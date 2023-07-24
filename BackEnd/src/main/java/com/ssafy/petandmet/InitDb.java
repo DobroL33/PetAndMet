@@ -53,12 +53,10 @@ public class InitDb {
             user.addCenter(center);
             em.persist(user);
 
-            Animal animal = new Animal();
-            animal.setName("sihwan");
-            animal.setAge(123);
-            animal.setCenter(center);
-            em.persist(animal);
-
+//            Animal animal = new Animal();
+//            animal.setName("sihwan");
+//            animal.setAge(123);
+//            em.persist(animal);
         }
 
 //        public void dbInit2() {
