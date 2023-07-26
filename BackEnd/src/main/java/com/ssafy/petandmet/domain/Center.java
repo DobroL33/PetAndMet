@@ -41,7 +41,15 @@ public class Center {
     @Column(name = "center_email")
     private String email;
 
+    //    ============= 다른 테이블과 연결 ================
 
+    @OneToMany(mappedBy = "center")
+    private List<Donate> donate = new ArrayList<>();
 
+    @OneToOne(mappedBy = "center")
+    private DonateLog donateLog;
+
+    @OneToMany(mappedBy = "center")
+    private List<Live> live;
 
 }
