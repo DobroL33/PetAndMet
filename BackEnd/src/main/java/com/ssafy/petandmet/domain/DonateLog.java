@@ -21,7 +21,7 @@ public class DonateLog {
 
     @ManyToOne
     @JoinColumn(name = "donate_id")
-    private Donate donateId;
+    private Donate donate;
 
     @OneToOne
     @JoinColumn(name = "user_uuid")
