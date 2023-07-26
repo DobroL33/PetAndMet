@@ -16,7 +16,18 @@ import java.util.UUID;
 public class Center {
 
     @Id
+    @Column(name = "center_uuid")
     private String uuid;
+
+    @OneToOne
+    @JoinColumn(name = "user_uuid")
+    private User user;
+
+    @OneToOne(mappedBy = "center")
+    private Animal animal;
+
+    @OneToMany(mappedBy = "center")
+    private List<Board> boardList = new ArrayList<>();
 
     @Column(name = "center_name")
     private String name;
