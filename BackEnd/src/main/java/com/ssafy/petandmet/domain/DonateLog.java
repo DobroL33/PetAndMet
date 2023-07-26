@@ -16,11 +16,12 @@ public class DonateLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "donatelog_id")
     private long id;
 
     @ManyToOne
     @JoinColumn(name = "donate_id")
-    private Donate donate_id;
+    private Donate donateId;
 
     @OneToOne
     @JoinColumn(name = "user_uuid")
