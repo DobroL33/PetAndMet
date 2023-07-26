@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,7 @@ public class Donate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "donate_id")
     private Long id;
 
     @ManyToOne
@@ -22,19 +24,19 @@ public class Donate {
     private Center center;
 
 //    @Column(name = "item_name")
-    private String item_name;
+    private String itemName;
 
 //    @Column(name = "item_url")
-    private String item_url;
+    private String itemUrl;
 
 //    @Column(name = "target_price")
-    private int target_price;
+    private int targetPrice;
 
 //    @Column(name = "current_price")
-    private int current_price;
+    private int currentPrice;
 
     @OneToMany(mappedBy = "donate_id")
-    private List<DonateLog> donateLog;
+    private List<DonateLog> donateLog = new ArrayList<>();
 
 
 }
