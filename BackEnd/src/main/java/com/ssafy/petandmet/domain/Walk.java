@@ -15,6 +15,7 @@ public class Walk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "walk_id")
     private Long id;
 
     @OneToOne
