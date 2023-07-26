@@ -3,10 +3,8 @@ package com.ssafy.petandmet.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "animals")
@@ -42,7 +40,7 @@ public class Animal {
     private DonateLog donateLog;
 
     @OneToOne(mappedBy = "animal")
-    private LiveAnimals liveAnimals;
+    private LiveAnimal liveAnimal;
 
     //==연관관계 메서드==//
     public void setCenter(Center center) {
