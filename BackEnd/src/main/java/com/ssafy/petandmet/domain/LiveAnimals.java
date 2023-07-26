@@ -12,6 +12,7 @@ import lombok.Setter;
 public class LiveAnimals {
 
     @Id
+    @Column(name = "live_animal_uuid")
     private String uuid;
 
     @OneToOne
@@ -20,6 +21,6 @@ public class LiveAnimals {
 
     @ManyToOne
     @JoinColumn(name="live_id")
-    private Live live_id;
+    private Live liveId;
 
 }
