@@ -15,6 +15,7 @@ import java.util.UUID;
 public class Animal {
 
     @Id
+    @Column(name = "animal_uuid")
     private String uuid;
 
     @OneToOne
