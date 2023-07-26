@@ -41,14 +41,7 @@ public class Center {
     @Column(name = "center_email")
     private String email;
 
-    @OneToOne
-    @JoinColumn(name = "user_uuid")
-    private User user;
-
     //    ============= 다른 테이블과 연결 ================
-
-    @OneToOne(mappedBy = "center")
-    private Animal animal;
 
     @OneToMany(mappedBy = "center")
     private List<Donate> donate = new ArrayList<>();
