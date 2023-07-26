@@ -29,6 +29,6 @@ public class Live {
     private Center center;
 
     @OneToMany(mappedBy = "live")
-    private List<LiveAnimals> liveAnimals = new ArrayList<>();
+    private List<LiveAnimal> liveAnimals = new ArrayList<>();
 
 }
