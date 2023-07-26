@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,7 @@ public class Live {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "live_id")
     private Long id;
 
     @Column(name = "session_name")
@@ -27,6 +29,6 @@ public class Live {
     private Center center;
 
     @OneToMany(mappedBy = "live_id")
-    private List<LiveAnimals> liveAnimals;
+    private List<LiveAnimals> liveAnimals = new ArrayList<>();
 
 }
