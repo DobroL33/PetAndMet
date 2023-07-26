@@ -28,7 +28,7 @@ public class Live {
     @JoinColumn(name = "center_uuid")
     private Center center;
 
-    @OneToMany(mappedBy = "live_id")
+    @OneToMany(mappedBy = "live")
     private List<LiveAnimals> liveAnimals = new ArrayList<>();
 
 }
