@@ -9,7 +9,7 @@ import lombok.Setter;
 @Table(name = "live_animals")
 @Getter
 @Setter
-public class LiveAnimals {
+public class LiveAnimal {
 
     @Id
     @Column(name = "live_animal_uuid")
