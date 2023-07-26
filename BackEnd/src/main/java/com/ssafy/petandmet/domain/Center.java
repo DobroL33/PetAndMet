@@ -16,6 +16,7 @@ import java.util.UUID;
 public class Center {
 
     @Id
+    @Column(name = "center_uuid")
     private String uuid;
 
     @Column(name = "center_name")
