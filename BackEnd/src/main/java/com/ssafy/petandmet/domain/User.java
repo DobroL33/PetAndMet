@@ -54,6 +54,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private WalkGradeType walkGrade;
 
+    @OneToOne(mappedBy = "user")
+    private DonateLog donateLog;
+
     //==연관관계 메서드==//
     public void addCenter(Center center) {
         this.center = center;

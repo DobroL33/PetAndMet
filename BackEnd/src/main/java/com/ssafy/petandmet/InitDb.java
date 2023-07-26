@@ -1,13 +1,14 @@
 package com.ssafy.petandmet;
 
-import com.ssafy.petandmet.domain.Animal;
-import com.ssafy.petandmet.domain.Center;
-import com.ssafy.petandmet.domain.User;
+import com.ssafy.petandmet.domain.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * 종 주문 2개
@@ -26,8 +27,9 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-        initService.dbInit1();
+//        initService.dbInit1();
 //        initService.dbInit2();
+        initService.dbInit3();
     }
 
     @Component
@@ -97,6 +99,66 @@ public class InitDb {
 //            delivery.setAddress(member.getAddress());
 //            return delivery;
 //        }
+
+        public void dbInit3() {
+//            donate_log 확인
+            System.out.println("Init3" + this.getClass());
+
+            Center center = new Center();
+            center.setUuid("aaaaa");
+            center.setName("13");
+            center.setAddress("asdfsd");
+            center.setEmail("1234");
+            em.persist(center);
+
+            User user = new User();
+            user.setUuid("aaww");
+            user.setName("환희");
+            user.addCenter(center);
+            em.persist(user);
+
+            Animal animal = new Animal();
+            animal.setUuid("bbbdb");
+            animal.setName("bb");
+            animal.setAge(12);
+            em.persist(animal);
+
+            Donate donate = new Donate();
+            donate.setCenter(center);
+            donate.setItem_name("선풍기");
+            donate.setTarget_price(320000);
+            em.persist(donate);
+
+            DonateLog donateLog = new DonateLog();
+            donateLog.setDonate_id(donate);
+            donateLog.setUser(user);
+            donateLog.setAnimal(animal);
+            donateLog.setCenter(center);
+            donateLog.setPrice(30000);
+            donateLog.setDonateDate(LocalDateTime.now());
+            em.persist(donateLog);
+
+//            ======== 라이브 확인 =======
+            Live live = new Live();
+            live.setName("세션");
+            live.setCenter(center);
+            em.persist(live);
+
+            LiveAnimals liveAnimals = new LiveAnimals();
+            liveAnimals.setAnimal(animal);
+            liveAnimals.setLive_id(live);
+            liveAnimals.setUuid("dfdfd");
+            em.persist(liveAnimals);
+
+//            ===== 산책 확인 =====
+            Walk walk = new Walk();
+            walk.setUser(user);
+            walk.setAnimal(animal);
+            walk.setDate(LocalDateTime.now().toLocalDate());
+            walk.setTime(LocalTime.now());
+            em.persist(walk);
+
+        }
     }
 }
 
