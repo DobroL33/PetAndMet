@@ -3,9 +3,9 @@ package com.ssafy.petandmet.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -19,6 +19,15 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Center center;
+
+    @OneToOne(mappedBy = "user")
+    private Interest interest;
+
+    @OneToMany(mappedBy = "user")
+    private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> commentList = new ArrayList<>();
 
     @Column(name = "user_id")
     private String id;
