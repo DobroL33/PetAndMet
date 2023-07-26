@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,13 +17,6 @@ public class Center {
 
     @Id
     private String uuid;
-
-    @OneToOne
-    @JoinColumn(name = "user_uuid")
-    private User user;
-
-    @OneToOne(mappedBy = "center")
-    private Animal animal;
 
     @Column(name = "center_name")
     private String name;
@@ -35,7 +30,22 @@ public class Center {
     @Column(name = "center_email")
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "user_uuid")
+    private User user;
 
+    //    ============= 다른 테이블과 연결 ================
 
+    @OneToOne(mappedBy = "center")
+    private Animal animal;
+
+    @OneToMany(mappedBy = "center")
+    private List<Donate> donate = new ArrayList<>();
+
+    @OneToOne(mappedBy = "center")
+    private DonateLog donateLog;
+
+    @OneToMany(mappedBy = "center")
+    private List<Live> live;
 
 }
