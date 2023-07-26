@@ -37,6 +37,12 @@ public class Animal {
     @Column(name = "animal_photo_url")
     private String photoUrl;
 
+    @OneToOne(mappedBy = "animal")
+    private DonateLog donateLog;
+
+    @OneToOne(mappedBy = "animal")
+    private LiveAnimals liveAnimals;
+
     //==연관관계 메서드==//
     public void setCenter(Center center) {
         this.center = center;
