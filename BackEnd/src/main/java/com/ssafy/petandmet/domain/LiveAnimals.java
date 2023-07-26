@@ -21,6 +21,6 @@ public class LiveAnimals {
 
     @ManyToOne
     @JoinColumn(name="live_id")
-    private Live liveId;
+    private Live live;
 
 }
