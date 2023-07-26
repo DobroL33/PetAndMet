@@ -23,19 +23,15 @@ public class Donate {
     @JoinColumn(name = "center_uuid")
     private Center center;
 
-//    @Column(name = "item_name")
     private String itemName;
 
-//    @Column(name = "item_url")
     private String itemUrl;
 
-//    @Column(name = "target_price")
     private int targetPrice;
 
-//    @Column(name = "current_price")
     private int currentPrice;
 
-    @OneToMany(mappedBy = "donate_id")
+    @OneToMany(mappedBy = "donate")
     private List<DonateLog> donateLog = new ArrayList<>();
 
 
