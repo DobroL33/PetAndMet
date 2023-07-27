@@ -1,18 +1,19 @@
 package com.ssafy.petandmet.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "centers")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Center {
 
     @Id
@@ -44,12 +45,26 @@ public class Center {
     //    ============= 다른 테이블과 연결 ================
 
     @OneToMany(mappedBy = "center")
-    private List<Donate> donate = new ArrayList<>();
+    private List<CenterItem> centerItem = new ArrayList<>();
 
     @OneToOne(mappedBy = "center")
-    private DonateLog donateLog;
+    private Donate donate;
 
     @OneToMany(mappedBy = "center")
     private List<Live> live;
 
+    @Builder
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+        this.uuid = uuid;
+        this.user = user;
+        this.animal = animal;
+        this.boardList = boardList;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.centerItem = centerItem;
+        this.donate = donate;
+        this.live = live;
+    }
 }
