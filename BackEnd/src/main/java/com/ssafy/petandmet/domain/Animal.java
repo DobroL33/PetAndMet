@@ -3,6 +3,7 @@ package com.ssafy.petandmet.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +38,7 @@ public class Animal {
     private String photoUrl;
 
     @OneToOne(mappedBy = "animal")
-    private DonateLog donateLog;
+    private Donate donate;
 
     @OneToOne(mappedBy = "animal")
     private LiveAnimal liveAnimal;
