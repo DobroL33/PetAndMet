@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "donates")
@@ -17,22 +16,28 @@ public class Donate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "donate_id")
-    private Long id;
+    private long id;
 
     @ManyToOne
+    @JoinColumn(name = "center_item_id")
+    private Item item;
+
+    @OneToOne
+    @JoinColumn(name = "user_uuid")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "animal_uuid")
+    private Animal animal;
+
+    @OneToOne
     @JoinColumn(name = "center_uuid")
     private Center center;
 
-    private String itemName;
+    @Column(name = "donate_price")
+    private int price;
 
-    private String itemUrl;
-
-    private int targetPrice;
-
-    private int currentPrice;
-
-    @OneToMany(mappedBy = "donate")
-    private List<DonateLog> donateLog = new ArrayList<>();
-
+    @Column(name = "donate_date")
+    private LocalDateTime donateDate;
 
 }
