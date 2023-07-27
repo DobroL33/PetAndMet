@@ -55,7 +55,7 @@ public class User {
     private WalkGradeType walkGrade;
 
     @OneToOne(mappedBy = "user")
-    private DonateLog donateLog;
+    private Donate donate;
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
