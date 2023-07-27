@@ -1,8 +1,7 @@
 package com.ssafy.petandmet.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,8 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@ToString(exclude = "center")
 public class User {
 
     @Id
@@ -40,6 +41,9 @@ public class User {
     @Column(name = "user_email")
     private String email;
 
+    @Column(name = "user_phone")
+    private String phone;
+
     @Column(name = "user_name")
     private String name;
 
@@ -56,6 +60,26 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private DonateLog donateLog;
+
+    @Builder
+    public User(String uuid, Center center, Interest interest, List<Board> boardList, List<Comment> commentList, String id, String password, String salt, String email, String phone, String name, RoleType roleType, int attendance, DonateGradeType donateGrade, WalkGradeType walkGrade, DonateLog donateLog) {
+        this.uuid = uuid;
+        this.center = center;
+        this.interest = interest;
+        this.boardList = boardList;
+        this.commentList = commentList;
+        this.id = id;
+        this.password = password;
+        this.salt = salt;
+        this.email = email;
+        this.phone = phone;
+        this.name = name;
+        this.roleType = roleType;
+        this.attendance = attendance;
+        this.donateGrade = donateGrade;
+        this.walkGrade = walkGrade;
+        this.donateLog = donateLog;
+    }
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
