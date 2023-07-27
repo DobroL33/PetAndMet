@@ -2,7 +2,9 @@ package com.ssafy.petandmet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @Table(name = "centers")
 @Getter
 @Setter
-//@ToString(exclude = {"user","animal","boardList","items","donate","live"}, callSuper = true)
+@NoArgsConstructor
 public class Center {
 
     @Id
@@ -59,4 +61,18 @@ public class Center {
     @OneToMany(mappedBy = "center")
     private List<Live> live;
 
+    @Builder
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+        this.uuid = uuid;
+        this.user = user;
+        this.animal = animal;
+        this.boardList = boardList;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.centerItem = centerItem;
+        this.donate = donate;
+        this.live = live;
+    }
 }
