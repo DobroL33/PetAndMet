@@ -21,8 +21,10 @@ public class JwtAuthenticationUtil {
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
-    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 30;
-    private final long REFRESH_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60 * 24 * 7;
+    @Value("${spring.jwt.token.access-expiration-time}")
+    private long accessTokenExpirationTime;
+    @Value("${spring.jwt.token.refresh-expiration-time}")
+    private long refreshTokenExpirationTime;
 
     @PostConstruct
     protected void init() {
@@ -30,7 +32,7 @@ public class JwtAuthenticationUtil {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public Token generateAccessToken(User user) {
+    public Token generateToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getUuid());
         claims.put("role_type", user.getRoleType().toString());
         Date now = new Date();
@@ -39,7 +41,7 @@ public class JwtAuthenticationUtil {
         String accessToken = Jwts.builder()
                 .setClaims(claims) //payload 저장
                 .setIssuedAt(now) //토큰 발행시간 정보
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)) //만료 시간 설정
+                .setExpiration(new Date(now.getTime() + accessTokenExpirationTime)) //만료 시간 설정
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, 암호키
                 .compact();
 
@@ -47,10 +49,10 @@ public class JwtAuthenticationUtil {
         String refreshToken = Jwts.builder()
                 .setClaims(claims) //payload 저장
                 .setIssuedAt(now) //토큰 발행시간 정보
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND)) //만료 시간 설정
+                .setExpiration(new Date(now.getTime() + refreshTokenExpirationTime)) //만료 시간 설정
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, 암호키
                 .compact();
 
-        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).key(user.getUuid()).build();
+        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 }

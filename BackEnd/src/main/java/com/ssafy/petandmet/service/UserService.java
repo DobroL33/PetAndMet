@@ -7,13 +7,13 @@ import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
 import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.repository.CenterRepository;
+import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
 import com.ssafy.petandmet.util.JwtAuthenticationUtil;
 import com.ssafy.petandmet.util.PasswordEncryptUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final CenterRepository centerRepository;
     private final JwtAuthenticationUtil jwtAuthenticationUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     /**
      * 사용자 등록
@@ -117,8 +118,9 @@ public class UserService {
             String encryptedPassword = PasswordEncryptUtil.getEncrypt(request.getPassword(), salt);
             User user = userRepository.findUser(request.getId(), encryptedPassword);
             log.debug(user.toString());
-            Token token = jwtAuthenticationUtil.generateAccessToken(user);
+            Token token = jwtAuthenticationUtil.generateToken(user);
             log.debug(token.toString());
+            refreshTokenRepository.save(token);
             return token;
         } catch (NullPointerException e) {
             throw new NullPointerException("사용자가 없습니다.");
