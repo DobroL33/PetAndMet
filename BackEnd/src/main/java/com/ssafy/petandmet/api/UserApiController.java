@@ -1,7 +1,9 @@
 package com.ssafy.petandmet.api;
 
 import com.ssafy.petandmet.dto.animal.Result;
+import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +36,17 @@ public class UserApiController {
         }
 
         return new Result("성공", "", "null");
+    }
+
+    /**
+     * 사용자 로그인
+     * @param request 사용자 정보
+     * @return access jwt 토큰
+     */
+    @PostMapping
+    public Result login(@RequestBody LoginUserRequest request) {
+        log.debug(request.toString());
+        Token token = userService.login(request);
+        return new Result("성공", token.getAccessToken(), "null");
     }
 }
