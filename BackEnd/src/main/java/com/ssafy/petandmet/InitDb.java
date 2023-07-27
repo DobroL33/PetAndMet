@@ -125,12 +125,12 @@ public class InitDb {
 
             Donate donate = new Donate();
             donate.setCenter(center);
-            donate.setItem_name("선풍기");
-            donate.setTarget_price(320000);
+            donate.setItemName("선풍기");
+            donate.setTargetPrice(320000);
             em.persist(donate);
 
             DonateLog donateLog = new DonateLog();
-            donateLog.setDonate_id(donate);
+            donateLog.setDonate(donate);
             donateLog.setUser(user);
             donateLog.setAnimal(animal);
             donateLog.setCenter(center);
@@ -144,9 +144,9 @@ public class InitDb {
             live.setCenter(center);
             em.persist(live);
 
-            LiveAnimals liveAnimals = new LiveAnimals();
+            LiveAnimal liveAnimals = new LiveAnimal();
             liveAnimals.setAnimal(animal);
-            liveAnimals.setLive_id(live);
+            liveAnimals.setLive(live);
             liveAnimals.setUuid("dfdfd");
             em.persist(liveAnimals);
 
