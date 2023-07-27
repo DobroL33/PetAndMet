@@ -1,10 +1,12 @@
 package com.ssafy.petandmet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,16 @@ public class Center {
     @Column(name = "center_uuid")
     private String uuid;
 
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne(mappedBy = "center")
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Animal animal;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Board> boardList = new ArrayList<>();
 
@@ -44,12 +49,15 @@ public class Center {
 
     //    ============= 다른 테이블과 연결 ================
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<CenterItem> centerItem = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
-    @OneToOne(mappedBy = "center")
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Donate donate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Live> live;
 
