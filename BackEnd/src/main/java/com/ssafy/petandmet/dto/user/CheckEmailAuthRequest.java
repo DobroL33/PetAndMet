@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendEmailAuthRequest {
+public class CheckEmailAuthRequest {
     private String email;
+    private int code;
 }

@@ -2,10 +2,7 @@ package com.ssafy.petandmet.api;
 
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
-import com.ssafy.petandmet.dto.user.CreateUserRequest;
-import com.ssafy.petandmet.dto.user.SendEmailAuthRequest;
-import com.ssafy.petandmet.dto.user.IdCheckRequest;
-import com.ssafy.petandmet.dto.user.LoginUserRequest;
+import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +85,17 @@ public class UserApiController {
         log.debug(request.toString());
         userService.sendEmailAuthCode(request);
         return new Result("성공", "이메일 인증 코드 전송", "null");
+    }
+
+    @PostMapping("/check-email-auth")
+    public Result checkEmailAuthenticationCode(@RequestBody CheckEmailAuthRequest request){
+        log.debug("이메일 인증 코드 확인 컨트롤러");
+        log.debug(request.toString());
+        boolean isValid = userService.checkEmailAuthCode(request);
+        log.debug("isValid = " + isValid);
+        if(isValid){
+            return new Result("성공", "이메일 인증 코드 확인", "null");
+        }
+        return new Result("실패", "이메일 인증 코드 확인", "null");
     }
 }

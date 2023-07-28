@@ -170,4 +170,16 @@ public class UserService {
         generator.setSeed(System.currentTimeMillis());
         return generator.nextInt(1000000) % 1000000;
     }
+
+    public boolean checkEmailAuthCode(CheckEmailAuthRequest request) {
+        log.debug("이메일 인증 코드 확인 서비스");
+        Optional<EmailAuthentication> emailAuthentication = emailAuthenticationRepository.findById(request.getEmail());
+        log.debug("emailAuthentication = " + emailAuthentication);
+        if (emailAuthentication.isPresent() && request.getCode() == emailAuthentication.get().getCode()) {
+            emailAuthenticationRepository.delete(emailAuthentication.get());
+            log.debug("이메일 인증 성공");
+            return true;
+        }
+        return false;
+    }
 }

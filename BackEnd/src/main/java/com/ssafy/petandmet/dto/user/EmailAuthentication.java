@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter
 @RedisHash(value = "emailAuthentication", timeToLive = 300000L)
 public class EmailAuthentication {
     @Id
