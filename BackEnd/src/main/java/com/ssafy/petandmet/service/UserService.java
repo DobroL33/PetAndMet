@@ -130,6 +130,11 @@ public class UserService {
         }
     }
 
+    /**
+     * 사용자 로그아웃
+     *
+     * @param accessToken 사용자 access token
+     */
     public void logout(String accessToken) {
         Optional<Token> findToken = refreshTokenRepository.findById(accessToken);
         //토큰 불러오기 확인
@@ -143,11 +148,23 @@ public class UserService {
         }
     }
 
+    /**
+     * 아이디 중복 확인
+     *
+     * @param request 사용자 ID
+     * @return 아이디 중복 여부
+     */
     public boolean isDuplicateId(IdCheckRequest request) {
         List<User> users = userRepository.findUserId(request.getId());
         return !users.isEmpty();
     }
 
+    /**
+     * 이메일 인증 코드 전송
+     *
+     * @param request 사용자 이메일
+     * @return 전송 여부
+     */
     public void sendEmailAuthCode(SendEmailAuthRequest request) {
         log.debug("이메일 인증 코드 전송 서비스");
 
@@ -171,6 +188,12 @@ public class UserService {
         return generator.nextInt(1000000) % 1000000;
     }
 
+    /**
+     * 이메일 인증 코드 확인
+     *
+     * @param request 사용자 이메일, 코드
+     * @return 코드 일치 여부
+     */
     public boolean checkEmailAuthCode(CheckEmailAuthRequest request) {
         log.debug("이메일 인증 코드 확인 서비스");
         Optional<EmailAuthentication> emailAuthentication = emailAuthenticationRepository.findById(request.getEmail());

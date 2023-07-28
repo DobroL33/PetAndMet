@@ -79,6 +79,12 @@ public class UserApiController {
         return new Result("성공", "존재하는 아이디가 있습니다.", "null");
     }
 
+    /**
+     * 이메일 인증 코드 전송
+     * 
+     * @param request 사용자 이메일
+     * @return 전송 여부
+     */
     @PostMapping("/send-email-auth")
     public Result sendEmailAuthenticationCode(@RequestBody SendEmailAuthRequest request){
         log.debug("이메일 인증 코드 전송 컨트롤러");
@@ -87,6 +93,12 @@ public class UserApiController {
         return new Result("성공", "이메일 인증 코드 전송", "null");
     }
 
+    /**
+     * 이메일 인증 코드 확인
+     * 
+     * @param request 사용자 이메일, 코드
+     * @return 코드 일치 여부
+     */
     @PostMapping("/check-email-auth")
     public Result checkEmailAuthenticationCode(@RequestBody CheckEmailAuthRequest request){
         log.debug("이메일 인증 코드 확인 컨트롤러");
