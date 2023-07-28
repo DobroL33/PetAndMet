@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -121,6 +122,10 @@ public class UserService {
             Token token = jwtAuthenticationUtil.generateToken(user);
             log.debug(token.toString());
             refreshTokenRepository.save(token);
+
+            //토큰 불러오기 확인
+            Optional<Token> findToken = refreshTokenRepository.findById(token.getAccessToken());
+            log.debug("findToken = " + findToken);
             return token;
         } catch (NullPointerException e) {
             throw new NullPointerException("사용자가 없습니다.");
