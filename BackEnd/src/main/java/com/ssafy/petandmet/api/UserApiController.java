@@ -3,6 +3,7 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.IdCheckRequest;
 import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +62,22 @@ public class UserApiController {
         String accessToken = authorization.substring(7);
         userService.logout(accessToken);
         return new Result("성공", "로그아웃하였습니다.", "null");
+    }
+
+    /**
+     * 아이디 중복 확인
+     *
+     * @param request 사용자가 원하는 ID
+     * @return 중복 여부 결과
+     */
+    @PostMapping("/id-check")
+    public Result isDuplicateId(@RequestBody IdCheckRequest request){
+        log.debug("아이디 중복확인 컨트롤러");
+        log.debug(request.toString());
+        boolean isExist = userService.isDuplicateId(request);
+        if(!isExist){
+            return new Result("성공", "존재하는 아이디가 없습니다.", "null");
+        }
+        return new Result("성공", "존재하는 아이디가 있습니다.", "null");
     }
 }

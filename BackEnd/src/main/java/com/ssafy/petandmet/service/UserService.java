@@ -5,6 +5,7 @@ import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.IdCheckRequest;
 import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
@@ -134,12 +135,16 @@ public class UserService {
         //토큰 불러오기 확인
         log.debug("findToken = " + findToken);
 
-        if(findToken.isPresent()){
+        if (findToken.isPresent()) {
             refreshTokenRepository.delete(findToken.get());
             log.debug("로그아웃 성공");
-        }
-        else{
+        } else {
             throw new NullPointerException("로그아웃에 오류가 생겼습니다.");
         }
+    }
+
+    public boolean isDuplicateId(IdCheckRequest request) {
+        List<User> users = userRepository.findUserId(request.getId());
+        return !users.isEmpty();
     }
 }
