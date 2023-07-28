@@ -3,6 +3,7 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.SendEmailAuthRequest;
 import com.ssafy.petandmet.dto.user.IdCheckRequest;
 import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.service.UserService;
@@ -79,5 +80,13 @@ public class UserApiController {
             return new Result("성공", "존재하는 아이디가 없습니다.", "null");
         }
         return new Result("성공", "존재하는 아이디가 있습니다.", "null");
+    }
+
+    @PostMapping("/send-email-auth")
+    public Result sendEmailAuthenticationCode(@RequestBody SendEmailAuthRequest request){
+        log.debug("이메일 인증 코드 전송 컨트롤러");
+        log.debug(request.toString());
+        userService.sendEmailAuthCode(request);
+        return new Result("성공", "이메일 인증 코드 전송", "null");
     }
 }

@@ -4,10 +4,9 @@ import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.jwt.Token;
-import com.ssafy.petandmet.dto.user.CreateUserRequest;
-import com.ssafy.petandmet.dto.user.IdCheckRequest;
-import com.ssafy.petandmet.dto.user.LoginUserRequest;
+import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.repository.CenterRepository;
+import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
 import com.ssafy.petandmet.util.JwtAuthenticationUtil;
@@ -30,6 +29,7 @@ public class UserService {
     private final CenterRepository centerRepository;
     private final JwtAuthenticationUtil jwtAuthenticationUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final EmailAuthenticationRepository emailAuthenticationRepository;
 
     /**
      * 사용자 등록
@@ -146,5 +146,28 @@ public class UserService {
     public boolean isDuplicateId(IdCheckRequest request) {
         List<User> users = userRepository.findUserId(request.getId());
         return !users.isEmpty();
+    }
+
+    public void sendEmailAuthCode(SendEmailAuthRequest request) {
+        log.debug("이메일 인증 코드 전송 서비스");
+
+        int code = generateRandomCode();
+        EmailAuthentication emailAuthentication = EmailAuthentication
+                .builder()
+                .email(request.getEmail())
+                .code(code)
+                .build();
+        emailAuthenticationRepository.save(emailAuthentication);
+    }
+
+    /**
+     * 이메일 인증 코드 생성
+     *
+     * @return 임의 6자리 숫자
+     */
+    private static int generateRandomCode() {
+        java.util.Random generator = new java.util.Random();
+        generator.setSeed(System.currentTimeMillis());
+        return generator.nextInt(1000000) % 1000000;
     }
 }
