@@ -37,6 +37,7 @@ public class UserApiController {
 
     /**
      * 사용자 로그인
+     *
      * @param request 사용자 정보
      * @return access jwt 토큰
      */
@@ -47,8 +48,14 @@ public class UserApiController {
         return new Result("성공", token.getAccessToken(), "null");
     }
 
+    /**
+     * 사용자 로그아웃
+     *
+     * @param authorization 사용자 인증 토큰
+     * @return 로그아웃 결과
+     */
     @DeleteMapping
-    public Result logout(@RequestHeader(value = "Authorization") String authorization){
+    public Result logout(@RequestHeader(value = "Authorization") String authorization) {
         log.debug("로그아웃 컨트롤러");
         log.debug(authorization);
         String accessToken = authorization.substring(7);
