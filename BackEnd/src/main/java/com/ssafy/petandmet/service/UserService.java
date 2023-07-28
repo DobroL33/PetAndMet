@@ -123,12 +123,23 @@ public class UserService {
             log.debug(token.toString());
             refreshTokenRepository.save(token);
 
-            //토큰 불러오기 확인
-            Optional<Token> findToken = refreshTokenRepository.findById(token.getAccessToken());
-            log.debug("findToken = " + findToken);
             return token;
         } catch (NullPointerException e) {
             throw new NullPointerException("사용자가 없습니다.");
+        }
+    }
+
+    public void logout(String accessToken) {
+        Optional<Token> findToken = refreshTokenRepository.findById(accessToken);
+        //토큰 불러오기 확인
+        log.debug("findToken = " + findToken);
+
+        if(findToken.isPresent()){
+            refreshTokenRepository.delete(findToken.get());
+            log.debug("로그아웃 성공");
+        }
+        else{
+            throw new NullPointerException("로그아웃에 오류가 생겼습니다.");
         }
     }
 }

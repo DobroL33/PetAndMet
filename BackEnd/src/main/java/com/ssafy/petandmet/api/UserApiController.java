@@ -7,10 +7,7 @@ import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,5 +45,14 @@ public class UserApiController {
         log.debug(request.toString());
         Token token = userService.login(request);
         return new Result("성공", token.getAccessToken(), "null");
+    }
+
+    @DeleteMapping
+    public Result logout(@RequestHeader(value = "Authorization") String authorization){
+        log.debug("로그아웃 컨트롤러");
+        log.debug(authorization);
+        String accessToken = authorization.substring(7);
+        userService.logout(accessToken);
+        return new Result("성공", "로그아웃하였습니다.", "null");
     }
 }
