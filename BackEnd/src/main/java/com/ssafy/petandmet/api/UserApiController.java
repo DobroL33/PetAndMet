@@ -81,7 +81,7 @@ public class UserApiController {
 
     /**
      * 이메일 인증 코드 전송
-     * 
+     *
      * @param request 사용자 이메일
      * @return 전송 여부
      */
@@ -95,7 +95,7 @@ public class UserApiController {
 
     /**
      * 이메일 인증 코드 확인
-     * 
+     *
      * @param request 사용자 이메일, 코드
      * @return 코드 일치 여부
      */

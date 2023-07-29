@@ -1,11 +1,16 @@
 package com.ssafy.petandmet.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUserRequest {
     private String id;
     private String password;
@@ -23,16 +28,7 @@ public class CreateUserRequest {
     @JsonProperty("center_email")
     private String centerEmail;
 
-    public CreateUserRequest(String id, String password, String email, String phone, String name, String roleType, String centerName, String centerAddress, String centerPhone, String centerEmail) {
-        this.id = id;
-        this.password = password;
-        this.email = email;
-        this.phone = phone;
-        this.name = name;
-        this.roleType = roleType;
-        this.centerName = centerName;
-        this.centerAddress = centerAddress;
-        this.centerPhone = centerPhone;
-        this.centerEmail = centerEmail;
+    public void passwordEncoder(BCryptPasswordEncoder encoder) {
+        this.password = encoder.encode(this.password);
     }
 }

@@ -5,17 +5,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    @Query("select a from User a where a.id = :id")
-    List<User> findUserId(String id);
+    @Query("select u from User u where u.id = :id")
+    Optional<User> findByUserId(String id);
 
     @Query("select u.salt from User u where u.id = :id")
     String getSalt(String id);
 
     @Query("select u from User u where u.id = :id and u.password = :password")
-    User findUser(String id, String password);
+    Optional<User> findUser(String id, String password);
 }
 
