@@ -280,4 +280,20 @@ public class UserService {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+
+    /**
+     * 사용자 개인 정보 수정
+     *
+     * @param uuid    사용자 uuid
+     * @param request 사용자 name, phone
+     */
+    public void modifyInfo(String uuid, ModifyInfoRequest request) {
+        log.debug("개인 정보 수정 서비스");
+        Optional<User> user = userRepository.findByUserUuid(uuid);
+        if (user.isPresent()) {
+            user.get().setName(request.getName());
+            user.get().setPhone(request.getPhone());
+            userRepository.save(user.get());
+        }
+    }
 }

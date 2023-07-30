@@ -165,4 +165,18 @@ public class UserApiController {
         userService.passwordReset(request);
         return new Result("성공", "비밀번호 초기화", "null");
     }
+
+    /**
+     * 사용자 개인 정보 수정
+     *
+     * @param request 사용자 name, phone
+     * @return 개인 정보 수정 결과
+     */
+    @PatchMapping
+    public Result modifyInfo(@RequestBody ModifyInfoRequest request) {
+        log.debug("개인 정보 수정 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        uuid.ifPresent(s -> userService.modifyInfo(s, request));
+        return new Result("성공", "개인정보 수정", "null");
+    }
 }
