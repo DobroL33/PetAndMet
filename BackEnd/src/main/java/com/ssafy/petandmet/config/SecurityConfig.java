@@ -54,6 +54,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(HttpMethod.POST, "api/v1/user").permitAll() //로그인 API
                                 .requestMatchers(HttpMethod.POST, "api/v1/user/new").permitAll() //회원가입 API
+                                .requestMatchers(HttpMethod.POST, "api/v1/user/id-check").permitAll() //아이디 중복확인 API
 //                                .requestMatchers(WHITE_LIST).permitAll()
 //                                .requestMatchers(DEFAULT_LIST).permitAll()
 //                                .requestMatchers(PathRequest.toH2Console()).permitAll()
