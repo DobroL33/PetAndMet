@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -244,5 +245,39 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 사용자 비밀번호 임의 초기화
+     *
+     * @param request 사용자 id, email
+     */
+    @Transactional
+    public void passwordReset(PasswordResetRequest request) {
+        Optional<User> user = userRepository.findByUserIdEmail(request.getId(), request.getEmail());
+        if (user.isPresent()) {
+            String tmpPassword = generateTmpPassword();
+            log.debug("tmpPassword = " + tmpPassword);
+            request.passwordEncoder(passwordEncoder, tmpPassword);
+            user.get().setPassword(request.getPassword());
+            userRepository.save(user.get());
+        }
+    }
+
+    /**
+     * 임의 비밀번호 생성
+     *
+     * @return 임의 문자열
+     */
+    private String generateTmpPassword() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+        return random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

@@ -136,6 +136,7 @@ public class UserApiController {
 
     /**
      * 회원 탈퇴
+     *
      * @return 탈퇴 여부
      */
     @DeleteMapping("/withdrawal")
@@ -150,5 +151,18 @@ public class UserApiController {
             }
         }
         return new Result("실패", "회원 탈퇴", "null");
+    }
+
+    /**
+     * 임의 비밀번호 초기화
+     *
+     * @param request 사용자의 id, email
+     * @return 초기화 여부
+     */
+    @PostMapping("/pwd-reset")
+    public Result passwordReset(@RequestBody PasswordResetRequest request) {
+        log.debug("임시 비밀번호 초기화 컨트롤러");
+        userService.passwordReset(request);
+        return new Result("성공", "비밀번호 초기화", "null");
     }
 }
