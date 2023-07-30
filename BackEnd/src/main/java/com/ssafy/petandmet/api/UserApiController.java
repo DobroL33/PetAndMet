@@ -115,6 +115,11 @@ public class UserApiController {
         return new Result("실패", "이메일 인증 코드 확인", "null");
     }
 
+    /**
+     * 사용자 마이페이지
+     *
+     * @return 사용자 정보
+     */
     @GetMapping
     @PreAuthorize("hasAnyRole('USER')")
     public Result getUserInfo() {
