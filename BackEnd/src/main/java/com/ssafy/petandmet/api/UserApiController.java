@@ -4,9 +4,13 @@ import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
+import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -69,11 +73,11 @@ public class UserApiController {
      * @return 중복 여부 결과
      */
     @PostMapping("/id-check")
-    public Result isDuplicateId(@RequestBody IdCheckRequest request){
+    public Result isDuplicateId(@RequestBody IdCheckRequest request) {
         log.debug("아이디 중복확인 컨트롤러");
         log.debug(request.toString());
         boolean isExist = userService.isDuplicateId(request);
-        if(!isExist){
+        if (!isExist) {
             return new Result("성공", "존재하는 아이디가 없습니다.", "null");
         }
         return new Result("성공", "존재하는 아이디가 있습니다.", "null");
@@ -86,7 +90,7 @@ public class UserApiController {
      * @return 전송 여부
      */
     @PostMapping("/send-email-auth")
-    public Result sendEmailAuthenticationCode(@RequestBody SendEmailAuthRequest request){
+    public Result sendEmailAuthenticationCode(@RequestBody SendEmailAuthRequest request) {
         log.debug("이메일 인증 코드 전송 컨트롤러");
         log.debug(request.toString());
         userService.sendEmailAuthCode(request);
@@ -100,14 +104,27 @@ public class UserApiController {
      * @return 코드 일치 여부
      */
     @PostMapping("/check-email-auth")
-    public Result checkEmailAuthenticationCode(@RequestBody CheckEmailAuthRequest request){
+    public Result checkEmailAuthenticationCode(@RequestBody CheckEmailAuthRequest request) {
         log.debug("이메일 인증 코드 확인 컨트롤러");
         log.debug(request.toString());
         boolean isValid = userService.checkEmailAuthCode(request);
         log.debug("isValid = " + isValid);
-        if(isValid){
+        if (isValid) {
             return new Result("성공", "이메일 인증 코드 확인", "null");
         }
         return new Result("실패", "이메일 인증 코드 확인", "null");
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER')")
+    public Result getUserInfo() {
+        log.debug("사용자 마이페이지 컨트롤러");
+        UserInfoResponse userInfoResponse = null;
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+//        uuid.ifPresent(log::debug);
+        if (uuid.isPresent()) {
+            userInfoResponse = userService.getUserInfo(uuid.get());
+        }
+        return new Result("성공", userInfoResponse, "null");
     }
 }

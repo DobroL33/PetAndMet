@@ -224,4 +224,9 @@ public class UserService {
         }
         return false;
     }
+
+    public UserInfoResponse getUserInfo(String uuid) {
+        Optional<User> user = userRepository.findByUserUuid(uuid);
+        return user.map(value -> UserInfoResponse.builder().message("개인정보 가져오기 성공").status("200").name(value.getName()).email(value.getEmail()).phone(value.getPhone()).build()).orElse(null);
+    }
 }

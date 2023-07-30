@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,12 +31,16 @@ public class SecurityConfig {
     };
 
     private static final String[] USER_LIST = {
-//            "/api/v1/**"
+            "/api/v1/user"
+    };
+
+    private static final String[] GET_LIST = {
+            "/api/v1/center"
     };
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 //html 공격 막기 위한 csrf 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
@@ -44,15 +50,16 @@ public class SecurityConfig {
                 .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
                 //url 요청 권한 설정
                 .authorizeHttpRequests(auth -> {
-                    try{
+                    try {
                         auth
-                                .requestMatchers(WHITE_LIST).permitAll()
-                                .requestMatchers(DEFAULT_LIST).permitAll()
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                                .requestMatchers(USER_LIST).hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "api/v1/user").permitAll() //로그인 API
+                                .requestMatchers(HttpMethod.POST, "api/v1/user/new").permitAll() //회원가입 API
+//                                .requestMatchers(WHITE_LIST).permitAll()
+//                                .requestMatchers(DEFAULT_LIST).permitAll()
+//                                .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                         ;
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 })
@@ -67,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
