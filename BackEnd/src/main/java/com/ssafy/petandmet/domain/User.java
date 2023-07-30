@@ -18,7 +18,7 @@ public class User {
     @Column(name = "user_uuid")
     private String uuid;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Center center;
 
     @OneToOne(mappedBy = "user")

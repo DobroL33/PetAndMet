@@ -132,4 +132,23 @@ public class UserApiController {
         }
         return new Result("성공", userInfoResponse, "null");
     }
+
+
+    /**
+     * 회원 탈퇴
+     * @return 탈퇴 여부
+     */
+    @DeleteMapping("/withdrawal")
+    public Result withdrawal() {
+        log.debug("회원 탈퇴 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        if (uuid.isPresent()) {
+            boolean isWithdrawal = userService.withdrawal(uuid.get());
+
+            if (isWithdrawal) {
+                return new Result("성공", "회원 탈퇴", "null");
+            }
+        }
+        return new Result("실패", "회원 탈퇴", "null");
+    }
 }

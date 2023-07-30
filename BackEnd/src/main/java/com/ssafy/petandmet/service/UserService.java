@@ -229,4 +229,20 @@ public class UserService {
         Optional<User> user = userRepository.findByUserUuid(uuid);
         return user.map(value -> UserInfoResponse.builder().message("개인정보 가져오기 성공").status("200").name(value.getName()).email(value.getEmail()).phone(value.getPhone()).build()).orElse(null);
     }
+
+    /**
+     * 회원 탈퇴
+     *
+     * @param uuid 사용자 uuid
+     * @return 탈퇴 여부
+     */
+    @Transactional
+    public boolean withdrawal(String uuid) {
+        Optional<User> user = userRepository.findByUserUuid(uuid);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+            return true;
+        }
+        return false;
+    }
 }
