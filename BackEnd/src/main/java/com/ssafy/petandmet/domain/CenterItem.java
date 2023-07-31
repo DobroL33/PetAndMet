@@ -29,8 +29,8 @@ import java.util.List;
 public class CenterItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "center_item_id")
+    @GeneratedValue
+    @Column(name = "center_items_id")
     private Long id;
 
     @ManyToOne
@@ -46,5 +46,15 @@ public class CenterItem {
     private int currentPrice;
 
     @OneToMany(mappedBy = "centerItem")
-    private List<Donate> donates = new ArrayList<>();
+    private List<Donate> donate = new ArrayList<>();
+
+    @Builder
+    public CenterItem(Center center, String itemName, String itemUrl, int targetPrice, int currentPrice, List<Donate> donate) {
+        this.center = center;
+        this.itemName = itemName;
+        this.itemUrl = itemUrl;
+        this.targetPrice = targetPrice;
+        this.currentPrice = currentPrice;
+        this.donate = donate;
+    }
 }
