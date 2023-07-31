@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateAnimalResponse {
+public class AnimalResponse {
 
     private String status;
     private String message;
