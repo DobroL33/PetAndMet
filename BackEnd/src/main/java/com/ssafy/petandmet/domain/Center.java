@@ -51,7 +51,7 @@ public class Center {
 
     @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<Item> items = new ArrayList<>();
+    private List<CenterItem> centerItem = new ArrayList<>();
 
     @JsonIgnore
     @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
