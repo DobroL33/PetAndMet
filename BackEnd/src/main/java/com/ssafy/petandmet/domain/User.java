@@ -67,7 +67,7 @@ public class User {
     }
 
     @Builder
-    public User(String uuid, Center center, Interest interest, List<Board> boardList, List<Comment> commentList, String id, String password, String salt, String email, String name, RoleType roleType, int attendance, DonateGradeType donateGrade, WalkGradeType walkGrade, Donate donate) {
+    public User(String uuid, Center center, Interest interest, List<Board> boardList, List<Comment> commentList, String id, String password, String salt, String email, String name, RoleType roleType, int attendance, DonateGradeType donateGrade, WalkGradeType walkGrade, List<Donate> donate) {
         this.uuid = uuid;
         this.center = center;
         this.interest = interest;
