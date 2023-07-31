@@ -2,8 +2,11 @@ package com.ssafy.petandmet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.websocket.OnOpen;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.ErrorResponse;
 
@@ -15,6 +18,9 @@ import java.util.List;
 @Table(name = "boards")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -34,6 +40,7 @@ public class Board {
 
     @OneToMany(mappedBy = "board")
     @JsonIgnore
+    @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
     private String title;
@@ -48,22 +55,4 @@ public class Board {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @Builder
-    public Board(Long id, String title, User user, Center center, String content, String photoUrl, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.photoUrl = photoUrl;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.user = user;
-        this.center = center;
-
-    }
-
-    public Board() {
-
-    }
 }

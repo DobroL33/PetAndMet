@@ -1,27 +1,27 @@
-//package com.ssafy.petandmet.service;
-//
-//import com.ssafy.petandmet.domain.*;
-//import com.ssafy.petandmet.dto.donate.CreateDonateRequest;
-//import com.ssafy.petandmet.repository.*;
-//import jakarta.transaction.Transactional;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.mockito.BDDMockito.given;
-//import static org.mockito.BDDMockito.then;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.ArgumentMatchers.any;
-//
-//@ExtendWith(MockitoExtension.class)
-//@Transactional
-//class DonateServiceTest {
+package com.ssafy.petandmet.service;
+
+import com.ssafy.petandmet.domain.*;
+import com.ssafy.petandmet.dto.donate.CreateDonateRequest;
+import com.ssafy.petandmet.repository.*;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+
+@ExtendWith(MockitoExtension.class)
+@Transactional
+class DonateServiceTest {
 //    @InjectMocks
 //    DonateService donateService;
 //    @Mock
@@ -180,4 +180,4 @@
 //        assertThat(responseDonate.get(0).getPrice()).isEqualTo(1000);
 //        assertThat(responseDonate.get(1).getPrice()).isEqualTo(10000);
 //    }
-//}
+}

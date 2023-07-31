@@ -45,5 +45,6 @@ public class CenterItem {
     private int currentPrice;
 
     @OneToMany(mappedBy = "centerItem")
+    @Builder.Default
     private List<Donate> donates = new ArrayList<>();
 }

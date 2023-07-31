@@ -41,9 +41,11 @@ public class User {
     private Interest interest;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Board> boardList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
     @Column(name = "user_id")
@@ -74,6 +76,7 @@ public class User {
     private WalkGradeType walkGrade;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Donate> donates = new ArrayList<>();
 
     //==연관관계 메서드==//

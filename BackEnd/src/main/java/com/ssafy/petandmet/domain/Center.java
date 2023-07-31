@@ -43,6 +43,7 @@ public class Center {
 
     @JsonIgnore
     @OneToMany(mappedBy = "center")
+    @Builder.Default
     private List<Board> boardList = new ArrayList<>();
 
     @Column(name = "center_name")
@@ -61,6 +62,7 @@ public class Center {
 
     @JsonIgnore
     @OneToMany(mappedBy = "center")
+    @Builder.Default
     private List<CenterItem> centerItem = new ArrayList<>();
 
     @JsonIgnore
@@ -69,5 +71,6 @@ public class Center {
 
     @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<Live> live;
+    @Builder.Default
+    private List<Live> live = new ArrayList<>();
 }

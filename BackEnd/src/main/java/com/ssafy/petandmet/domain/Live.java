@@ -1,7 +1,7 @@
 package com.ssafy.petandmet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,9 @@ import java.util.List;
 @Table(name = "lives")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Live {
 
     @Id
@@ -32,14 +34,6 @@ public class Live {
     private Center center;
 
     @OneToMany(mappedBy = "live")
+    @Builder.Default
     private List<Animal> animal = new ArrayList<>();
-
-    @Builder
-    public Live(Long id, String sessionName, String thumbnail, Center center, List<Animal> animal) {
-        this.id = id;
-        this.sessionName = sessionName;
-        this.thumbnail = thumbnail;
-        this.center = center;
-        this.animal = animal;
-    }
 }
