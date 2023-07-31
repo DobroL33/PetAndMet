@@ -1,34 +1,37 @@
 package com.ssafy.petandmet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "centers")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(exclude = "user")
 public class Center {
 
     @Id
     @Column(name = "center_uuid")
     private String uuid;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne(mappedBy = "center")
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Animal animal;
 
-    @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Board> boardList = new ArrayList<>();
 
@@ -44,16 +47,47 @@ public class Center {
     @Column(name = "center_email")
     private String email;
 
+    @Builder
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<Donate> donate, DonateLog donateLog, List<Live> live) {
+        this.uuid = uuid;
+        this.user = user;
+        this.animal = animal;
+        this.boardList = boardList;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.donate = donate;
+        this.donateLog = donateLog;
+        this.live = live;
+    }
+
     //    ============= 다른 테이블과 연결 ================
 
-    @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<Donate> donate = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
-    @OneToOne(mappedBy = "center")
-    private DonateLog donateLog;
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
+    private Donate donate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Live> live;
 
+    @Builder
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+        this.uuid = uuid;
+        this.user = user;
+        this.animal = animal;
+        this.boardList = boardList;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.centerItem = centerItem;
+        this.donate = donate;
+        this.live = live;
+    }
 }

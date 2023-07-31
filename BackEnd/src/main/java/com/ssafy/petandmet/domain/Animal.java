@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -42,6 +43,9 @@ public class Animal {
 
     @Column(name = "animal_photo_url")
     private String photoUrl;
+
+    @OneToOne(mappedBy = "animal")
+    private Donate donate;
 
     @Builder
     public Animal(String uuid, Center center, String name, int age, String specie, String breed, String findPlace, LocalDateTime enterDate, String photoUrl) {
