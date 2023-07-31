@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // 입양 상태
 // 성별
@@ -47,8 +49,13 @@ public class Animal {
     @OneToOne(mappedBy = "animal")
     private Donate donate;
 
+    @ManyToOne
+    @JoinColumn(name = "live_id")
+    private Live live;
+
     @Builder
-    public Animal(String uuid, Center center, String name, int age, String specie, String breed, String findPlace, LocalDateTime enterDate, String photoUrl) {
+    public Animal(Live live, String uuid, Center center, String name, int age, String specie, String breed, String findPlace, LocalDateTime enterDate, String photoUrl) {
+        this.live =live;
         this.uuid = uuid;
         this.center = center;
         this.name = name;
