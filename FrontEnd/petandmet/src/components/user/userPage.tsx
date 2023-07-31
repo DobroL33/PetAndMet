@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import LeftMenu from './userpage/leftMenu'
 import Profile from './userpage/profile'
 import Activity from './userpage/activity'
+import FavoriteAnimal from './userpage/favoriteAnimal'
 function UserPage() {
   return (
     <div className="flex flex-row h-screen justify-center mt-10">
@@ -12,6 +13,7 @@ function UserPage() {
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/activity" element={<Activity />} />
+          <Route path="/favorite" element={<FavoriteAnimal />} />
         </Routes>
       </div>
     </div>
