@@ -1,8 +1,7 @@
 package com.ssafy.petandmet.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
@@ -13,6 +12,9 @@ import java.util.UUID;
 @Table(name = "centers")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Center {
 
     @Id
@@ -26,6 +28,7 @@ public class Center {
     @OneToOne(mappedBy = "center")
     private Animal animal;
 
+    @Builder.Default
     @OneToMany(mappedBy = "center")
     private List<Board> boardList = new ArrayList<>();
 
@@ -43,6 +46,7 @@ public class Center {
 
     //    ============= 다른 테이블과 연결 ================
 
+    @Builder.Default
     @OneToMany(mappedBy = "center")
     private List<Donate> donate = new ArrayList<>();
 
