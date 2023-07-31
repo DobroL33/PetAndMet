@@ -19,7 +19,7 @@ function LeftMenu() {
       <div className="mb-10">
         <p className="text-gray-500 my-2">후원 관리</p>
         <p className="pl-6 py-2 hover:bg-amber-300 rounded-2xl cursor-pointer">
-          후원 금액
+          포인트 내역
         </p>
         <p className="pl-6 py-2 hover:bg-amber-300 rounded-2xl cursor-pointer">
           후원 목록
