@@ -1,23 +1,15 @@
 package com.ssafy.petandmet.api;
 
-import com.ssafy.petandmet.domain.Animal;
-import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.CenterItem;
-import com.ssafy.petandmet.domain.Donate;
-import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
-import com.ssafy.petandmet.dto.animal.CreateAnimalResponse;
-import com.ssafy.petandmet.dto.animal.FindAnimalBySearchResponse;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.centerItem.CenterItemResponse;
 import com.ssafy.petandmet.dto.centerItem.CreateCenterItemRequest;
 import com.ssafy.petandmet.dto.centerItem.CreateCenterItemResponse;
 import com.ssafy.petandmet.dto.centerItem.UpdateCenterItemRequest;
 import com.ssafy.petandmet.service.CenterItemService;
-import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;

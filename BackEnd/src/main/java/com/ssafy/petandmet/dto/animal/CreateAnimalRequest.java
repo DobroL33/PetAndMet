@@ -1,6 +1,7 @@
 package com.ssafy.petandmet.dto.animal;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class CreateAnimalRequest {
     private String centerUuid;
     private LocalDateTime enteredDate;
 
+    @Builder
     public CreateAnimalRequest(String name, int age, String specie, String breed, String findPlace, String centerUuid, LocalDateTime enteredDate) {
         this.name = name;
         this.age = age;

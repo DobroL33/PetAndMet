@@ -4,7 +4,6 @@ package com.ssafy.petandmet.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -46,15 +45,5 @@ public class CenterItem {
     private int currentPrice;
 
     @OneToMany(mappedBy = "centerItem")
-    private List<Donate> donate = new ArrayList<>();
-
-    @Builder
-    public CenterItem(Center center, String itemName, String itemUrl, int targetPrice, int currentPrice, List<Donate> donate) {
-        this.center = center;
-        this.itemName = itemName;
-        this.itemUrl = itemUrl;
-        this.targetPrice = targetPrice;
-        this.currentPrice = currentPrice;
-        this.donate = donate;
-    }
+    private List<Donate> donates = new ArrayList<>();
 }

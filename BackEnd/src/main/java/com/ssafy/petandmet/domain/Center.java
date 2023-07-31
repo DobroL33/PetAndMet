@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString(exclude = "user")
 public class Center {
 
@@ -67,19 +70,4 @@ public class Center {
     @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Live> live;
-
-    @Builder
-    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItems, Donate donate, List<Live> live) {
-        this.uuid = uuid;
-        this.user = user;
-        this.animal = animal;
-        this.boardList = boardList;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.centerItems = centerItems;
-        this.donate = donate;
-        this.live = live;
-    }
 }
