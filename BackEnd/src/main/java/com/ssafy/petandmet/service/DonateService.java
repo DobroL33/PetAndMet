@@ -3,13 +3,13 @@ package com.ssafy.petandmet.service;
 import com.ssafy.petandmet.domain.*;
 import com.ssafy.petandmet.dto.donate.CreateDonateRequest;
 import com.ssafy.petandmet.repository.*;
-import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,7 +26,7 @@ public class DonateService {
         Center center = centerRepository.findById(request.getCenterUuid()).get();
         User user = userRepository.findById(request.getUserUuid()).get();
         Animal animal = animalRepository.findById(request.getAnimalUuid()).get();
-        CenterItem centerItem = centerItemRepository.findById(request.getCenterItemId()).get();
+        Optional<CenterItem> item = centerItemRepository.findById(request.getItemId());
 
         Donate donate = Donate.builder()
                 .user(user)
@@ -34,7 +34,7 @@ public class DonateService {
                 .animal(animal)
                 .price(request.getDonatePrice())
                 .donateDate(LocalDateTime.now())
-                .centerItem(centerItem)
+                .centerItem(item.get())
                 .build();
 
         Donate save = donateRepository.save(donate);

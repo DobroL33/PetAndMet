@@ -1,8 +1,11 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Animal;
+import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
 import com.ssafy.petandmet.dto.animal.UpdateAnimalRequest;
 import com.ssafy.petandmet.repository.AnimalRepository;
+import com.ssafy.petandmet.repository.CenterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +22,7 @@ public class AnimalService {
 
     private final AnimalRepository animalRepository;
 
-//    private final CenterRepository centerRepository;
+    private final CenterRepository centerRepository;
 
 
     @Transactional
@@ -55,7 +58,20 @@ public class AnimalService {
 //        findAnimal.setCenter(findCenter);
     }
 
-    public String join(Animal animal) {
+    public String join(CreateAnimalRequest request) {
+        Center center = centerRepository.findByUuid(request.getCenterUuid());
+
+        Animal animal = Animal.builder()
+                .uuid("123")
+                .name(request.getName())
+                .age(request.getAge())
+                .specie(request.getSpecie())
+                .breed(request.getBreed())
+                .findPlace(request.getFindPlace())
+                .enterDate(request.getEnteredDate())
+                .center(center)
+                .build();
+
         validateDuplicateAnimal(animal); //중복 회원 검증
         animalRepository.save(animal);
         return animal.getUuid();

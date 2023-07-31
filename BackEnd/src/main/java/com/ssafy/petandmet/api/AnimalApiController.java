@@ -65,27 +65,16 @@ public class AnimalApiController {
     public Result deleteAnimal(@PathVariable("id") String id) {
         Optional<String> deleteId = animalService.delete(id);
 
-        CreateAnimalResponse response = new CreateAnimalResponse("200", "동물 정보 삭제 성공");
+        AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
 
         return new Result("성공", response, "null");
     }
 
     @PostMapping("api/v1/animal")
     public Result createAnimal(@RequestBody CreateAnimalRequest request) {
+        String id = animalService.join(request);
 
-        Animal animal = Animal.builder()
-                .uuid("123")
-                .name(request.getName())
-                .age(request.getAge())
-                .specie(request.getSpecie())
-                .breed(request.getBreed())
-                .findPlace(request.getFindPlace())
-                .enterDate(request.getEnteredDate())
-                .build();
-
-        String id = animalService.join(animal);
-
-        CreateAnimalResponse response = new CreateAnimalResponse("200", "강아지 정보 수정 성공");
+        AnimalResponse response = new AnimalResponse("200", "강아지 정보 수정 성공");
 
         return new Result("성공", response, "null");
     }

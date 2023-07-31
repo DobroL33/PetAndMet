@@ -1,7 +1,14 @@
 package com.ssafy.petandmet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +23,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(exclude = "user")
 public class Center {
 
     @Id
     @Column(name = "center_uuid")
     private String uuid;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid")
     private User user;
@@ -62,7 +69,7 @@ public class Center {
     private List<Live> live;
 
     @Builder
-    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItems, Donate donate, List<Live> live) {
         this.uuid = uuid;
         this.user = user;
         this.animal = animal;
@@ -71,7 +78,7 @@ public class Center {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.centerItem = centerItem;
+        this.centerItems = centerItems;
         this.donate = donate;
         this.live = live;
     }
