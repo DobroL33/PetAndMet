@@ -25,9 +25,11 @@ public class AnimalApiController {
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Page<Animal> findAnimal = animalService.findAll(pageable);
 
-        List<Animal> collect = findAnimal.stream().collect(toList());
+        List<FindAllAnimalResponse> response = findAnimal.stream()
+                .map(o -> new FindAllAnimalResponse(o))
+                .collect(toList());
 
-        return new Result("성공", collect, "null");
+        return new Result("성공", response, "null");
     }
 
     @GetMapping("api/v1/animal/search")
