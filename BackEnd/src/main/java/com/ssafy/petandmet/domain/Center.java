@@ -1,7 +1,12 @@
 package com.ssafy.petandmet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +27,11 @@ public class Center {
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne(mappedBy = "center")
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Animal animal;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Board> boardList = new ArrayList<>();
 
@@ -57,13 +64,30 @@ public class Center {
 
     //    ============= 다른 테이블과 연결 ================
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<Donate> donate = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
-    @OneToOne(mappedBy = "center")
-    private DonateLog donateLog;
+    @JsonIgnore
+    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
+    private Donate donate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "center")
     private List<Live> live;
 
+    @Builder
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+        this.uuid = uuid;
+        this.user = user;
+        this.animal = animal;
+        this.boardList = boardList;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.centerItem = centerItem;
+        this.donate = donate;
+        this.live = live;
+    }
 }
