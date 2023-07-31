@@ -23,7 +23,7 @@ public class Donate {
     @JoinColumn(name = "center_items_id")
     private CenterItem centerItem;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_uuid")
     private User user;
 
