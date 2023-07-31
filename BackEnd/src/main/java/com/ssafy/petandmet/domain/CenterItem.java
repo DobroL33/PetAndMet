@@ -18,7 +18,7 @@ import java.util.List;
 public class CenterItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "center_items_id")
     private Long id;
 
@@ -38,8 +38,7 @@ public class CenterItem {
     private List<Donate> donate = new ArrayList<>();
 
     @Builder
-    public CenterItem(Long id, Center center, String itemName, String itemUrl, int targetPrice, int currentPrice, List<Donate> donate) {
-        this.id = id;
+    public CenterItem(Center center, String itemName, String itemUrl, int targetPrice, int currentPrice, List<Donate> donate) {
         this.center = center;
         this.itemName = itemName;
         this.itemUrl = itemUrl;
