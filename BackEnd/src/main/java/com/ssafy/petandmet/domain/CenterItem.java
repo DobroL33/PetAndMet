@@ -1,7 +1,16 @@
 package com.ssafy.petandmet.domain;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "centeritems")
+@Table(name = "items")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CenterItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "center_items_id")
+    @Column(name = "center_item_id")
     private Long id;
 
     @ManyToOne
@@ -35,16 +46,5 @@ public class CenterItem {
     private int currentPrice;
 
     @OneToMany(mappedBy = "centerItem")
-    private List<Donate> donate = new ArrayList<>();
-
-    @Builder
-    public CenterItem(Long id, Center center, String itemName, String itemUrl, int targetPrice, int currentPrice, List<Donate> donate) {
-        this.id = id;
-        this.center = center;
-        this.itemName = itemName;
-        this.itemUrl = itemUrl;
-        this.targetPrice = targetPrice;
-        this.currentPrice = currentPrice;
-        this.donate = donate;
-    }
+    private List<Donate> donates = new ArrayList<>();
 }

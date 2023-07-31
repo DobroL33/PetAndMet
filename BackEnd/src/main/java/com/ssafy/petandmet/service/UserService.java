@@ -10,7 +10,6 @@ import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
-import com.ssafy.petandmet.util.JwtAuthenticationUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,6 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final CenterRepository centerRepository;
-    private final JwtAuthenticationUtil jwtAuthenticationUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final TokenProvider tokenProvider;

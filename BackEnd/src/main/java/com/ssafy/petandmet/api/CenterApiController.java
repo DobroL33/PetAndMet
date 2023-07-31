@@ -1,9 +1,10 @@
 package com.ssafy.petandmet.api;
 
-import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
-import com.ssafy.petandmet.domain.Item;
-import com.ssafy.petandmet.dto.center.*;
+import com.ssafy.petandmet.dto.center.FindCenterByIdResponse;
+import com.ssafy.petandmet.dto.center.Result;
+import com.ssafy.petandmet.dto.center.UpdateCenterRequest;
+import com.ssafy.petandmet.dto.center.UpdateCenterResponse;
 import com.ssafy.petandmet.service.CenterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

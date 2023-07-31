@@ -3,7 +3,11 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.domain.CenterItem;
 import com.ssafy.petandmet.domain.Donate;
 import com.ssafy.petandmet.dto.animal.Result;
-import com.ssafy.petandmet.dto.donate.*;
+import com.ssafy.petandmet.dto.donate.CenterDonateResponse;
+import com.ssafy.petandmet.dto.donate.CreateDonateRequest;
+import com.ssafy.petandmet.dto.donate.CreateDonateResponse;
+import com.ssafy.petandmet.dto.donate.PossibleItemResponse;
+import com.ssafy.petandmet.dto.donate.UserDonateResponse;
 import com.ssafy.petandmet.service.DonateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +35,9 @@ public class DonateApiController {
     @GetMapping("api/v1/donate")
     public Result getDonate(@RequestParam String uuid) {
 
-        List<CenterItem> possibleItem = donateService.findPossibleItem(uuid);
+        List<CenterItem> possibleCenterItem = donateService.findPossibleItem(uuid);
 
-        List<PossibleItemResponse> response = possibleItem.stream()
+        List<PossibleItemResponse> response = possibleCenterItem.stream()
                 .map(o -> new PossibleItemResponse(o))
                 .collect(toList());
 

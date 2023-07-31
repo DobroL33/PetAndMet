@@ -27,7 +27,7 @@ public class CommentService {
 
         Center center = centerRepository.findByUuid(request.getCenterUuid());
 //        System.out.println(center.toString());
-        User user = userRepository.findByUuid(request.getUserUuid());
+        Optional<User> user = userRepository.findByUserUuid(request.getUserUuid());
 //        System.out.println(user.toString());
         Board board = boardRepository.findById(request.getBoardId());
 
@@ -35,7 +35,7 @@ public class CommentService {
                 .board(board)
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
-                .user(user)
+                .user(user.get())
                 .build();
 
         commentRepository.save(comment);

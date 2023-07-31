@@ -1,21 +1,33 @@
 package com.ssafy.petandmet.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(exclude = "center")
+@Builder
 public class User {
 
     @Id
@@ -40,7 +52,6 @@ public class User {
     @Column(name = "user_password")
     private String password;
 
-    private String salt;
 
     @Column(name = "user_email")
     private String email;
@@ -63,50 +74,11 @@ public class User {
     private WalkGradeType walkGrade;
 
     @OneToMany(mappedBy = "user")
-    private List<Donate> donate = new ArrayList<>();
-
-    @Builder
-    public User(String uuid, Center center, Interest interest, List<Board> boardList, List<Comment> commentList, String id, String password, String salt, String email, String phone, String name, RoleType roleType, int attendance, DonateGradeType donateGrade, WalkGradeType walkGrade, DonateLog donateLog) {
-        this.uuid = uuid;
-        this.center = center;
-        this.interest = interest;
-        this.boardList = boardList;
-        this.commentList = commentList;
-        this.id = id;
-        this.password = password;
-        this.salt = salt;
-        this.email = email;
-        this.phone = phone;
-        this.name = name;
-        this.roleType = roleType;
-        this.attendance = attendance;
-        this.donateGrade = donateGrade;
-        this.walkGrade = walkGrade;
-        this.donateLog = donateLog;
-    }
+    private List<Donate> donates = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
         this.center = center;
         center.setUser(this);
-    }
-
-    @Builder
-    public User(String uuid, Center center, Interest interest, List<Board> boardList, List<Comment> commentList, String id, String password, String salt, String email, String name, RoleType roleType, int attendance, DonateGradeType donateGrade, WalkGradeType walkGrade, Donate donate) {
-        this.uuid = uuid;
-        this.center = center;
-        this.interest = interest;
-        this.boardList = boardList;
-        this.commentList = commentList;
-        this.id = id;
-        this.password = password;
-        this.salt = salt;
-        this.email = email;
-        this.name = name;
-        this.roleType = roleType;
-        this.attendance = attendance;
-        this.donateGrade = donateGrade;
-        this.walkGrade = walkGrade;
-        this.donate = donate;
     }
 }

@@ -1,7 +1,14 @@
 package com.ssafy.petandmet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,26 +54,11 @@ public class Center {
     @Column(name = "center_email")
     private String email;
 
-    @Builder
-    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<Donate> donate, DonateLog donateLog, List<Live> live) {
-        this.uuid = uuid;
-        this.user = user;
-        this.animal = animal;
-        this.boardList = boardList;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.donate = donate;
-        this.donateLog = donateLog;
-        this.live = live;
-    }
-
     //    ============= 다른 테이블과 연결 ================
 
     @JsonIgnore
     @OneToMany(mappedBy = "center")
-    private List<Item> items = new ArrayList<>();
+    private List<CenterItem> centerItems = new ArrayList<>();
 
     @JsonIgnore
     @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
@@ -77,7 +69,7 @@ public class Center {
     private List<Live> live;
 
     @Builder
-    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItem, Donate donate, List<Live> live) {
+    public Center(String uuid, User user, Animal animal, List<Board> boardList, String name, String address, String phone, String email, List<CenterItem> centerItems, Donate donate, List<Live> live) {
         this.uuid = uuid;
         this.user = user;
         this.animal = animal;
@@ -86,7 +78,7 @@ public class Center {
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.centerItem = centerItem;
+        this.centerItems = centerItems;
         this.donate = donate;
         this.live = live;
     }

@@ -1,7 +1,12 @@
 package com.ssafy.petandmet.config;
 
 import com.ssafy.petandmet.dto.jwt.Token;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +76,7 @@ public class TokenProvider {
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRATION_TIME))
-                .signWith(getSignKey(),SignatureAlgorithm.HS512)
+                .signWith(getSignKey(), SignatureAlgorithm.HS512)
                 .compact();
 
         return Token.builder()
@@ -137,10 +142,5 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
-    }
-
-    public Long getMemberId(String token) {
-        Claims claims = parseClaims(token);
-        return Long.parseLong(claims.get("sub").toString());
     }
 }

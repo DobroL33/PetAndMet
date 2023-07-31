@@ -1,14 +1,10 @@
 package com.ssafy.petandmet.service;
 
-import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Board;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.User;
-import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
-import com.ssafy.petandmet.dto.animal.UpdateAnimalRequest;
 import com.ssafy.petandmet.dto.board.CreateBoardRequest;
 import com.ssafy.petandmet.dto.board.UpdateBoardRequest;
-import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.BoardRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.UserRepository;
@@ -19,9 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -37,8 +30,8 @@ public class BoardService {
         System.out.println(request.toString());
         Center center = centerRepository.findByUuid(request.getCenterUuid());
         System.out.println(center.toString());
-        User user = userRepository.findByUuid(request.getUserUuid());
-        System.out.println(user.toString());
+        Optional<User> user = userRepository.findByUserUuid(request.getUserUuid());
+        System.out.println(user.get().toString());
 
         Board board = Board.builder()
                 .title(request.getTitle())
@@ -47,7 +40,7 @@ public class BoardService {
                 .photoUrl(request.getPhotoUrl())
                 .type(request.getType())
                 .updatedAt(null)
-                .user(user)
+                .user(user.get())
                 .center(center)
                 .build();
 

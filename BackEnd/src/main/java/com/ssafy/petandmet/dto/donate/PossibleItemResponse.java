@@ -17,13 +17,13 @@ public class PossibleItemResponse {
     private int currentPrice;
 
     @Builder
-    public PossibleItemResponse(CenterItem donate) {
-        this.id = donate.getId();
-        this.centerUuid = donate.getCenter().getUuid();
-        this.itemName = donate.getItemName();
-        this.itemUrl = donate.getItemUrl();
-        this.targetPrice = donate.getTargetPrice();
-        this.currentPrice = donate.getCurrentPrice();
+    public PossibleItemResponse(CenterItem centerItem) {
+        this.id = centerItem.getId();
+        this.centerUuid = centerItem.getCenter().getUuid();
+        this.itemName = centerItem.getItemName();
+        this.itemUrl = centerItem.getItemUrl();
+        this.targetPrice = centerItem.getTargetPrice();
+        this.currentPrice = centerItem.getCurrentPrice();
     }
 }
 
