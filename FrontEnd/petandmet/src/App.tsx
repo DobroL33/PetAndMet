@@ -12,8 +12,8 @@ function App() {
   return (
     <div className="App">
       <Navbar></Navbar>
-      <MainPage></MainPage>
-      {/* <WalkPage></WalkPage> */}
+      {/* <MainPage></MainPage> */}
+      <WalkPage></WalkPage>
     </div>
   );
 }
