@@ -10,18 +10,11 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import { useState } from "react";
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
+
 import AdbIcon from "@mui/icons-material/Adb";
 import logo from "../images/new_logo.jpg";
 import WalkCenter from "./walks/walkCenter";
+import WalkDate from "./walks/walkDate";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#FFA629",
@@ -69,13 +62,7 @@ function WalkPage() {
         >
           <div className="text-left my-5 text-2xl font-bold">
             <WalkCenter></WalkCenter>
-            <div className="my-0.5 border-y-2 border-x-2">
-              <CalendarMonthIcon
-                className="mx-3"
-                color="action"
-              ></CalendarMonthIcon>
-              날짜
-            </div>
+            <WalkDate></WalkDate>
             <div className="my-0.5 border-y-2 border-x-2">
               <AccessTimeIcon className="mx-3" color="action"></AccessTimeIcon>
               시간
