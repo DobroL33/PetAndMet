@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import logo from '../images/new_logo.jpg';
+import logo from '../../images/new_logo.jpg';
 // import { Route, Routes, Link,  useNavigate} from 'react-router-dom';
 
 const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입'];

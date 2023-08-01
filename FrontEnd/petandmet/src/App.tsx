@@ -11,8 +11,10 @@ function App() {
   return (
     <div className="App">
       <Navbar></Navbar>
-      {/* <MainPage></MainPage> */}
-      <WalkPage></WalkPage>
+      <Container sx={{padding: '0 !important'}}>
+        <img src={banner} alt="" style={{paddingTop : 10, width: '100%'}} />
+      </Container>
+      <MainPage></MainPage>
     </div>
   );
 }
