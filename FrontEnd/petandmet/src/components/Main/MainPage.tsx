@@ -1,11 +1,10 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import banner from '../images/banner.jpg';
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MainLive from './livelist';
-import AnimalList from './animallist';
+import MainLive from '../Live/LiveList';
+import AnimalList from '../Animal/AnimalList';
 import {useState} from 'react';
 
 const btn = ['라이브', '보호동물', '봉사']
@@ -26,9 +25,7 @@ function MainPage(){
 
     return(
     <>
-    <Container sx={{padding: '0 !important'}}>
-    <img src={banner} alt="" style={{paddingTop : 10, width: '100%'}} />
-    </Container>
+
   
     <CssBaseline />
       <Container sx={{
