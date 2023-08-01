@@ -3,7 +3,7 @@ import Login from '../components/user/login'
 import Register from '../components/user/register'
 import FindID from '../components/user/findID'
 import FindPW from '../components/user/findPW'
-import UserPage from '../components/user/userPage'
+import UserPage from '../components/user/UserPage'
 
 const App = () => {
   return (
