@@ -10,7 +10,7 @@ export default function WalkCenter() {
     "대전 동물 보호센터",
     "보호소 B",
     "보호소 C",
-  ]); // DB에서 state에 들어가있는 보호소 바꿔주기
+  ]); // DB에서 state에 들어가있는 보호소
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,8 +21,7 @@ export default function WalkCenter() {
   };
 
   return (
-    <div className="my-0.5 border-y-2 border-x-2">
-      <HouseSidingIcon className="mx-3" color="action"></HouseSidingIcon>
+    <div className="my-0.5 border rounded border-silver">
       <Button
         id="demo-positioned-button"
         aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -30,7 +29,9 @@ export default function WalkCenter() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <p className="text-left text-2xl font-bold">보호소</p>
+        <p className="text-left text-base my-2.5">
+          봉사할 보호소를 선택해주세요
+        </p>
       </Button>
       <Menu
         id="demo-positioned-menu"
@@ -51,6 +52,7 @@ export default function WalkCenter() {
         <MenuItem onClick={handleClose}>{center[1]}</MenuItem>
         <MenuItem onClick={handleClose}>{center[2]}</MenuItem>
       </Menu>
+      <HouseSidingIcon className="mx-3 grow" color="action"></HouseSidingIcon>
     </div>
   );
 }

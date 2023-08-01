@@ -4,15 +4,8 @@ import Container from "@mui/material/Container";
 import banner from "../images/banner.jpg";
 import { Button, colors } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import HouseSidingIcon from "@mui/icons-material/HouseSiding";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
 import { useState } from "react";
 import * as React from "react";
-
-import AdbIcon from "@mui/icons-material/Adb";
-import logo from "../images/new_logo.jpg";
 import WalkCenter from "./walks/walkCenter";
 import WalkDate from "./walks/walkDate";
 
@@ -63,10 +56,6 @@ function WalkPage() {
           <div className="text-left my-5 text-2xl font-bold">
             <WalkCenter></WalkCenter>
             <WalkDate></WalkDate>
-            <div className="my-0.5 border-y-2 border-x-2">
-              <AccessTimeIcon className="mx-3" color="action"></AccessTimeIcon>
-              시간
-            </div>
           </div>
         </Container>
       </Container>
