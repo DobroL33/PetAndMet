@@ -1,10 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Navbar from './components/Main/Navbar';
-import MainPage from './components/Main/MainPage';
-import Container from '@mui/material/Container';
-import banner from './images/banner.jpg';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Navbar from "./components/navbar";
+import MainPage from "./components/mainpage";
+import WalkPage from "./components/walkpage";
+
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
 function App() {
   return (
     <div className="App">
