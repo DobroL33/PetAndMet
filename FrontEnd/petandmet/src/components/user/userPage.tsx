@@ -17,7 +17,7 @@ function UserPage() {
           <Route path="/activity" element={<Activity />} />
           <Route path="/favorite" element={<FavoriteAnimal />} />
           <Route path="/charge" element={<Charge />} />
-          <Route path="/donateList" element={<DonateList />} />
+          <Route path="/donatelist" element={<DonateList />} />
         </Routes>
       </div>
     </div>
