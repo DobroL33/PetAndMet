@@ -4,6 +4,7 @@ import Profile from './userpage/profile'
 import Activity from './userpage/activity'
 import FavoriteAnimal from './userpage/favoriteAnimal'
 import Charge from './userpage/charge'
+import DonateList from './userpage/donateList'
 function UserPage() {
   return (
     <div className="flex flex-row h-screen justify-center mt-10">
@@ -16,6 +17,7 @@ function UserPage() {
           <Route path="/activity" element={<Activity />} />
           <Route path="/favorite" element={<FavoriteAnimal />} />
           <Route path="/charge" element={<Charge />} />
+          <Route path="/donateList" element={<DonateList />} />
         </Routes>
       </div>
     </div>
