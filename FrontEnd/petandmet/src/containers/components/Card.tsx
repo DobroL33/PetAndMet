@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import logo from '../images/logo.png';
+import logo from '../../images/logo.png';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;

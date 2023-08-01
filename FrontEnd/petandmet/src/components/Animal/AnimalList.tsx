@@ -1,4 +1,4 @@
-import CardInfo from './card';
+import CardInfo from '../../containers/components/Card';
 
 function AnimalList(){
     return(
