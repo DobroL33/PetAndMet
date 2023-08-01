@@ -9,6 +9,9 @@ import * as React from "react";
 import WalkCenter from "./walks/walkCenter";
 import WalkDate from "./walks/walkDate";
 
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#FFA629",
   color: "white",

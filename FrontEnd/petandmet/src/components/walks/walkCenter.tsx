@@ -6,11 +6,8 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 
 export default function WalkCenter() {
-  const [center, setCenter] = useState([
-    "대전 동물 보호센터",
-    "보호소 B",
-    "보호소 C",
-  ]); // DB에서 state에 들어가있는 보호소
+  const [center, setCenter] = useState(["A 보호소", "B 보호소", "C 보호소"]);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,7 +18,7 @@ export default function WalkCenter() {
   };
 
   return (
-    <div className="my-0.5 border rounded border-silver">
+    <div className="my-0.5 border rounded">
       <Button
         id="demo-positioned-button"
         aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -29,9 +26,7 @@ export default function WalkCenter() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <p className="text-left text-base my-2.5">
-          봉사할 보호소를 선택해주세요
-        </p>
+        <p className="grow">보호소를 선택해주세요</p>
       </Button>
       <Menu
         id="demo-positioned-menu"
@@ -40,7 +35,7 @@ export default function WalkCenter() {
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "left",
         }}
         transformOrigin={{
@@ -52,7 +47,7 @@ export default function WalkCenter() {
         <MenuItem onClick={handleClose}>{center[1]}</MenuItem>
         <MenuItem onClick={handleClose}>{center[2]}</MenuItem>
       </Menu>
-      <HouseSidingIcon className="mx-3 grow" color="action"></HouseSidingIcon>
+      <HouseSidingIcon className="m-3" color="action"></HouseSidingIcon>
     </div>
   );
 }
