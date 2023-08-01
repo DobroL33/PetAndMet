@@ -37,7 +37,7 @@ public class CenterApiController {
 
     //보호소 한개 찾기
     @GetMapping("/detail")
-    public Result GetCenter(@RequestParam(value = "id") String id){
+    public Result GetCenter(@RequestParam(value = "uuid") String id){
         Optional<Center> findCenter = centerService.findOne(id);
 
         FindCenterByIdResponse response = FindCenterByIdResponse.builder()
