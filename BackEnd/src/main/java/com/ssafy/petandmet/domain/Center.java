@@ -33,6 +33,7 @@ public class Center {
     @Column(name = "center_uuid")
     private String uuid;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid")
     private User user;
