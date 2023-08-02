@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
-import LeftMenu from './userpage/LeftMenu'
-import Profile from './userpage/Profile'
-import Activity from './userpage/Activity'
-import FavoriteAnimal from './userpage/FavoriteAnimal'
-import Charge from './userpage/Charge'
-import DonateList from './userpage/DonateList'
+import LeftMenu from './Userpage/LeftMenu'
+import Profile from './Userpage/Profile'
+import Activity from './Userpage/Activity'
+import FavoriteAnimal from './Userpage/FavoriteAnimal'
+import Charge from './Userpage/Charge'
+import DonateList from './Userpage/DonateList'
 function UserPage() {
   return (
     <div className="flex flex-row h-screen justify-center mt-10">
