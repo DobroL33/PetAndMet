@@ -5,13 +5,14 @@ import Navbar from "./components/Main/Navbar";
 import "react-calendar/dist/Calendar.css";
 import Container from "@mui/material/Container";
 import MainPage from "./components/Main/MainPage";
-
+import InputForm from "./containers/components/Form";
 function App() {
   return (
     <div className="App">
       <Navbar></Navbar>
       <Container sx={{ padding: "0 !important" }}></Container>
-      <MainPage></MainPage>
+      {/* <MainPage></MainPage> */}
+      <InputForm></InputForm>
     </div>
   );
 }
