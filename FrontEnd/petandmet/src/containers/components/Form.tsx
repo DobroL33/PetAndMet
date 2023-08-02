@@ -41,11 +41,6 @@ function InputForm(){
             <input type="file" accept='image/png, image/jpeg, image/jpg' />
         </Box>
 
-        <Box sx={{textAlign  : 'right', width : '90%'}}>
-            <Button sx={{backgroundColor : '#1E90FF', "&:hover":{backgroundColor :'#4FC3F7'}, color : 'black'}}>작성</Button>
-            <Button sx={{backgroundColor : '#FF0044', "&:hover":{backgroundColor :'#FA8072'}, color : 'black'}}>돌아가기</Button>
-        </Box>
-
         </Container>
     </>
     )
