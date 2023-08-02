@@ -16,7 +16,7 @@ function FId() {
       }
     }
   }
-  const findID = (): void => {
+  const FindID = (): void => {
     setIsAuth(false)
     setShowComponent(false)
     if (divRef.current) {
@@ -62,7 +62,7 @@ function FId() {
         인증번호 받기
       </div>
       {/* 아이디 찾기가 끝나면 Modal 창으로 아이디 알려주기*/}
-      {showComponent ? <Modal closeModal={findID} /> : <></>}
+      {showComponent ? <Modal closeModal={FindID} /> : <></>}
     </div>
   )
 }
