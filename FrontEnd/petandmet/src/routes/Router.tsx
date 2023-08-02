@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from '../components/user/login'
 import Register from '../components/user/register'
-import FindID from '../components/user/findID'
-import FindPW from '../components/user/findPW'
-import UserPage from '../components/user/UserPage'
+import FindAccount from '../components/user/FindAccount'
+import UserPage from '../components/user/userPage'
 
 const App = () => {
   return (
@@ -11,9 +10,8 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/fid" element={<FindID />} />
-        <Route path="/fpw" element={<FindPW />} />
-        <Route path="/mypage/*" element={<UserPage />} />
+        <Route path="/faccount" element={<FindAccount />} />
+        <Route path="/mypage" element={<UserPage />} />
       </Routes>
     </BrowserRouter>
   )
