@@ -1,15 +1,11 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import banner from "../images/banner.jpg";
 import { Button, colors } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import * as React from "react";
-import WalkCenter from "./walks/walkCenter";
-import WalkDate from "./walks/walkDate";
-
-import Calendar from "react-calendar";
+import WalkCenter from "./Walk/walkCenter";
+import WalkDate from "./Walk/walkDate";
 import "react-calendar/dist/Calendar.css";
 
 const CustomButton = styled(Button)(({ theme }) => ({
@@ -31,9 +27,6 @@ function WalkPage() {
 
   return (
     <>
-      <Container sx={{ padding: "0 !important" }}>
-        <img src={banner} alt="" style={{ paddingTop: 10, width: "100%" }} />
-      </Container>
       <CssBaseline />
       <h4 className="text-3xl text-yellow-500 font-extrabold my-9">산책하기</h4>
       <Container

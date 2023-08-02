@@ -5,7 +5,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-export default function WalkCenter() {
+function WalkCenter() {
   const [center, setCenter] = useState(["A 보호소", "B 보호소", "C 보호소"]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -51,3 +51,5 @@ export default function WalkCenter() {
     </div>
   );
 }
+
+export default WalkCenter;
