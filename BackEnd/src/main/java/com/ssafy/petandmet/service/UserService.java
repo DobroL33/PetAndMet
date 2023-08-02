@@ -10,9 +10,14 @@ import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -35,6 +40,10 @@ public class UserService {
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     /**
      * 사용자 등록
@@ -224,6 +233,55 @@ public class UserService {
         return false;
     }
 
+    /**
+     * 아이디 찾기
+     * 이메일 인증 코드 확인
+     *
+     * @param request 사용자 이메일, 코드
+     * @return 코드 일치 여부
+     */
+    @Transactional
+    public boolean checkEmailAuthCode(FindIdRequest request) {
+        log.debug("이메일 인증 코드 확인 서비스");
+        Optional<EmailAuthentication> emailAuthentication = emailAuthenticationRepository.findById(request.getEmail());
+        log.debug("emailAuthentication = " + emailAuthentication);
+        if (emailAuthentication.isPresent() && request.getCode() == emailAuthentication.get().getCode()) {
+            emailAuthenticationRepository.delete(emailAuthentication.get());
+            sendIdToEmail(request.getEmail());
+            log.debug("이메일 인증 성공");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 이메일로 사용자의 아이디 전송
+     *
+     * @param email 사용자 이메일
+     */
+    private void sendIdToEmail(String email) {
+        Optional<User> user = userRepository.findByUserEmail(email);
+        if (user.isPresent()) {
+            try {
+                MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+                MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                mimeMessageHelper.setFrom(fromEmail);
+                mimeMessageHelper.setTo(email);
+                mimeMessageHelper.setSubject("[petandmet] 아이디 찾기 안내");
+                String msg = getHiddenId(user.get().getId());
+                mimeMessageHelper.setText(msg, true);
+                javaMailSender.send(mimeMessage);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private String getHiddenId(String id) {
+        int len = id.length();
+        return id.substring(0, len / 3) + id.substring(len / 3).replaceAll("[a-zA-Z0-9]", "*");
+    }
+
     public UserInfoResponse getUserInfo(String uuid) {
         Optional<User> user = userRepository.findByUserUuid(uuid);
         return user.map(value -> UserInfoResponse.builder().message("개인정보 가져오기 성공").status("200").name(value.getName()).email(value.getEmail()).phone(value.getPhone()).build()).orElse(null);
@@ -294,4 +352,5 @@ public class UserService {
             userRepository.save(user.get());
         }
     }
+
 }

@@ -179,4 +179,15 @@ public class UserApiController {
         uuid.ifPresent(s -> userService.modifyInfo(s, request));
         return new Result("성공", "개인정보 수정", "null");
     }
+
+    @PostMapping("find-id")
+    public Result findId(@RequestBody FindIdRequest request) {
+        log.debug("아이디 찾기 컨트롤러");
+        boolean isValid = userService.checkEmailAuthCode(request);
+        log.debug("isValid = " + isValid);
+        if (isValid) {
+            return new Result("성공", "이메일 인증", "null");
+        }
+        return new Result("실패", "이메일 인증", "null");
+    }
 }
