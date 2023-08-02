@@ -64,7 +64,15 @@ function StreamingPage() {
                   flexDirection: "column",
                 }}
               >
-                <Box sx={{ backgroundColor: "#7b7777", flex: 1 }}>
+                <Box
+                  sx={{
+                    backgroundColor: "#7b7777",
+                    flex: 1,
+                    borderRadius: 5,
+                    height: "100%",
+                    width: "90%",
+                  }}
+                >
                   <h1 font-size="lg">ㅇㅇ</h1>
                 </Box>
               </Box>
@@ -77,9 +85,12 @@ function StreamingPage() {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
+                  borderRadius: 5,
                 }}
               >
-                <Box sx={{ backgroundColor: "#f8d260", flex: 1 }}>
+                <Box
+                  sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
+                >
                   후원할 공간입니다
                 </Box>
               </Box>
@@ -93,9 +104,12 @@ function StreamingPage() {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                borderRadius: 5,
               }}
             >
-              <Box sx={{ backgroundColor: "#e99414", flex: 1 }}>
+              <Box
+                sx={{ backgroundColor: "#e99414", flex: 1, borderRadius: 5 }}
+              >
                 개 정본디 (Bottom)
               </Box>
             </Box>
