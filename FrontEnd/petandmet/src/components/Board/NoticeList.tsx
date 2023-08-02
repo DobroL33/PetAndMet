@@ -1,49 +1,5 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
-
-interface Column {
-  id: '번호' | '제목' | '작성자' | '조회수' | '등록일';
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-  format?: (value: number) => string;
-}
-
-const columns: readonly Column[] = [
-  { id: '번호', label: '번호', minWidth: 170 },
-  { id: '제목', label: '제목', minWidth: 100 },
-  {
-    id: '작성자',
-    label: '작성자',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: '조회수',
-    label: '조회수',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: '등록일',
-    label: '등록일',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
-];
-
+import List from '../../containers/components/List';
 interface Data {
   번호: string;
   제목: string | JSX.Element;
@@ -83,76 +39,16 @@ const rows = [
 ];
 
 function NoticeList() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   return (
     <>
     <div style={{ padding: 20 }}>
         <Typography variant="h4" style={{ color: '#FFA629', fontWeight: 'bold' }}>
             공지사항
         </Typography>
+        <List rows={rows}></List>
     </div>
 
-    <Container>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: "100%"}}>
-            <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-                <TableRow>
-                {columns.map((column) => (
-                    <TableCell 
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                    >
-                    {column.label}
-                    </TableCell>
-                ))}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                    return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.번호}>
-                        {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                                <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                        );
-                        })}
-                    </TableRow>
-                    );
-                })}
-            </TableBody>
-            </Table>
-        </TableContainer>
-        <TablePagination
-            rowsPerPageOptions={[10, 20, 50]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </Paper>
-    </Container>
+    
     </>
   );
 }
