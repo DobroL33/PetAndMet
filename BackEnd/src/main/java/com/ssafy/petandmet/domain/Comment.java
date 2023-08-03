@@ -26,12 +26,10 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
