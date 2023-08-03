@@ -13,6 +13,7 @@ function UserPage() {
       {/* 메인 */}
       <div className="w-[50%] text-start px-10">
         <Routes>
+          <Route path="/" element={<Profile />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/activity" element={<Activity />} />
           <Route path="/favorite" element={<FavoriteAnimal />} />
