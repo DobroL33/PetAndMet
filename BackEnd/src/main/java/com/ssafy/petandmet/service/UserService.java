@@ -2,6 +2,7 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.config.TokenProvider;
 import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.domain.EmailType;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.jwt.Token;
@@ -10,20 +11,19 @@ import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -202,7 +202,9 @@ public class UserService {
                 .code(code)
                 .build();
         emailAuthenticationRepository.save(emailAuthentication);
-        emailService.sendAuthCode(request.getEmail(), Integer.toString(code));
+        Map<String, String> contents = new HashMap<>();
+        contents.put(EmailType.CODE.toString(), Integer.toString(code));
+        emailService.send(EmailType.CODE.toString(), request.getEmail(), contents);
     }
 
     /**
@@ -266,7 +268,9 @@ public class UserService {
         Optional<User> user = userRepository.findByUserEmail(email);
         if (user.isPresent()) {
             log.debug(user.get().toString());
-            emailService.sendId(email, getHiddenId(user.get().getId()));
+            Map<String, String> contents = new HashMap<>();
+            contents.put(EmailType.ID.toString(), getHiddenId(user.get().getId()));
+            emailService.send(EmailType.ID.toString(), email, contents);
         }
     }
 
