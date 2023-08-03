@@ -1,19 +1,14 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { Button, colors } from "@mui/material";
+import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import newLogo from "../../images/new_logo.jpg";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import { useParams } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -36,6 +31,44 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 function StreamingPage() {
+  const { animal_uuid } = useParams();
+  const [Animals, setAnimals] = useState({
+    error: null,
+    response: null,
+  });
+
+  useEffect(() => {
+    const accessToken =
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZGVlODQzNS0yODcxLTQ4OGUtODUyMC1kMDkxYmJiZDAwMmIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMDM4MTg5fQ.o7SOqBBwUUpGrjEvXg5_1LvwIEwPSEnog3IbJ6G_WsnRdrPoi3QsrVm-VHFPpkZr9m9P5qokC7jdIJaqXr_GMA";
+
+    fetch(`https://i9b302.p.ssafy.io/api/v1/animal?id=aa`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setAnimals({ error: null, response: data });
+      })
+      .catch((error) => {
+        setAnimals({ error: error.message, response: null });
+      });
+  }, []);
+
+  if (!Animals.response) {
+    // Data is still loading
+    return <div>Loading...</div>;
+  }
+
+  if (Animals.error) {
+    // Error occurred during API fetch
+    return <div>Error: {Animals.error}</div>;
+  }
+
+  const { name, age, specie, message } = Animals.response;
+
   return (
     <>
       <CssBaseline />
@@ -68,7 +101,6 @@ function StreamingPage() {
                   sx={{
                     backgroundColor: "#7b7777",
                     flex: 1,
-                    borderRadius: 5,
                     height: "100%",
                     width: "90%",
                   }}
@@ -97,22 +129,34 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={12} md={3} sx={{ flexGrow: 3 }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
+            {/* Bottom Right */}
             <Box
               sx={{
                 backgroundColor: "#FFA629",
                 height: "100%",
                 display: "flex",
-                flexDirection: "column",
                 borderRadius: 5,
+                justifyContent: "Left",
               }}
             >
-              <Box
-                sx={{ backgroundColor: "#e99414", flex: 1, borderRadius: 5 }}
-              >
-                개 정본디 (Bottom)
-              </Box>
+              <img
+                className="h-28 m-5 md-3"
+                src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
+                alt=""
+              />
+              <h4 className="m-5">
+                Name: {name}
+                <br />
+                Age: {age}
+                <br />
+                Specie: {specie}
+                <br />
+                Message: {message}
+              </h4>
             </Box>
+
+            {/* Bottom Left */}
           </Grid>
         </Grid>
       </Container>
