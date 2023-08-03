@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import { ToggleButton } from '@mui/material'
-import FId from './find/FId'
-import FPw from './find/FPw'
+import FId from './Find/FId'
+import FPw from './Find/FPw'
 
 function FindAccount() {
   const [selectedComponent, setSelectedComponent] = useState<String | null>(
