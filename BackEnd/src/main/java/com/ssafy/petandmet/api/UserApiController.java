@@ -180,7 +180,7 @@ public class UserApiController {
         return new Result("성공", "개인정보 수정", "null");
     }
 
-    @PostMapping("find-id")
+    @PostMapping("/find-id")
     public Result findId(@RequestBody FindIdRequest request) {
         log.debug("아이디 찾기 컨트롤러");
         boolean isValid = userService.checkEmailAuthCode(request);
