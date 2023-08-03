@@ -1,7 +1,8 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.*;
-import com.ssafy.petandmet.dto.donate.CreateDonateRequest;
+import com.ssafy.petandmet.dto.donate.CreateAnimalDonateRequest;
+import com.ssafy.petandmet.dto.donate.CreateCenterItemDonateRequest;
 import com.ssafy.petandmet.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,11 +22,16 @@ public class DonateService {
     private final UserRepository userRepository;
     private final AnimalRepository animalRepository;
 
-    public Long add(CreateDonateRequest request) {
-        Center center = centerRepository.findById(request.getCenterUuid()).get();
-        User user = userRepository.findById(request.getUserUuid()).get();
-        Animal animal = animalRepository.findById(request.getAnimalUuid()).get();
-        Optional<CenterItem> item = centerItemRepository.findById(request.getItemId());
+    public boolean addAnimalDonate(CreateAnimalDonateRequest request) {
+        User user = userRepository.findById(request.getUserUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        Animal animal = animalRepository.findById(request.getAnimalUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
         Donate donate = Donate.builder()
                 .user(user)
@@ -34,12 +39,34 @@ public class DonateService {
                 .animal(animal)
                 .price(request.getDonatePrice())
                 .donateDate(LocalDateTime.now())
-                .centerItem(item.get())
                 .build();
 
-        Donate save = donateRepository.save(donate);
+        donateRepository.save(donate);
 
-        return save.getId();
+        return true;
+    }
+    public boolean addCenterItemDonate(CreateCenterItemDonateRequest request) {
+        User user = userRepository.findById(request.getUserUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        CenterItem item = centerItemRepository.findById(request.getItemId()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+
+        Donate donate = Donate.builder()
+                .user(user)
+                .center(center)
+                .centerItem(item)
+                .price(request.getDonatePrice())
+                .donateDate(LocalDateTime.now())
+                .build();
+
+        donateRepository.save(donate);
+
+        return true;
     }
 
     public List<CenterItem> findPossibleItem(String uuid) {
@@ -53,4 +80,5 @@ public class DonateService {
     public List<Donate> findResponseDonate(String uuid) {
         return donateRepository.findAllByCenterId(uuid);
     }
+
 }
