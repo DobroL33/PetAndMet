@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.dto.center;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -10,6 +11,7 @@ public class UpdateCenterRequest {
     private String phone;
     private String email;
 
+    @Builder
     public UpdateCenterRequest(String uuid, String name, String address, String phone, String email){
         this.uuid = uuid;
         this.name = name;
