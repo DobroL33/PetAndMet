@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class FindAllAnimalResponse {
 
-    @JsonProperty("animal_uuit")
+    @JsonProperty("animal_uuid")
     private String animalUuid;
     private String name;
     private int age;
