@@ -41,6 +41,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -201,6 +202,7 @@ public class UserService {
                 .code(code)
                 .build();
         emailAuthenticationRepository.save(emailAuthentication);
+        emailService.sendAuthCode(request.getEmail(), Integer.toString(code));
     }
 
     /**
@@ -260,20 +262,11 @@ public class UserService {
      * @param email 사용자 이메일
      */
     private void sendIdToEmail(String email) {
+        log.debug("메일 전송");
         Optional<User> user = userRepository.findByUserEmail(email);
         if (user.isPresent()) {
-            try {
-                MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-                MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-                mimeMessageHelper.setFrom(fromEmail);
-                mimeMessageHelper.setTo(email);
-                mimeMessageHelper.setSubject("[petandmet] 아이디 찾기 안내");
-                String msg = getHiddenId(user.get().getId());
-                mimeMessageHelper.setText(msg, true);
-                javaMailSender.send(mimeMessage);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
+            log.debug(user.get().toString());
+            emailService.sendId(email, getHiddenId(user.get().getId()));
         }
     }
 

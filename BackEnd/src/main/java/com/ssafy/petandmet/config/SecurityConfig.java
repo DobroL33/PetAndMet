@@ -20,8 +20,15 @@ public class SecurityConfig {
     private final CustomEntryPoint entryPoint; //
     private final CustomAccessDeniedHandler accessDeniedHandler; //인가 제어
 
-    private static final String[] DEFAULT_LIST = {
-//            "/docs.html"
+    private static final String[] POST_LIST = {
+            //사용자
+            "api/v1/user", //로그인
+            "api/v1/user/new", //회원가입
+            "api/v1/user/id-check", //아이디 중복 확인
+            "api/v1/user/pwd-reset", //비밀번호 초기화
+            "api/v1/user/send-email-auth", //이메일 인증 코드 전송
+            "api/v1/user/check-email-auth", //이메일 인증 코드 확인
+            "api/v1/user/find-id" //아이디 찾기
     };
 
     private static final String[] WHITE_LIST = {
@@ -50,13 +57,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     try {
                         auth
-                                .requestMatchers(HttpMethod.POST, "api/v1/user").permitAll() //로그인 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/new").permitAll() //회원가입 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/id-check").permitAll() //아이디 중복확인 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/pwd-reset").permitAll() //임시 비밀번호 초기화 API
-//                                .requestMatchers(WHITE_LIST).permitAll()
-//                                .requestMatchers(DEFAULT_LIST).permitAll()
-//                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .requestMatchers(HttpMethod.POST, POST_LIST).permitAll() // POST 허용 리스트
+//                                .requestMatchers(HttpMethod.POST, "api/v1/**").permitAll() //모든 POST 다 허용
                                 .anyRequest().authenticated()
                         ;
                     } catch (Exception e) {
