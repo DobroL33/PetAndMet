@@ -28,32 +28,39 @@ public class LiveApiController {
     public Result getLiveList(@PageableDefault(size = 10) Pageable pageable) {
         Page<Live> liveList = liveService.findLiveList(pageable);
 
-        List<LiveResponseDto> response = liveList.stream()
-                .map(o -> new LiveResponseDto(o))
-                .collect(toList());
+        if (!liveList.isEmpty()) {
+            List<LiveResponseDto> response = liveList.stream()
+                    .map(o -> new LiveResponseDto(o))
+                    .collect(toList());
 
-        return new Result("true", response, "null");
+            return new Result("true", response, "null");
+        }
+        return new Result("false", "null", "null");
     }
 
     @GetMapping("api/v1/live/search")
     public Result getLiveListByCenterUuid(@RequestParam String uuid) {
         List<Live> liveList = liveService.findLiveListByCenter(uuid);
 
-        List<LiveListResponse> response = liveList.stream()
-                .map(o -> new LiveListResponse(o))
-                .collect(toList());
+        if (!liveList.isEmpty()) {
+            List<LiveListResponse> response = liveList.stream()
+                    .map(o -> new LiveListResponse(o))
+                    .collect(toList());
 
-        return new Result("true", response, "null");
+            return new Result("true", response, "null");
+        }
+        return new Result("false", "null", "null");
     }
-
 
     @GetMapping("api/v1/live/detail")
     public Result getLiveDetail(@RequestParam Long id) {
         Live live = liveService.findLiveDetail(id);
 
-        LiveDetailResponse response = new LiveDetailResponse(live);
-
-        return new Result("true", response, "null");
+        if (live != null) {
+            LiveDetailResponse response = new LiveDetailResponse(live);
+            return new Result("true", response, "null");
+        }
+        return new Result("false", "null", "null");
     }
 
 }
