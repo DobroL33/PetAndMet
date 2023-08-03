@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from '../components/user/Login'
-import Register from '../components/user/Register'
-import FindAccount from '../components/user/FindAccount'
-import UserPage from '../components/user/UserPage'
+import Login from '../components/User/Login'
+import Register from '../components/User/Register'
+import FindAccount from '../components/User/FindAccount'
+import UserPage from '../components/User/UserPage'
 
 const App = () => {
   return (
