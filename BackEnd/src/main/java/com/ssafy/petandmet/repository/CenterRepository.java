@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CenterRepository extends JpaRepository<Center, String> {
 
-    @Query("select c from Center c where c.uuid = :uuid")
-    Center findByUuid(String uuid);
 
 }
 
