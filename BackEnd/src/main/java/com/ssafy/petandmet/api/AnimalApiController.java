@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,11 +24,14 @@ public class AnimalApiController {
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Page<Animal> findAnimal = animalService.findAll(pageable);
 
-        List<FindAllAnimalResponse> response = findAnimal.stream()
-                .map(o -> new FindAllAnimalResponse(o))
-                .collect(toList());
+        if(!findAnimal.isEmpty()) {
+            List<FindAllAnimalResponse> response = findAnimal.stream()
+                    .map(o -> new FindAllAnimalResponse(o))
+                    .collect(toList());
 
-        return new Result("성공", response, "null");
+            return new Result("true", response, "null");
+        }
+        return new Result("false", "null", "null");
     }
 
     @GetMapping("api/v1/animal/search")
@@ -37,56 +39,57 @@ public class AnimalApiController {
 
         List<Animal> findAnimal = animalService.findAnimalBySearch(map);
 
-        List<FindAnimalBySearchResponse> collect = findAnimal.stream()
-                .map(o -> new FindAnimalBySearchResponse(o))
-                .collect(toList());
+        if(!findAnimal.isEmpty()) {
+            List<FindAnimalBySearchResponse> response = findAnimal.stream()
+                    .map(o -> new FindAnimalBySearchResponse(o))
+                    .collect(toList());
 
-        return new Result("성공", collect, "null");
+            return new Result("true", response, "null");
+        }
+        return new Result("false", "null", "null");
     }
 
     @GetMapping("api/v1/animal")
     public Result GetAnimal(@RequestParam(value = "id") String id) {
-        Optional<Animal> findAnimal = animalService.findOne(id);
+        FindAnimalByIdResponse response = animalService.findOne(id);
 
-        FindAnimalByIdResponse response = FindAnimalByIdResponse.builder()
-                .message("강아지 조회 성공")
-                .status("200")
-                .name(findAnimal.get().getName())
-                .age(findAnimal.get().getAge())
-                .specie(findAnimal.get().getSpecie())
-                .breed(findAnimal.get().getBreed())
-                .findPlace(findAnimal.get().getFindPlace())
-                .enteredDate(findAnimal.get().getEnterDate())
-//                .centerUuid(findAnimal.get().getCenter().getUuid())
-                .build();
+        if (response != null) {
+            return new Result("true", response, "null");
+        }
 
-        return new Result("성공", response, "null");
+        return new Result("false", "null", "null");
     }
 
     @DeleteMapping("api/v1/animal/{id}")
     public Result deleteAnimal(@PathVariable("id") String id) {
-        Optional<String> deleteId = animalService.delete(id);
+        String deleteId = animalService.delete(id);
 
-        AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
-
-        return new Result("성공", response, "null");
+        if (deleteId != null) {
+            AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
+            return new Result("true", response, "null");
+        }
+        AnimalResponse response = new AnimalResponse("500", "동물 정보 삭제 실패");
+        return new Result("false", "null", "null");
     }
 
     @PostMapping("api/v1/animal")
     public Result createAnimal(@RequestBody CreateAnimalRequest request) {
-        String id = animalService.join(request);
 
-        AnimalResponse response = new AnimalResponse("200", "강아지 정보 수정 성공");
-
-        return new Result("성공", response, "null");
+        if (animalService.join(request)) {
+            AnimalResponse response = new AnimalResponse("200", "강아지 정보 등록 성공");
+            return new Result("true", response, "null");
+        }
+        AnimalResponse response = new AnimalResponse("500", "강아지 정보 등록 실패");
+        return new Result("false", response, "null");
     }
 
     @PatchMapping("/api/v1/animal")
     public Result updateAnimal(@RequestBody UpdateAnimalRequest request) {
-        animalService.update(request);
-        animalService.findOne(request.getUuid());
-        UpdateAnimalResponse response = new UpdateAnimalResponse("200", "강아지 정보 수정 성공");
-
-        return new Result("성공", response, "null");
+        if (animalService.update(request)) {
+            UpdateAnimalResponse response = new UpdateAnimalResponse("200", "강아지 정보 수정 성공");
+            return new Result("true", response, "null");
+        }
+        UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 성공");
+        return new Result("false", response, "null");
     }
 }

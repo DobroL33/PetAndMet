@@ -3,6 +3,7 @@ package com.ssafy.petandmet.service;
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
+import com.ssafy.petandmet.dto.animal.FindAnimalByIdResponse;
 import com.ssafy.petandmet.dto.animal.UpdateAnimalRequest;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,40 +26,68 @@ public class AnimalService {
 
 
     @Transactional
-    public Optional<String> delete(String id) {
-        Optional<Animal> findAnimal = animalRepository.findById(id);
-        if(findAnimal.isEmpty()) {
-            return Optional.empty();
-        }
-        animalRepository.delete(findAnimal.get());
-        return Optional.of(id);
+    public String delete(String id) {
+        Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });;
+        animalRepository.delete(findAnimal);
+        return id;
     }
 
-    public Optional<Animal> findOne(String id) {
-        return animalRepository.findById(id);
+    public FindAnimalByIdResponse findOne(String id) {
+
+        Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });;
+
+        FindAnimalByIdResponse response = FindAnimalByIdResponse.builder()
+                .message("강아지 조회 성공")
+                .status("200")
+                .name(findAnimal.getName())
+                .age(findAnimal.getAge())
+                .specie(findAnimal.getSpecie())
+                .breed(findAnimal.getBreed())
+                .findPlace(findAnimal.getFindPlace())
+                .enteredDate(findAnimal.getEnterDate())
+                .build();
+
+        if(findAnimal.getCenter() != null) {
+            Center center = centerRepository.findById(findAnimal.getCenter().getUuid()).orElseThrow(() -> {
+                throw new NullPointerException();
+            });
+            response.setCenterUuid(center.getUuid());
+        }
+
+        return response;
     }
 
     @Transactional
-    public void update(UpdateAnimalRequest request) {
+    public boolean update(UpdateAnimalRequest request) {
         String id = request.getUuid();
-        Optional<Animal> findAnimal = animalRepository.findById(id);
+        Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });;
 
-        if(findAnimal.isEmpty()) {
-            return;
+        findAnimal.setName(request.getName());
+        findAnimal.setAge(request.getAge());
+        findAnimal.setSpecie(request.getSpecie());
+        findAnimal.setBreed(request.getBreed());
+        findAnimal.setFindPlace(request.getFindPlace());
+        findAnimal.setEnterDate(request.getEnteredDate());
+        if (request.getCenterUuid() != null) {
+            Center findCenter = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+                throw new NullPointerException();
+            });
+            findAnimal.setCenter(findCenter);
         }
 
-        findAnimal.get().setName(request.getName());
-        findAnimal.get().setAge(request.getAge());
-        findAnimal.get().setSpecie(request.getSpecie());
-        findAnimal.get().setBreed(request.getBreed());
-        findAnimal.get().setFindPlace(request.getFindPlace());
-        findAnimal.get().setEnterDate(request.getEnteredDate());
-//        Center findCenter = centerRepository.findOne(request.getCenterUuid());
-//        findAnimal.setCenter(findCenter);
+        return true;
     }
 
-    public String join(CreateAnimalRequest request) {
-        Center center = centerRepository.findByUuid(request.getCenterUuid());
+    public boolean join(CreateAnimalRequest request) {
+        Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
         Animal animal = Animal.builder()
                 .uuid("123")
@@ -74,7 +102,7 @@ public class AnimalService {
 
         validateDuplicateAnimal(animal); //중복 회원 검증
         animalRepository.save(animal);
-        return animal.getUuid();
+        return true;
     }
 
     private void validateDuplicateAnimal(Animal animal) {

@@ -8,19 +8,13 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class CreateDonateRequest {
-
+public class CreateAnimalDonateRequest {
     @JsonProperty("user_uuid")
     private String userUuid;
-
-    @JsonProperty("animal_uuid")
-    private String animalUuid;
     @JsonProperty("center_uuid")
     private String centerUuid;
+    @JsonProperty("animal_uuid")
+    private String animalUuid;
     @JsonProperty("donate_price")
     private int donatePrice;
-
-    @JsonProperty("center_item_id")
-    private Long itemId;
-
 }
