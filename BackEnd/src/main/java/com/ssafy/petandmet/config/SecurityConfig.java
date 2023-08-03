@@ -54,6 +54,21 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "api/v1/user/new").permitAll() //회원가입 API
                                 .requestMatchers(HttpMethod.POST, "api/v1/user/id-check").permitAll() //아이디 중복확인 API
                                 .requestMatchers(HttpMethod.POST, "api/v1/user/pwd-reset").permitAll() //임시 비밀번호 초기화 API
+                                //게시판
+                                .requestMatchers(HttpMethod.POST, "api/v1/board/adopt").hasAnyRole("USER") //입양후기 게시판 작성
+                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/adopt").hasAnyRole("USER","CENTER") //입양후기 게시판 수정
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/adopt/{id}").hasAnyRole("USER","CENTER") //입양후기 게시판 삭제
+                                .requestMatchers(HttpMethod.POST, "api/v1/board/support").hasAnyRole("CENTER") //후원후기 게시판 작성
+                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/support").hasAnyRole("CENTER") //후원후기 게시판 수정
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/support/{id}").hasAnyRole("CENTER") //후원후기 게시판 삭제
+                                .requestMatchers(HttpMethod.POST, "api/v1/board/notice").hasAnyRole("CENTER") //공지사항 게시판 작성
+                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/notice").hasAnyRole("CENTER") //공지사항 게시판 수정
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/notice/{id}").hasAnyRole("CENTER") //공지사항 게시판 삭제
+                                .requestMatchers(HttpMethod.POST, "api/v1/board/qna").hasAnyRole("USER","CENTER") //QNA 게시판 작성
+                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/qna").hasAnyRole("USER","CENTER") //QNA 게시판 수정
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/qna/{id}").hasAnyRole("USER","CENTER") //QNA 게시판 삭제
+                                .requestMatchers(HttpMethod.POST, "api/v1/comment/qna").hasAnyRole("USER","CENTER") //QNA 댓글 작성
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/comment/qna/{comment_id}").hasAnyRole("USER","CENTER") //QNA 댓글 삭제
 //                                .requestMatchers(WHITE_LIST).permitAll()
 //                                .requestMatchers(DEFAULT_LIST).permitAll()
 //                                .requestMatchers(PathRequest.toH2Console()).permitAll()
