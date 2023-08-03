@@ -1,15 +1,22 @@
 package com.ssafy.petandmet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 // 입양 상태
 // 성별
@@ -19,6 +26,10 @@ import java.util.List;
 @Table(name = "animals")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = "center")
 public class Animal {
 
     @Id
@@ -30,7 +41,7 @@ public class Animal {
     @JsonIgnore
     private Center center;
 
-    @Column(name = "animal_name")
+    @Column(name = "animal_name", unique = false)
     private String name;
 
     private int age;
@@ -53,23 +64,8 @@ public class Animal {
     @JoinColumn(name = "live_id")
     private Live live;
 
-    @Builder
-    public Animal(Live live, String uuid, Center center, String name, int age, String specie, String breed, String findPlace, LocalDateTime enterDate, String photoUrl) {
-        this.live =live;
-        this.uuid = uuid;
-        this.center = center;
-        this.name = name;
-        this.age = age;
-        this.specie = specie;
-        this.breed = breed;
-        this.findPlace = findPlace;
-        this.enterDate = enterDate;
-        this.photoUrl = photoUrl;
-    }
-
-    public Animal() {
-
-    }
+    @OneToOne(mappedBy = "animal", fetch = FetchType.LAZY)
+    private Interest interest;
 
     //==연관관계 메서드==//
     public void setCenter(Center center) {

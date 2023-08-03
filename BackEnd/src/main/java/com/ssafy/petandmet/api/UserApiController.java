@@ -190,4 +190,25 @@ public class UserApiController {
         }
         return new Result("실패", "이메일 인증", "null");
     }
+
+    /**
+     * 동물 찜하기
+     *
+     * @param request 사용자 uuid, 동물 uuid
+     * @return 좋아요 결과
+     */
+    @PostMapping("/interest")
+    public Result interestAnimal(@RequestBody InterestAnimalRequest request) {
+        log.debug("동물 찜하기 컨트롤러");
+        try {
+            boolean isInterest = userService.interestAnimal(request);
+            if (isInterest) {
+                return new Result("성공", "좋아요", "null");
+            } else {
+                return new Result("성공", "좋아요 취소", "null");
+            }
+        } catch (NullPointerException e) {
+            return new Result("실패", e.getMessage(), "null");
+        }
+    }
 }

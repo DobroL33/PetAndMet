@@ -1,14 +1,28 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.config.TokenProvider;
+import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.EmailType;
+import com.ssafy.petandmet.domain.Interest;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.jwt.Token;
-import com.ssafy.petandmet.dto.user.*;
+import com.ssafy.petandmet.dto.user.CheckEmailAuthRequest;
+import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.EmailAuthentication;
+import com.ssafy.petandmet.dto.user.FindIdRequest;
+import com.ssafy.petandmet.dto.user.IdCheckRequest;
+import com.ssafy.petandmet.dto.user.InterestAnimalRequest;
+import com.ssafy.petandmet.dto.user.LoginUserRequest;
+import com.ssafy.petandmet.dto.user.ModifyInfoRequest;
+import com.ssafy.petandmet.dto.user.PasswordResetRequest;
+import com.ssafy.petandmet.dto.user.SendEmailAuthRequest;
+import com.ssafy.petandmet.dto.user.UserInfoResponse;
+import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
+import com.ssafy.petandmet.repository.InterestRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -38,6 +52,8 @@ public class UserService {
     private final CenterRepository centerRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EmailAuthenticationRepository emailAuthenticationRepository;
+    private final AnimalRepository animalRepository;
+    private final InterestRepository interestRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JavaMailSender javaMailSender;
@@ -350,4 +366,25 @@ public class UserService {
         }
     }
 
+    public boolean interestAnimal(InterestAnimalRequest request) {
+        log.debug("동물 찜하기 서비스");
+        log.debug(request.toString());
+        Optional<Animal> animal = animalRepository.findById(request.getAnimalUuid());
+        Optional<User> user = userRepository.findById(request.getUserUuid());
+        if (animal.isPresent() && user.isPresent()) {
+            Optional<Interest> findInterest = interestRepository.findByUserAnimal(request.getUserUuid(), request.getAnimalUuid());
+            if (findInterest.isPresent()) {
+                interestRepository.delete(findInterest.get());
+                return false;
+            } else {
+                Interest interest = Interest.builder()
+                        .user(user.get())
+                        .animal(animal.get())
+                        .build();
+                interestRepository.save(interest);
+                return true;
+            }
+        }
+        throw new NullPointerException("해당하는 동물이나 사람을 찾을 수 없습니다.");
+    }
 }
