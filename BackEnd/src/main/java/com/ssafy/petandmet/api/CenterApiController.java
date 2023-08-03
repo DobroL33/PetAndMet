@@ -5,6 +5,7 @@ import com.ssafy.petandmet.dto.center.FindCenterByIdResponse;
 import com.ssafy.petandmet.dto.center.Result;
 import com.ssafy.petandmet.dto.center.UpdateCenterRequest;
 import com.ssafy.petandmet.dto.center.UpdateCenterResponse;
+import com.ssafy.petandmet.dto.center.FindAllCenterResponse;
 import com.ssafy.petandmet.service.CenterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,39 +30,39 @@ public class CenterApiController {
     @GetMapping
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Page<Center> findCenter = centerService.findAll(pageable);
+        if(!findCenter.isEmpty()){
+            List<FindAllCenterResponse> response =findCenter.stream()
+                    .map(o -> new FindAllCenterResponse(o))
+                    .collect(toList());
 
-        List<Center> collect = findCenter.stream().collect(toList());
+            return new Result("true", response, "null");
+        }
 
-        return new Result("성공", collect, "null");
+        return new Result("false", "null", "null");
     }
 
     //보호소 한개 찾기
     @GetMapping("/detail")
     public Result GetCenter(@RequestParam(value = "id") String id){
-        Optional<Center> findCenter = centerService.findOne(id);
+        FindCenterByIdResponse response = centerService.findOne(id);
 
-        FindCenterByIdResponse response = FindCenterByIdResponse.builder()
-                .message("보호소 조회 성공")
-                .status("200")
-                .uuid(findCenter.get().getUuid())
-                .name(findCenter.get().getName())
-                .address(findCenter.get().getAddress())
-                .phone(findCenter.get().getPhone())
-                .email(findCenter.get().getEmail())
-                .build();
+        if(response != null){
+            return new Result("true", response, "null");
+        }
 
-        return new Result("성공", response, "null");
+        return new Result("false", "null", "null");
     }
 
     //보호소 정보 수정
     @PatchMapping
     public Result updateCenter(@RequestBody UpdateCenterRequest request){
-        System.out.println(request.toString());
-        centerService.update(request);
-//        centerService.findOne(request.getUuid());
-        UpdateCenterResponse response = new UpdateCenterResponse("200", "보호소 정보 수정 성공");
+        if(centerService.update(request)){
+            UpdateCenterResponse response = new UpdateCenterResponse("200", "보호소 정보 수정 성공");
+            return  new Result("true", response,"null");
+        }
 
-        return  new Result("성공", response,"null");
+        UpdateCenterResponse response = new UpdateCenterResponse("500", "보호소 정보 수정 실패");
+        return  new Result("false", response,"null");
     }
 
 
