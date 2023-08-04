@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult } from 'react-query'
 import axios from 'axios'
 
 interface Token {
-  token: String
+  response: String
 }
 
 interface LoginCredentials {
@@ -15,15 +15,16 @@ const fetchData = async (credentials: LoginCredentials): Promise<Token> => {
     'https://i9b302.p.ssafy.io/api/v1/user',
     credentials
   )
-  console.log(response)
   return response.data
 }
 
-export function useLogin(): UseMutationResult<
+export function useLoginMutation(): UseMutationResult<
   Token,
   unknown,
   LoginCredentials,
   unknown
 > {
-  return useMutation<Token, unknown, LoginCredentials, unknown>(fetchData)
+  return useMutation<Token, unknown, LoginCredentials, unknown>(fetchData, {
+    onSuccess(data, variables, context) {},
+  })
 }
