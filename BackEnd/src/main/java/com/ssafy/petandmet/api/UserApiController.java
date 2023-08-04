@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.api;
 
+import com.ssafy.petandmet.domain.Point;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
@@ -10,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +21,26 @@ import java.util.Optional;
 @Slf4j
 public class UserApiController {
     private final UserService userService;
+
+    /**
+     * 마일리지 조회
+     *
+     * @param request 사용자 UUID
+     * @return 전체 마일리지 조회
+     */
+    @GetMapping("/mileage")
+    public Result findMileage(@RequestParam String uuid) {
+        List<Point> findMileage = userService.findMileage(uuid);
+
+        if (!findMileage.isEmpty()) {
+            List<MileageResponse> response = findMileage
+                    .stream()
+                    .map(o -> new MileageResponse(o))
+                    .collect(Collectors.toList());
+            return new Result("성공", response, "null");
+        }
+        return new Result("false", "null", "null");
+    }
 
     /**
      * 동물 우호도 조회

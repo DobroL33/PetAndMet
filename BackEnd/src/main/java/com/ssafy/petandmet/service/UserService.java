@@ -1,10 +1,7 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.config.TokenProvider;
-import com.ssafy.petandmet.domain.Center;
-import com.ssafy.petandmet.domain.Donate;
-import com.ssafy.petandmet.domain.RoleType;
-import com.ssafy.petandmet.domain.User;
+import com.ssafy.petandmet.domain.*;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.repository.*;
@@ -36,6 +33,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final DonateRepository donateRepository;
     private final WalkRepository walkRepository;
+    private final PointRepository pointRepository;
 
     /**
      * 사용자 등록
@@ -319,5 +317,9 @@ public class UserService {
             friendliness = 100L;
         }
         return friendliness;
+    }
+
+    public List<Point> findMileage(String uuid) {
+        return pointRepository.findMileage(uuid);
     }
 }
