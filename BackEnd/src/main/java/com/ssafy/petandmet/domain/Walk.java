@@ -18,15 +18,17 @@ public class Walk {
     @Column(name = "walk_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "animal_uuid")
     private Animal animal;
 
     private LocalDate date;
 
     private LocalTime time;
+
+    private boolean flag;
 }

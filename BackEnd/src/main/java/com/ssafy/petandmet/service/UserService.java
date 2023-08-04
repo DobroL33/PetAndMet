@@ -2,14 +2,12 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.config.TokenProvider;
 import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.domain.Donate;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
-import com.ssafy.petandmet.repository.CenterRepository;
-import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
-import com.ssafy.petandmet.repository.RefreshTokenRepository;
-import com.ssafy.petandmet.repository.UserRepository;
+import com.ssafy.petandmet.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -35,6 +34,8 @@ public class UserService {
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final DonateRepository donateRepository;
+    private final WalkRepository walkRepository;
 
     /**
      * 사용자 등록
@@ -293,5 +294,30 @@ public class UserService {
             user.get().setPhone(request.getPhone());
             userRepository.save(user.get());
         }
+    }
+
+    public Long findAnimalFriendliness(AnimalFriendlinessRequest request) {
+
+        Long totalDoantePrice = donateRepository.findTotalPriceByUserIdAndAnimalId(request.getUserUuid(), request.getAnimalUuid());
+        Long WalkCount = walkRepository.findCountByUserIdAndAnimalId(request.getUserUuid(), request.getAnimalUuid());
+
+        Long friendliness = getAnimalFreindLiness(totalDoantePrice, WalkCount);
+
+        return friendliness;
+    }
+
+    private Long getAnimalFreindLiness(Long totalDoantePrice, Long walkCount) {
+        Long friendliness;
+
+        if (totalDoantePrice >= 50000L) {
+            friendliness = 50L; // 50%
+        } else {
+            friendliness = (long)(totalDoantePrice * 0.001); // 1% 씩 증가
+        }
+        friendliness += walkCount * 10;
+        if (friendliness >= 100L) {
+            friendliness = 100L;
+        }
+        return friendliness;
     }
 }
