@@ -30,10 +30,10 @@ public class CommentService {
 //        System.out.println(center.toString());
         Optional<User> user = userRepository.findByUserUuid(request.getUserUuid());
 //        System.out.println(user.toString());
-        Board board = boardRepository.findById(request.getBoardId());
+        Optional<Board> board = boardRepository.findById(request.getBoardId());
 
         Comment comment = Comment.builder()
-                .board(board)
+                .board(board.get())
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
                 .user(user.get())

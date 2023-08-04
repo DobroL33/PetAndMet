@@ -50,24 +50,24 @@ public class BoardService {
 
     //게시물 삭제
     @Transactional
-    public Optional<String> delete(String uuid) {
-        Optional<Board> findBoard = boardRepository.findById(uuid);
+    public Optional<Long> delete(Long id) {
+        Optional<Board> findBoard = boardRepository.findById(id);
         if(findBoard.isEmpty()) {
             return Optional.empty();
         }
         boardRepository.delete(findBoard.get());
-        return Optional.of(uuid);
+        return Optional.of(id);
     }
 
     //게시글 1개 찾기(상세보기)
-    public Optional<Board> findOne(String uuid) {
-        return boardRepository.findById(uuid);
+    public Optional<Board> findOne(Long id) {
+        return boardRepository.findById(id);
     }
 
     //게시글 정보 수정
     @Transactional
     public void update(UpdateBoardRequest request) {
-        String id = request.getId();
+        Long id = request.getId();
         Optional<Board> findBoard = boardRepository.findById(id);
 
         if(findBoard.isEmpty()) {
@@ -82,7 +82,7 @@ public class BoardService {
 
     //페이지
     public Page<Board> findAll(String uuid, String type, Pageable pageable) {
-        return boardRepository.findBoardByType(type, uuid, pageable);
+        return boardRepository.findBoardByType(uuid, type, pageable);
     }
 
 

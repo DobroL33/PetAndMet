@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, String> {
@@ -17,9 +18,9 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     List<Board> findByTitle(String title);
 
     @Query("select b from Board b where b.type = :type and b.center.uuid= :uuid ORDER BY b.id")
-    Page<Board> findBoardByType(String type, String uuid, Pageable pageable);
+    Page<Board> findBoardByType(String uuid, String type, Pageable pageable);
 
     @Query("select b from Board b where b.id = :id")
-    Board findById(Long id);
+    Optional<Board> findById(Long id);
 }
 

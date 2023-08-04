@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class BoardApiController {
 
     //입양 후기 1개 상세보기
     @GetMapping("/adopt/detail")
-    public Result GetAdoptBoard(@RequestParam(value = "id") String id) {
+    public Result GetAdoptBoard(@RequestParam(value = "id") Long id) {
         Optional<Board> findBoard = boardService.findOne(id);
 
         FindBoardByIdResponse response = FindBoardByIdResponse.builder()
@@ -68,7 +69,7 @@ public class BoardApiController {
     @PatchMapping("/adopt")
     public Result updateAdoptBoard(@RequestBody UpdateBoardRequest request) {
         boardService.update(request);
-        boardService.findOne(request.getId());
+        boardService.findOne(Long.valueOf(request.getId()));
         UpdateBoardResponse response = new UpdateBoardResponse("200", "입양후기 정보 수정 성공");
 
         return new Result("성공", response, "null");
@@ -76,8 +77,8 @@ public class BoardApiController {
 
     //입양 후기 정보 삭제
     @DeleteMapping("adopt/{id}")
-    public Result deleteAdoptBoard(@PathVariable("id") String id) {
-        Optional<String> deleteId = boardService.delete(id);
+    public Result deleteAdoptBoard(@PathVariable("id") Long id) {
+        Optional<Long> deleteId = boardService.delete(id);
 
         BoardResponse response = new BoardResponse("200", "입양후기 게시판 정보 삭제 성공");
 
@@ -98,8 +99,8 @@ public class BoardApiController {
 
     //후원 후기 1개 상세보기
     @GetMapping("/support/detail")
-    public Result GetSupportBoard(@RequestParam(value = "id") String id) {
-        Optional<Board> findBoard = boardService.findOne(id);
+    public Result GetSupportBoard(@RequestParam(value = "id") Long id) {
+        Optional<Board> findBoard = boardService.findOne(Long.valueOf(id));
 
         FindBoardByIdResponse response = FindBoardByIdResponse.builder()
                 .message("게시판 조회 성공")
@@ -131,7 +132,7 @@ public class BoardApiController {
     @PatchMapping("/support")
     public Result updateSupportBoard(@RequestBody UpdateBoardRequest request) {
         boardService.update(request);
-        boardService.findOne(request.getId());
+        boardService.findOne(Long.valueOf(request.getId()));
         UpdateBoardResponse response = new UpdateBoardResponse("200", "후원후기 정보 수정 성공");
 
         return new Result("성공", response, "null");
@@ -139,8 +140,8 @@ public class BoardApiController {
 
     //후원 후기 정보 삭제
     @DeleteMapping("support/{id}")
-    public Result deleteSupportBoard(@PathVariable("id") String id) {
-        Optional<String> deleteId = boardService.delete(id);
+    public Result deleteSupportBoard(@PathVariable("id") Long id) {
+        Optional<Long> deleteId = boardService.delete(id);
 
         BoardResponse response = new BoardResponse("200", "후원후기 게시판 정보 삭제 성공");
 
@@ -162,7 +163,7 @@ public class BoardApiController {
 
     //공지사항 1개 상세보기
     @GetMapping("/notice/detail")
-    public Result GetNoticeBoard(@RequestParam(value = "id") String id) {
+    public Result GetNoticeBoard(@RequestParam(value = "id") Long id) {
         Optional<Board> findBoard = boardService.findOne(id);
 
         FindBoardByIdResponse response = FindBoardByIdResponse.builder()
@@ -192,10 +193,11 @@ public class BoardApiController {
     }
 
     //공지사항 정보 수정
+    @PreAuthorize("hasAnyRole('CENTER')")
     @PatchMapping("/notice")
     public Result updateNoticeBoard(@RequestBody UpdateBoardRequest request) {
         boardService.update(request);
-        boardService.findOne(request.getId());
+        boardService.findOne(Long.valueOf(request.getId()));
         UpdateBoardResponse response = new UpdateBoardResponse("200", "공지사항 정보 수정 성공");
 
         return new Result("성공", response, "null");
@@ -203,8 +205,8 @@ public class BoardApiController {
 
     //공지사항 정보 삭제
     @DeleteMapping("notice/{id}")
-    public Result deleteNoticeBoard(@PathVariable("id") String id) {
-        Optional<String> deleteId = boardService.delete(id);
+    public Result deleteNoticeBoard(@PathVariable("id") Long id) {
+        Optional<Long> deleteId = boardService.delete(id);
 
         BoardResponse response = new BoardResponse("200", "공지사항 게시판 정보 삭제 성공");
 
@@ -225,7 +227,7 @@ public class BoardApiController {
 
     //QNA 1개 상세보기
     @GetMapping("/qna/detail")
-    public Result GetQnaBoard(@RequestParam(value = "id") String id) {
+    public Result GetQnaBoard(@RequestParam(value = "id") Long id) {
         Optional<Board> findBoard = boardService.findOne(id);
 
         FindBoardByIdResponse response = FindBoardByIdResponse.builder()
@@ -266,8 +268,8 @@ public class BoardApiController {
 
     //QNA 정보 삭제
     @DeleteMapping("qna/{id}")
-    public Result deleteQnaBoard(@PathVariable("id") String id) {
-        Optional<String> deleteId = boardService.delete(id);
+    public Result deleteQnaBoard(@PathVariable("id") Long id) {
+        Optional<Long> deleteId = boardService.delete(id);
 
         BoardResponse response = new BoardResponse("200", "QNA 게시판 정보 삭제 성공");
 
