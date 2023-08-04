@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import { useLoginMutation } from '../../hooks/useLoginMutation'
+import {
+  useLoginMutation,
+  LoginCredentials,
+} from '../../hooks/useLoginMutation'
 function Login() {
-  interface LoginCredentials {
-    id: String
-    password: String
-  }
-
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
 
