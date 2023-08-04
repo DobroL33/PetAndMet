@@ -62,8 +62,8 @@ public class Center {
     @Builder.Default
     private List<CenterItem> centerItem = new ArrayList<>();
 
-    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
-    private Donate donate;
+    @OneToMany(mappedBy = "center")
+    private List<Donate> donate = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")
     @Builder.Default

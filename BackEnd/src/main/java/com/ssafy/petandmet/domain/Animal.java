@@ -46,8 +46,8 @@ public class Animal {
     @Column(name = "animal_photo_url")
     private String photoUrl;
 
-    @OneToOne(mappedBy = "animal")
-    private Donate donate;
+    @OneToMany(mappedBy = "animal")
+    private List<Donate> donate = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "live_id")
