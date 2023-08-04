@@ -5,7 +5,7 @@ interface Token {
   response: String
 }
 
-interface LoginCredentials {
+export interface LoginCredentials {
   id: String
   password: String
 }
