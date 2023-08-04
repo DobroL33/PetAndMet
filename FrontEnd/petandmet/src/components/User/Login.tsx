@@ -1,5 +1,21 @@
-import React from 'react'
+import { useState } from 'react'
+import { useLogin } from '../../hooks/useLoginMutation'
 function Login() {
+  interface LoginCredentials {
+    id: String
+    password: String
+  }
+
+  const [id, setId] = useState('')
+  const [password, setPassword] = useState('')
+
+  const login = useLogin()
+
+  const handleLogin = () => {
+    console.log(id, password)
+    const credentials: LoginCredentials = { id, password }
+    login.mutate(credentials)
+  }
   return (
     <section className="flex flex-col items-center h-screen">
       <div className="bg-white mx-auto w-1/4 flex items-center justify-center my-auto">
@@ -9,8 +25,10 @@ function Login() {
             <input
               type="email"
               name=""
+              value={id}
               placeholder="아이디"
               className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+              onChange={e => setId(e.target.value)}
             />
           </div>
 
@@ -18,9 +36,11 @@ function Login() {
             <input
               type="password"
               name=""
+              value={password}
               placeholder="비밀번호"
               className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
               focus:bg-white focus:outline-none"
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
 
@@ -37,6 +57,7 @@ function Login() {
             type="submit"
             className="w-full block bg-amber-400 hover:bg-amber-500 focus:bg-amber-500 text-white font-semibold rounded-lg
             px-4 py-3 mt-6"
+            onClick={handleLogin}
           >
             로그인
           </button>
