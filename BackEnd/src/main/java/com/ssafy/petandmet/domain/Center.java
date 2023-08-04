@@ -37,11 +37,9 @@ public class Center {
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Animal animal;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "center")
     @Builder.Default
     private List<Board> boardList = new ArrayList<>();
@@ -60,16 +58,13 @@ public class Center {
 
     //    ============= 다른 테이블과 연결 ================
 
-    @JsonIgnore
     @OneToMany(mappedBy = "center")
     @Builder.Default
     private List<CenterItem> centerItem = new ArrayList<>();
 
-    @JsonIgnore
     @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
     private Donate donate;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "center")
     @Builder.Default
     private List<Live> live = new ArrayList<>();
