@@ -1,4 +1,9 @@
-import {Grid, Box, Typography, Skeleton, Container} from '@mui/material'
+import {useState} from 'react';
+import {Grid, Box,Typography, Skeleton, 
+        Container, FormControl, InputLabel,
+        MenuItem
+      } from '@mui/material'
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import pay from '../../images/kakaopay.png'
 
 const data = [
@@ -23,12 +28,18 @@ const data = [
 
 ];
 
+
 interface LoadProps {
   loading?: boolean;
 }
+const centers = ['A보호소', 'B보호소', 'C보호소']
 
 function List(props: LoadProps) {
   const { loading = false } = props;
+  const [center, setCenter] = useState('')
+  const handleChange = (event: SelectChangeEvent) => {
+    setCenter(event.target.value);
+  };
 
   return (
     <Container>
@@ -37,6 +48,26 @@ function List(props: LoadProps) {
           후원 물품 목록
         </Typography>
       </div>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <FormControl sx={{width:'25%'}}>
+            <InputLabel id="demo-simple-select-label">보호소</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={center}
+              label="보호소"
+              onChange={handleChange}
+              >
+                {centers.map((cent, idx) => (
+                  <MenuItem value={idx}>{cent}</MenuItem>
+                ))}
+              </Select>
+          </FormControl>
+      </div>
+    
+    {/* 보호소 아이디에 해당하는 물품 map을 통해 보여주기 */}
+
     <Grid container spacing={2}>
       {(loading ? Array.from(new Array(3)) : data).map((item, index) => (
           <Grid key={index} item xs={12} sm={6} md={3}>
