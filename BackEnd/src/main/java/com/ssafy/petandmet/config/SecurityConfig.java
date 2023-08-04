@@ -19,6 +19,7 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider; //토큰 생성 및 유효성 검증
     private final CustomEntryPoint entryPoint; //
     private final CustomAccessDeniedHandler accessDeniedHandler; //인가 제어
+    private final CorsConfig corsConfig; //cors 설정
 
     private static final String[] DEFAULT_LIST = {
 //            "/docs.html"
@@ -46,6 +47,8 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 //h2 콘솔 사용 위함
                 .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
+                //cors 필터
+                .addFilter(corsConfig.corsFilter())
                 //url 요청 권한 설정
                 .authorizeHttpRequests(auth -> {
                     try {
