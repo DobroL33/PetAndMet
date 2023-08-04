@@ -20,6 +20,24 @@ public class UserApiController {
     private final UserService userService;
 
     /**
+     * 동물 우호도 조회
+     *
+     * @param request 사용자 UUID, 동물 UUID
+     * @return 우호도 Percent
+     */
+    @PostMapping("/animal-friendliness")
+    public Result getAnimalFriendless(@RequestBody AnimalFriendlinessRequest request) {
+        try {
+            Long response = userService.findAnimalFriendliness(request);
+
+            return new Result("성공", new AnimalFrindlinessResponse(response), "null");
+
+        } catch ( Exception e) {
+            return new Result("실패", "null", e.getMessage());
+        }
+    }
+
+    /**
      * 사용자 회원가입
      *
      * @param request 사용자 request
