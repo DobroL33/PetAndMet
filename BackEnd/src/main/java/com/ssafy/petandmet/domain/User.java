@@ -50,9 +50,8 @@ public class User {
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "point_id")
-    private Point point;
+    @OneToMany(mappedBy = "user")
+    private List<Point> points = new ArrayList<>();
 
     @Column(name = "user_id")
     private String id;

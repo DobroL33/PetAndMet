@@ -30,9 +30,8 @@ public class PointService {
         Point point = Point.builder()
                 .pointAmount(pointChargeDto.getAmount())
                 .pointDataTime(LocalDateTime.now())
+                .user(user.get())
                 .build();
-
-        user.get().setPoint(point);
         pointRepository.save(point);
     }
 }
