@@ -4,11 +4,13 @@ import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import * as React from "react";
+import axios from "axios";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { useParams } from "react-router-dom";
+import { resolve } from "dns/promises";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -39,23 +41,18 @@ function StreamingPage() {
 
   useEffect(() => {
     const accessToken =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzZGVlODQzNS0yODcxLTQ4OGUtODUyMC1kMDkxYmJiZDAwMmIiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMDM4MTg5fQ.o7SOqBBwUUpGrjEvXg5_1LvwIEwPSEnog3IbJ6G_WsnRdrPoi3QsrVm-VHFPpkZr9m9P5qokC7jdIJaqXr_GMA";
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og";
 
-    fetch(`https://i9b302.p.ssafy.io/api/v1/animal?id=aa`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setAnimals({ error: null, response: data });
-      })
-      .catch((error) => {
-        setAnimals({ error: error.message, response: null });
-      });
-  }, []);
+    const test = axios.get<any>(
+      `https://i9b302.p.ssafy.io/api/v1/animal?id=aa`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(test);
+  });
 
   if (!Animals.response) {
     // Data is still loading
