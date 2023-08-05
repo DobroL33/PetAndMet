@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +63,7 @@ public class AnimalService {
         Center center = centerRepository.findByUuid(request.getCenterUuid());
 
         Animal animal = Animal.builder()
-                .uuid("123")
+                .uuid(UUID.randomUUID().toString())
                 .name(request.getName())
                 .age(request.getAge())
                 .specie(request.getSpecie())
@@ -72,7 +73,7 @@ public class AnimalService {
                 .center(center)
                 .build();
 
-        validateDuplicateAnimal(animal); //중복 회원 검증
+//        validateDuplicateAnimal(animal); //중복 회원 검증
         animalRepository.save(animal);
         return animal.getUuid();
     }
@@ -81,7 +82,7 @@ public class AnimalService {
         List<Animal> findAnimals = animalRepository.findByName(animal.getName());
 
         if (!findAnimals.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new IllegalStateException("이미 존재하는 동물입니다.");
         }
     }
 
