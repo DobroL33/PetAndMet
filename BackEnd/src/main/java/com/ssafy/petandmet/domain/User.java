@@ -61,7 +61,6 @@ public class User {
     @Column(name = "user_password")
     private String password;
 
-
     @Column(name = "user_email")
     private String email;
 
@@ -85,6 +84,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Donate> donates = new ArrayList<>();
+
+    @Column(name = "user_photo_url")
+    private String photoUrl;
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {

@@ -5,14 +5,17 @@ import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
+import com.ssafy.petandmet.service.S3Service;
 import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ import java.util.Optional;
 @Slf4j
 public class UserApiController {
     private final UserService userService;
+    private final S3Service s3Service;
     private final int INTEREST_ANIMAL_COUNT = 8;
 
     /**
@@ -229,5 +233,20 @@ public class UserApiController {
         List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
         log.debug("관심 가져오기");
         return new Result("성공", interestAnimals, "null");
+    }
+
+    @PostMapping("/profile")
+    public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
+        log.debug("사용자 프로필 사진 등록 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String currentTime = LocalDateTime.now().toString();
+        String fileName = currentTime + request.getImage().getOriginalFilename();
+        log.debug(fileName);
+        boolean isUpload = s3Service.uploadFile(request.getImage(), fileName);
+        userService.setPhotoUrl(uuid.get(), fileName);
+        if (isUpload) {
+            return new Result("성공", "업로드 성공", "null");
+        }
+        return new Result("실패", "업로드 실패", "null");
     }
 }

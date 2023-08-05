@@ -395,4 +395,10 @@ public class UserService {
         System.out.println("userUuid = " + userUuid);
         return interestRepository.findInterestAnimals(pageable, userUuid);
     }
+
+    @Transactional
+    public void setPhotoUrl(String userUuid, String fileName) {
+        log.debug(userUuid);
+        userRepository.updatePhotoUrl(userUuid, fileName);
+    }
 }
