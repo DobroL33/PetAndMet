@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +24,11 @@ public class Interest {
     @Column(name = "interest_id")
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "animal_uuid")
     private Animal animal;
 

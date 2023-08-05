@@ -5,7 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -40,8 +39,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Center center;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Interest interest;
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Interest> interests = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @Builder.Default

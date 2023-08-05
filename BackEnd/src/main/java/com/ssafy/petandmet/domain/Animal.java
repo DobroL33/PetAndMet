@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // 입양 상태
 // 성별
@@ -36,7 +39,7 @@ public class Animal {
     @Column(name = "animal_uuid")
     private String uuid;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "center_uuid")
     @JsonIgnore
     private Center center;
@@ -64,12 +67,13 @@ public class Animal {
     @JoinColumn(name = "live_id")
     private Live live;
 
-    @OneToOne(mappedBy = "animal", fetch = FetchType.LAZY)
-    private Interest interest;
+    @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Interest> interests = new ArrayList<>();
 
     //==연관관계 메서드==//
-    public void setCenter(Center center) {
-        this.center = center;
-        center.setAnimal(this);
-    }
+//    public void setCenter(Center center) {
+//        this.center = center;
+//        center.setAnimal(this);
+//    }
 }
