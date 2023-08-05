@@ -4,10 +4,10 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import 'tailwindcss/tailwind.css'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClientProvider } from 'react-query'
+import { queryClient } from './hooks/customQueryClient'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-const queryClient = new QueryClient()
 
 root.render(
   <React.StrictMode>

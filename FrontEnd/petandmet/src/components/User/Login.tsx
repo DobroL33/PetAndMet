@@ -1,20 +1,18 @@
 import { useState } from 'react'
-import { useLogin } from '../../hooks/useLoginMutation'
+import {
+  useLoginMutation,
+  LoginCredentials,
+} from '../../hooks/useLoginMutation'
 function Login() {
-  interface LoginCredentials {
-    id: String
-    password: String
-  }
-
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
 
-  const login = useLogin()
+  const login = useLoginMutation()
 
   const handleLogin = () => {
-    console.log(id, password)
     const credentials: LoginCredentials = { id, password }
     login.mutate(credentials)
+    console.log(login.data?.response)
   }
   return (
     <section className="flex flex-col items-center h-screen">
@@ -84,6 +82,9 @@ function Login() {
           </p>
         </div>
       </div>
+      {login.isLoading && <div>Loading</div>}
+      {login.isError && <div>Error</div>}
+      {login.isSuccess && <div>success</div>}
     </section>
   )
 }
