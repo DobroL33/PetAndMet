@@ -76,7 +76,7 @@ public class AnimalApiController {
     public Result createAnimal(@RequestBody CreateAnimalRequest request) {
         String id = animalService.join(request);
 
-        AnimalResponse response = new AnimalResponse("200", "강아지 정보 수정 성공");
+        AnimalResponse response = new AnimalResponse("200", "강아지 정보 등록 성공");
 
         return new Result("성공", response, "null");
     }
