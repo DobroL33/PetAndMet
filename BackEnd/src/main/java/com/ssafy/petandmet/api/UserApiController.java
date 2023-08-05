@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.api;
 
+import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
@@ -7,9 +8,12 @@ import com.ssafy.petandmet.service.UserService;
 import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,6 +22,7 @@ import java.util.Optional;
 @Slf4j
 public class UserApiController {
     private final UserService userService;
+    private final int INTEREST_ANIMAL_COUNT = 8;
 
     /**
      * 사용자 회원가입
@@ -210,5 +215,19 @@ public class UserApiController {
         } catch (NullPointerException e) {
             return new Result("실패", e.getMessage(), "null");
         }
+    }
+
+    /**
+     * 사용자가 찜한 동물 조회
+     *
+     * @param pageable INTEREST_ANIMAL_COUNT 만큼 조회
+     * @return 찜한 동물들
+     */
+    @GetMapping("/interest")
+    public Result getInterestAnimals(@PageableDefault(size = INTEREST_ANIMAL_COUNT) Pageable pageable) {
+        String userUuid = SecurityUtil.getCurrentUserUuid().get();
+        List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
+        log.debug("관심 가져오기");
+        return new Result("성공", interestAnimals, "null");
     }
 }

@@ -7,6 +7,7 @@ import com.ssafy.petandmet.domain.EmailType;
 import com.ssafy.petandmet.domain.Interest;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
+import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.CheckEmailAuthRequest;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
@@ -29,6 +30,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -37,6 +39,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -386,5 +389,10 @@ public class UserService {
             }
         }
         throw new NullPointerException("해당하는 동물이나 사람을 찾을 수 없습니다.");
+    }
+
+    public List<InterestAnimal> getInterestAnimals(Pageable pageable, String userUuid) {
+        System.out.println("userUuid = " + userUuid);
+        return interestRepository.findInterestAnimals(pageable, userUuid);
     }
 }
