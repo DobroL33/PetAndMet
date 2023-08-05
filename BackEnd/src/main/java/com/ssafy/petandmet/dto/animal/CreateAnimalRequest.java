@@ -1,6 +1,6 @@
 package com.ssafy.petandmet.dto.animal;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,8 +12,11 @@ public class CreateAnimalRequest {
     private int age;
     private String specie;
     private String breed;
+    @JsonProperty("find_place")
     private String findPlace;
+    @JsonProperty("center_uuid")
     private String centerUuid;
+    @JsonProperty("enter_date")
     private LocalDateTime enteredDate;
 
     @Builder
