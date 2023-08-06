@@ -81,4 +81,12 @@ public class DonateService {
         return donateRepository.findAllByCenterId(uuid);
     }
 
+    public Long findCenterItemDonateTotalPrice(String uuid, Long id) {
+        Long findTotalPrice = donateRepository.findCenterItemDonateTotalPrice(uuid, id);
+
+        if (findTotalPrice == null) {
+            return 0L;
+        }
+        return findTotalPrice;
+    }
 }

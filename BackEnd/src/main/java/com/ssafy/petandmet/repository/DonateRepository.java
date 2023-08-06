@@ -17,4 +17,7 @@ public interface DonateRepository extends JpaRepository<Donate, String> {
 
     @Query("select d from Donate d where d.center.uuid = :uuid")
     List<Donate> findAllByCenterId(String uuid);
+
+    @Query("select sum(d.price) from Donate d where d.center.uuid = :uuid and d.centerItem.id = :id")
+    Long findCenterItemDonateTotalPrice(String uuid, Long id);
 }

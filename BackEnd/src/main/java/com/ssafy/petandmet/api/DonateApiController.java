@@ -3,6 +3,7 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.domain.CenterItem;
 import com.ssafy.petandmet.domain.Donate;
 import com.ssafy.petandmet.dto.animal.Result;
+import com.ssafy.petandmet.dto.centerItem.CenterItemDonateTotalPriceRespoonse;
 import com.ssafy.petandmet.dto.donate.*;
 import com.ssafy.petandmet.service.DonateService;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,15 @@ public class DonateApiController {
             return new Result("true", response, "null");
         }
         return new Result("false", "null", "null");
+    }
+
+    @GetMapping("api/v1/donate/centeritem")
+    public Result getCenterItemDonateTotalPrice(@RequestParam String uuid, @RequestParam Long id) {
+        Long totalPrice = donateService.findCenterItemDonateTotalPrice(uuid, id);
+
+        CenterItemDonateTotalPriceRespoonse response = new CenterItemDonateTotalPriceRespoonse("후원 Total Price 조회 성공", "200", totalPrice);
+
+        return new Result("true", response, "null");
     }
 
 
