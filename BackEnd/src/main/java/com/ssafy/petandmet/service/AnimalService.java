@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +35,9 @@ public class AnimalService {
         return id;
     }
 
-    public FindAnimalByIdResponse findOne(String id) {
+    public FindAnimalByIdResponse findOne(String uuid) {
 
-        Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
+        Animal findAnimal = animalRepository.findById(uuid).orElseThrow(() -> {
             throw new NullPointerException();
         });;
 
@@ -48,7 +49,14 @@ public class AnimalService {
                 .specie(findAnimal.getSpecie())
                 .breed(findAnimal.getBreed())
                 .findPlace(findAnimal.getFindPlace())
-                .enteredDate(findAnimal.getEnterDate())
+                .enterDate(findAnimal.getEnterDate())
+                .enterAge(findAnimal.getEnterAge())
+                .gender(findAnimal.getGender())
+                .adoptionStatus(findAnimal.getAdoptionStatus())
+                .adotionStartDate(findAnimal.getAdotionStartDate())
+                .noticeDate(findAnimal.getNoticeDate())
+                .character(findAnimal.getCharacterType())
+                .photoUrl(findAnimal.getPhotoUrl())
                 .build();
 
         if(findAnimal.getCenter() != null) {
@@ -73,7 +81,13 @@ public class AnimalService {
         findAnimal.setSpecie(request.getSpecie());
         findAnimal.setBreed(request.getBreed());
         findAnimal.setFindPlace(request.getFindPlace());
-        findAnimal.setEnterDate(request.getEnteredDate());
+        findAnimal.setEnterDate(request.getEnterDate());
+        findAnimal.setAdoptionStatus(request.getAdoptionStatus());
+        findAnimal.setAdotionStartDate(request.getAdoptionStartDate());
+        findAnimal.setEnterAge(request.getEnterAge());
+        findAnimal.setNoticeDate(request.getNoticeDate());
+        findAnimal.setCharacterType(request.getCharacter());
+        findAnimal.setGender(request.getGender());
         if (request.getCenterUuid() != null) {
             Center findCenter = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
                 throw new NullPointerException();
@@ -85,19 +99,27 @@ public class AnimalService {
     }
 
     public boolean join(CreateAnimalRequest request) {
+        String animalUuid = UUID.randomUUID().toString();
         Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
 
         Animal animal = Animal.builder()
-                .uuid("123")
+                .uuid(animalUuid)
                 .name(request.getName())
                 .age(request.getAge())
                 .specie(request.getSpecie())
                 .breed(request.getBreed())
                 .findPlace(request.getFindPlace())
-                .enterDate(request.getEnteredDate())
+                .enterDate(request.getEnterDate())
                 .center(center)
+                .adoptionStartDate(request.getAdoptionStartDate())
+                .noticeDate(request.getNoticeDate())
+                .gender(request.getGender())
+                .enterAge(request.getEnterAge())
+                .adoptionStatus(request.getAdoptionStatus())
+                .characterType(request.getCharacter())
+                .photoUrl(request.getPhotoUrl())
                 .build();
 
         validateDuplicateAnimal(animal); //중복 회원 검증
@@ -120,5 +142,15 @@ public class AnimalService {
 
     public Page<Animal> findAll(Pageable pageable) {
         return animalRepository.findAll(pageable);
+    }
+
+    public Long findPageCount(String uuid, Long size) {
+
+        Long totalCount = animalRepository.findTotalCount(uuid);
+
+        if (totalCount == 0) {
+            return 0L;
+        }
+        return (totalCount-1)/size + 1;
     }
 }

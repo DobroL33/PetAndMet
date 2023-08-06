@@ -50,8 +50,8 @@ public class AnimalApiController {
     }
 
     @GetMapping("api/v1/animal")
-    public Result GetAnimal(@RequestParam(value = "id") String id) {
-        FindAnimalByIdResponse response = animalService.findOne(id);
+    public Result GetAnimal(@RequestParam String uuid) {
+        FindAnimalByIdResponse response = animalService.findOne(uuid);
 
         if (response != null) {
             return new Result("true", response, "null");
@@ -91,5 +91,13 @@ public class AnimalApiController {
         }
         UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 성공");
         return new Result("false", response, "null");
+    }
+
+    @GetMapping("/api/v1/animal/page-count")
+    public Result getPageCount(@RequestParam("center_uuid") String uuid, @RequestParam Long size) {
+        Long findPageCount = animalService.findPageCount(uuid, size);
+
+        PageCountResponse response = new PageCountResponse(findPageCount);
+        return new Result("true", response, "null");
     }
 }

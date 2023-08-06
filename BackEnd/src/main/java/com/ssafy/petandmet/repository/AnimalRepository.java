@@ -17,5 +17,8 @@ public interface AnimalRepository extends JpaRepository<Animal, String> {
 
     @Query("select a from Animal a where a.name = :name and a.specie = :specie and a.breed = :breed")
     List<Animal> findAnimalBySearch(String name, String specie, String breed);
+
+    @Query("select count(a) from Animal a where a.center.uuid = :uuid")
+    Long findTotalCount(String uuid);
 }
 
