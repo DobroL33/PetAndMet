@@ -19,7 +19,7 @@ public class LiveDetailResponse {
     private String sessionName;
     private String thumbnail;
     private CenterDto center;
-    private List<AnimalDto> animal;
+    private AnimalDto animal;
 
     public LiveDetailResponse(Live live) {
         this.message = "라이브 상세 조회 성공";
@@ -28,9 +28,7 @@ public class LiveDetailResponse {
         this.sessionName = live.getSessionName();
         this.thumbnail = live.getThumbnail();
         this.center = new CenterDto(live.getCenter());
-        this.animal = live.getAnimal().stream()
-                .map(o -> new AnimalDto(o))
-                .collect(Collectors.toList());
+        this.animal = new AnimalDto(live.getAnimal());
     }
 
     @Data
