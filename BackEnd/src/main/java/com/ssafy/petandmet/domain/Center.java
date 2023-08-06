@@ -37,8 +37,8 @@ public class Center {
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
-    private Animal animal;
+    @OneToMany(mappedBy = "center")
+    private List<Animal> animal = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")
     @Builder.Default
