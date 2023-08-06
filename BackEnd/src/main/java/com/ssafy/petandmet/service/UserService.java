@@ -401,4 +401,12 @@ public class UserService {
         log.debug(userUuid);
         userRepository.updatePhotoUrl(userUuid, fileName);
     }
+
+    public String getPhotoUrl(String userUuid) {
+        Optional<String> photoUrl = userRepository.getPhotoUrl(userUuid);
+        if (photoUrl.isPresent()) {
+            return photoUrl.get();
+        }
+        throw new IllegalStateException("사용자를 찾을 수 없습니다.");
+    }
 }

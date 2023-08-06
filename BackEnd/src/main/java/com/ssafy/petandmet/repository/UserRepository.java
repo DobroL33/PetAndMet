@@ -26,5 +26,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("update User u set u.photoUrl = :fileName where u.uuid = :uuid")
     @Modifying
     void updatePhotoUrl(String uuid, String fileName);
+
+    @Query("select u.photoUrl from User u where u.uuid = :uuid")
+    Optional<String> getPhotoUrl(String uuid);
 }
 

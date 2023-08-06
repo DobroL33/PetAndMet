@@ -256,4 +256,19 @@ public class UserApiController {
         }
         return new Result("실패", "업로드 실패", "null");
     }
+
+    /**
+     * 프로필 사진 불러오기
+     *
+     * @return 만료시간 설정된 url
+     */
+    @GetMapping("/profile")
+    public Result getProfileUrl() {
+        log.debug("사용자 프로필 사진 불러오기 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String photoUrl = userService.getPhotoUrl(uuid.get());
+        String profileUrl = s3Service.getProfileUrl(photoUrl);
+        log.debug(profileUrl);
+        return new Result("성공", profileUrl, "null");
+    }
 }
