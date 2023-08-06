@@ -235,6 +235,13 @@ public class UserApiController {
         return new Result("성공", interestAnimals, "null");
     }
 
+    /**
+     * 사용자 프로필 업로드
+     *
+     * @param request 사진
+     * @return 업로드 유무
+     * @throws FileUploadException 이미지 업로드 오류
+     */
     @PostMapping("/profile")
     public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
         log.debug("사용자 프로필 사진 등록 컨트롤러");
