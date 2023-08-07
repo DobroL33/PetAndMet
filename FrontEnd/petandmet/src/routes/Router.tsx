@@ -18,9 +18,19 @@ import QnaForm from '../components/Board/QnaForm'
 import QnaList from '../components/Board/QnaList'
 import VolunteerPage from '../components/Volunteer/VolunteerPage'
 import WalkPage from '../components/Volunteer/walkpage'
+import Navbar from '../components/Main/Navbar'
+import AdoptReviewDetail from '../components/Board/AdoptReviewDetail'
+import DonateReviewDetail from '../components/Board/DonateReviewDetail'
+import NoticeDetail from '../components/Board/NoticeDetail'
+import QnaDetail from '../components/Board/QnaDetail'
+import CenterPage from '../components/Center/CenterPage'
+import Charge from '../components/Donate/Charge'
+import ItemList from '../components/Item/ItemList'
+import ItemDetail from '../containers/components/ItemDetail'
 const App = () => {
   return (
     <BrowserRouter>
+    <Navbar></Navbar>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
@@ -41,6 +51,14 @@ const App = () => {
         <Route path="/qna" element={<QnaList />} />
         <Route path="/volunteer" element={<VolunteerPage />} />
         <Route path="/walk" element={<WalkPage />} />
+        <Route path='/adopt/review/detail/:id' element={<AdoptReviewDetail/>}/>
+        <Route path='/donate/review/detail/:id' element={<DonateReviewDetail/>}/>
+        <Route path='/comm/notice/detail/:id' element={<NoticeDetail/>}/>
+        <Route path='/comm/qna/detail/:id' element={<QnaDetail/>}/>
+        <Route path='/admin' element={<CenterPage/>}/>
+        <Route path='/donate/charge' element={<Charge/>}/>
+        <Route path='/donate/item' element={<ItemList/>}/>
+        <Route path='/donate/item/:id' element={<ItemDetail/>}/>
       </Routes>
     </BrowserRouter>
   )

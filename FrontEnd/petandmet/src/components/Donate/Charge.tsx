@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import kakaopay from '../images/kakaopay.png';
+import kakaopay from '../../images/kakaopay.png';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const options = [5000, 10000, 15000, 20000, 50000];
