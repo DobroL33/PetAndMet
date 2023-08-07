@@ -1,8 +1,12 @@
 package com.ssafy.petandmet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.petandmet.dto.animal.AdoptionStatus;
+import com.ssafy.petandmet.dto.animal.CharacterType;
+import com.ssafy.petandmet.dto.animal.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -17,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -68,7 +71,7 @@ public class Animal {
 
     private String noticeDate;
 
-    private LocalDateTime adotionStartDate;
+    private LocalDateTime adoptionStartDate;
 
     @Column(name = "animal_photo_url")
     private String photoUrl;
@@ -89,7 +92,7 @@ public class Animal {
     //==연관관계 메서드==//
     public void setCenter(Center center) {
         this.center = center;
-        center.getAnimal().add(this);
+        center.getAnimals().add(this);
     }
 
     public void setLive(Live live) {

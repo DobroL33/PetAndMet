@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class AnimalService {
     public String delete(String id) {
         Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
             throw new NullPointerException();
-        });;
+        });
         animalRepository.delete(findAnimal);
         return id;
     }
@@ -39,7 +40,7 @@ public class AnimalService {
 
         Animal findAnimal = animalRepository.findById(uuid).orElseThrow(() -> {
             throw new NullPointerException();
-        });;
+        });
 
         FindAnimalByIdResponse response = FindAnimalByIdResponse.builder()
                 .message("강아지 조회 성공")
@@ -53,13 +54,13 @@ public class AnimalService {
                 .enterAge(findAnimal.getEnterAge())
                 .gender(findAnimal.getGender())
                 .adoptionStatus(findAnimal.getAdoptionStatus())
-                .adotionStartDate(findAnimal.getAdotionStartDate())
+                .adotionStartDate(findAnimal.getAdoptionStartDate())
                 .noticeDate(findAnimal.getNoticeDate())
                 .character(findAnimal.getCharacterType())
                 .photoUrl(findAnimal.getPhotoUrl())
                 .build();
 
-        if(findAnimal.getCenter() != null) {
+        if (findAnimal.getCenter() != null) {
             Center center = centerRepository.findById(findAnimal.getCenter().getUuid()).orElseThrow(() -> {
                 throw new NullPointerException();
             });
@@ -74,7 +75,7 @@ public class AnimalService {
         String id = request.getUuid();
         Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
             throw new NullPointerException();
-        });;
+        });
 
         findAnimal.setName(request.getName());
         findAnimal.setAge(request.getAge());
@@ -83,7 +84,7 @@ public class AnimalService {
         findAnimal.setFindPlace(request.getFindPlace());
         findAnimal.setEnterDate(request.getEnterDate());
         findAnimal.setAdoptionStatus(request.getAdoptionStatus());
-        findAnimal.setAdotionStartDate(request.getAdoptionStartDate());
+        findAnimal.setAdoptionStartDate(request.getAdoptionStartDate());
         findAnimal.setEnterAge(request.getEnterAge());
         findAnimal.setNoticeDate(request.getNoticeDate());
         findAnimal.setCharacterType(request.getCharacter());
@@ -104,6 +105,9 @@ public class AnimalService {
             throw new NullPointerException();
         });
 
+        String currentTime = LocalDateTime.now().toString();
+        String photoUrl = currentTime + request.getPhoto().getOriginalFilename();
+
         Animal animal = Animal.builder()
                 .uuid(animalUuid)
                 .name(request.getName())
@@ -119,7 +123,7 @@ public class AnimalService {
                 .enterAge(request.getEnterAge())
                 .adoptionStatus(request.getAdoptionStatus())
                 .characterType(request.getCharacter())
-                .photoUrl(request.getPhotoUrl())
+                .photoUrl(photoUrl)
                 .build();
 
 //        validateDuplicateAnimal(animal); //중복 회원 검증
@@ -151,6 +155,6 @@ public class AnimalService {
         if (totalCount == 0) {
             return 0L;
         }
-        return (totalCount-1)/size + 1;
+        return (totalCount - 1) / size + 1;
     }
 }
