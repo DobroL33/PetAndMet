@@ -87,6 +87,23 @@ public class TokenProvider {
                 .build();
     }
 
+    public Token regenerateToken(Authentication authentication, Token token) {
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION_TIME);
+        String accessToken = createAccessToken(authentication.getName(), authorities, accessTokenExpiresIn);
+
+        return Token.builder()
+                .type(AUTHENTICATION_PREFIX)
+                .accessToken(accessToken)
+                .refreshToken(token.getRefreshToken())
+                .build();
+    }
+
     public String createAccessToken(String userUuid, String authorities, Date accessTokenExpiresIn) {
         log.debug("userUuid = " + userUuid);
         log.debug("authorities = " + authorities);
@@ -128,6 +145,7 @@ public class TokenProvider {
             log.warn("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.warn("만료된 JWT 토큰입니다.");
+
         } catch (UnsupportedJwtException e) {
             log.warn("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {

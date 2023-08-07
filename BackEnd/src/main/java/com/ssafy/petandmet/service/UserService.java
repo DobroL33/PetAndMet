@@ -29,6 +29,7 @@ import com.ssafy.petandmet.repository.InterestRepository;
 import com.ssafy.petandmet.repository.RefreshTokenRepository;
 import com.ssafy.petandmet.repository.UserRepository;
 import com.ssafy.petandmet.repository.WalkRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +49,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
@@ -438,5 +442,34 @@ public class UserService {
             friendliness = 100L;
         }
         return friendliness;
+    }
+
+    public Token refresh(HttpServletRequest request) {
+        String jwtToken = resolveToken(request);
+
+        if (jwtToken != null && tokenProvider.validateToken(jwtToken)) {
+            Token refreshToken = refreshTokenRepository.findById(jwtToken).orElseThrow(() -> {
+                throw new NullPointerException();
+            });
+
+            Authentication authentication = tokenProvider.getAuthentication(jwtToken);
+            Token token = tokenProvider.regenerateToken(authentication, refreshToken);
+
+            refreshTokenRepository.delete(refreshToken);
+            refreshTokenRepository.save(token);
+
+            return token;
+        }
+
+        return null;
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        final String BEARER_PREFIX = "Bearer ";
+        String bearerToken = request.getHeader(AUTHORIZATION);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(BEARER_PREFIX.length());
+        }
+        return null;
     }
 }
