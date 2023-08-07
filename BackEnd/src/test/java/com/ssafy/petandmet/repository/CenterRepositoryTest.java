@@ -37,7 +37,7 @@ public class CenterRepositoryTest {
     }
 
     @Test
-    void 보호소를_수정할수있다(){
+    void 보호소를_수정한다(){
         //given
         Center center = Center.builder()
                 .uuid("aa1")
