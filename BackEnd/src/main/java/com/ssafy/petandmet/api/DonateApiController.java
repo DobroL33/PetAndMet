@@ -21,26 +21,31 @@ public class DonateApiController {
 
     @PostMapping("api/v1/donate/animal")
     public Result createDonate(@RequestBody CreateAnimalDonateRequest request) {
-        if (donateService.addAnimalDonate(request)) {
+        try {
+            donateService.addAnimalDonate(request);
+
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
             return new Result(true, response, "null");
-        };
-        CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result(false, response, "null");
+        } catch (Exception e) {
+            CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
+            return new Result(false, response, e.getMessage());
+        }
     }
     @PostMapping("api/v1/donate/center")
     public Result createCenterItemDonate(@RequestBody CreateCenterItemDonateRequest request) {
-        if (donateService.addCenterItemDonate(request)) {
+        try {
+            donateService.addCenterItemDonate(request);
+
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
             return new Result(true, response, "null");
-        };
-        CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result(false, response, "null");
+        } catch (Exception e) {
+            CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
+            return new Result(false, response, e.getMessage());
+        }
     }
 
     @GetMapping("api/v1/donate")
     public Result getPossibleDonateItem(@RequestParam String uuid) {
-
         List<CenterItem> possibleCenterItem = donateService.findPossibleItem(uuid);
 
         if (!possibleCenterItem.isEmpty()) {
