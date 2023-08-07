@@ -10,7 +10,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { useParams } from "react-router-dom";
-import { resolve } from "dns/promises";
+
+import useAnimal from "../../hooks/Animal/useAnimal"; // useAnimal의 경로에 맞게 수정해주세요.
+
 /* ### Streaming - 후원하기 파트
 
 1. 목록 클릭 ⇒ 보호소가 등록한 필요 물품 조회 ( 일단 클릭해서 들어오기 전에 Zustand에 보호소id를 state에 저장하고 들어오는 거 ) 
@@ -41,39 +43,21 @@ const CustomButton = styled(Button)(({ theme }) => ({
   margin: "5px",
 }));
 
+const AnimalInfoContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  padding: theme.spacing(3),
+  borderRadius: "5px",
+}));
+
 function StreamingPage() {
   const { animal_uuid } = useParams();
-  const [Animals, setAnimals] = useState({
-    error: null,
-    response: null,
-  });
+
+  const fetchAnimalData = useAnimal((state) => state.fetchAnimalData);
+  const { name: animalName, age: animalAge } = useAnimal();
 
   useEffect(() => {
-    const accessToken =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og";
-
-    const test = axios.get<any>(
-      `https://i9b302.p.ssafy.io/api/v1/animal?id=aa`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    console.log(test);
-  });
-
-  if (!Animals.response) {
-    // Data is still loading
-    return <div>Loading...</div>;
-  }
-
-  if (Animals.error) {
-    // Error occurred during API fetch
-    return <div>Error: {Animals.error}</div>;
-  }
-
-  const { name, age, specie, message } = Animals.response;
+    fetchAnimalData();
+  }, [fetchAnimalData]);
 
   return (
     <>
@@ -111,7 +95,7 @@ function StreamingPage() {
                     width: "90%",
                   }}
                 >
-                  <h1 font-size="lg">ㅇㅇ</h1>
+                  {/* 동물 데이터의 이름과 나이 출력 */}
                 </Box>
               </Box>
             </Grid>
@@ -151,15 +135,10 @@ function StreamingPage() {
                 src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                 alt=""
               />
-              <h4 className="m-5">
-                Name: {name}
-                <br />
-                Age: {age}
-                <br />
-                Specie: {specie}
-                <br />
-                Message: {message}
-              </h4>
+              {/* <AnimalInfoContainer> */}
+              <h2>{animalName}</h2>
+              <p>나이: {animalAge}</p>
+              {/* </AnimalInfoContainer> */}
             </Box>
 
             {/* Bottom Left */}
