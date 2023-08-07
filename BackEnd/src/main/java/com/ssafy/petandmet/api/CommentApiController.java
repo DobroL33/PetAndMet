@@ -1,7 +1,7 @@
 package com.ssafy.petandmet.api;
 
-import com.ssafy.petandmet.dto.board.BoardResponse;
-import com.ssafy.petandmet.dto.board.CreateBoardRequest;
+import com.ssafy.petandmet.domain.Comment;
+
 import com.ssafy.petandmet.dto.board.Result;
 import com.ssafy.petandmet.dto.comment.CommentResponse;
 import com.ssafy.petandmet.dto.comment.CreateCommentRequest;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,5 +47,12 @@ public class CommentApiController {
             CommentResponse response = new CommentResponse("500", "댓글 정보 삭제 실패");
             return new Result("false", response, "null");
         }
+    }
+
+    //게시판의 모든 댓글 찾기
+    @GetMapping("/qna")
+    public Result findQnaComment(@RequestParam(value = "id") Long id){
+        List<Comment> collect = commentService.findByBoardId(id);
+        return new Result("성공",collect,"null");
     }
 }
