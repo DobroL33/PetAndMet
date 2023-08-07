@@ -29,40 +29,48 @@ public class CenterApiController {
     //보호소 전제 조회
     @GetMapping
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
-        Page<Center> findCenter = centerService.findAll(pageable);
-        if(!findCenter.isEmpty()){
+        try{
+            Page<Center> findCenter = centerService.findAll(pageable);
             List<FindAllCenterResponse> response =findCenter.stream()
                     .map(o -> new FindAllCenterResponse(o))
                     .collect(toList());
 
             return new Result("true", response, "null");
+
+        }catch (Exception e){
+            return new Result("false", "null", "null");
+
         }
 
-        return new Result("false", "null", "null");
     }
 
     //보호소 한개 찾기
     @GetMapping("/detail")
     public Result GetCenter(@RequestParam(value = "id") String id){
-        FindCenterByIdResponse response = centerService.findOne(id);
-
-        if(response != null){
+        try {
+            FindCenterByIdResponse response = centerService.findOne(id);
             return new Result("true", response, "null");
+
+        }catch (Exception e){
+            return new Result("false", "null", "null");
+
         }
 
-        return new Result("false", "null", "null");
+
     }
 
     //보호소 정보 수정
     @PatchMapping
     public Result updateCenter(@RequestBody UpdateCenterRequest request){
-        if(centerService.update(request)){
+        try {
+            centerService.update(request);
             UpdateCenterResponse response = new UpdateCenterResponse("200", "보호소 정보 수정 성공");
             return  new Result("true", response,"null");
+        }catch (Exception e){
+            UpdateCenterResponse response = new UpdateCenterResponse("500", "보호소 정보 수정 실패");
+            return  new Result("false", response,"null");
         }
 
-        UpdateCenterResponse response = new UpdateCenterResponse("500", "보호소 정보 수정 실패");
-        return  new Result("false", response,"null");
     }
 
 
