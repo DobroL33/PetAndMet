@@ -25,12 +25,12 @@ public class CommentApiController {
     public Result createComment(@RequestBody CreateCommentRequest request) {
         try {
             commentService.join(request);
-            BoardResponse response = new BoardResponse("200", "QNA 정보 등록 성공");
-            return new Result("true", response, "null");
+            CommentResponse response = new CommentResponse("200", "QNA 정보 등록 성공");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
-            BoardResponse response = new BoardResponse("500", "QNA 정보 등록 실패");
-            return new Result("false", response, "null");
+            CommentResponse response = new CommentResponse("500", "QNA 정보 등록 실패");
+            return new Result(false, response, "null");
         }
     }
 
@@ -41,11 +41,11 @@ public class CommentApiController {
         try {
             Long deleteId = commentService.delete(id);
             CommentResponse response = new CommentResponse("200", "댓글 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         catch (Exception e){
             CommentResponse response = new CommentResponse("500", "댓글 정보 삭제 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -53,6 +53,6 @@ public class CommentApiController {
     @GetMapping("/qna")
     public Result findQnaComment(@RequestParam(value = "id") Long id){
         List<Comment> collect = commentService.findByBoardId(id);
-        return new Result("성공",collect,"null");
+        return new Result(true, collect,"null");
     }
 }
