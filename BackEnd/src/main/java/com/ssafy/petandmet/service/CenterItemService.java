@@ -22,7 +22,7 @@ public class CenterItemService {
     private final CenterRepository centerRepository;
 
     @Transactional
-    public boolean addItem(CreateCenterItemRequest request) {
+    public void addItem(CreateCenterItemRequest request) {
         Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
@@ -35,17 +35,15 @@ public class CenterItemService {
                 .build();
 
         centerItemRepository.save(centerItem);
-        return true;
     }
 
     @Transactional
-    public boolean removeItem(Long id) {
+    public void removeItem(Long id) {
         centerItemRepository.deleteById(id);
-        return true;
     }
 
     @Transactional
-    public boolean updateItem(UpdateCenterItemRequest request) {
+    public void updateItem(UpdateCenterItemRequest request) {
         CenterItem centerItem = centerItemRepository.findById(request.getCenterItemId()).orElseThrow(() -> {
             throw new NullPointerException();
         });;
@@ -53,8 +51,6 @@ public class CenterItemService {
         centerItem.setItemName(request.getItemName());
         centerItem.setItemUrl(request.getItemUrl());
         centerItem.setTargetPrice(request.getItemTargetPrice());
-
-        return true;
     }
 
     public List<CenterItem> findCenterItem(String uuid) {

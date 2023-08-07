@@ -22,39 +22,46 @@ public class CenterItemApiController {
 
     @PostMapping("api/v1/center/item")
     public Result createCenterItem(@RequestBody CreateCenterItemRequest request) {
+        try {
+            centerItemService.addItem(request);
 
-        if (centerItemService.addItem(request)) {
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 등록 성공", "200");
             return new Result(true, response, "null");
+        } catch (Exception e) {
+            CreateCenterItemResponse response = new CreateCenterItemResponse("품목 등록 실패", "500");
+            return new Result(false, response, e.getMessage());
         }
-        CreateCenterItemResponse response = new CreateCenterItemResponse("품목 등록 실패", "500");
-        return new Result(false, response, "null");
     }
 
     @DeleteMapping("api/v1/center/item/{id}")
     public Result removeCenterItem(@PathVariable Long id) {
-        if (centerItemService.removeItem(id)) {
+        try {
+            centerItemService.removeItem(id);
+
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 삭제 성공", "200");
             return new Result(true, response, "null");
+
+        } catch (Exception e) {
+            CreateCenterItemResponse response = new CreateCenterItemResponse("품목 삭제 실패", "500");
+            return new Result(false, response, e.getMessage());
         }
-        CreateCenterItemResponse response = new CreateCenterItemResponse("품목 삭제 실패", "200");
-        return new Result(false, response, "null");
     }
 
     @PatchMapping("api/v1/center/item")
     public Result updateCenterItem(@RequestBody UpdateCenterItemRequest request) {
+        try {
+            centerItemService.updateItem(request);
 
-        if (centerItemService.updateItem(request)) {
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 정보 수정 성공", "200");
             return new Result(true, response, "null");
+        } catch (Exception e) {
+            CreateCenterItemResponse response = new CreateCenterItemResponse("품목 정보 수정 실패", "500");
+            return new Result(false, response, e.getMessage());
         }
-        CreateCenterItemResponse response = new CreateCenterItemResponse("품목 정보 수정 실패", "500");
-        return new Result(false, response, "null");
     }
 
     @GetMapping("api/v1/center/item")
     public Result getCenterItem(@RequestParam String uuid) {
-
         List<CenterItem> centerItem = centerItemService.findCenterItem(uuid);
 
         if (!centerItem.isEmpty()) {
