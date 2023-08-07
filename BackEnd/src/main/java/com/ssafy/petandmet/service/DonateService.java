@@ -22,7 +22,7 @@ public class DonateService {
     private final UserRepository userRepository;
     private final AnimalRepository animalRepository;
 
-    public boolean addAnimalDonate(CreateAnimalDonateRequest request) {
+    public void addAnimalDonate(CreateAnimalDonateRequest request) {
         User user = userRepository.findById(request.getUserUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
@@ -42,10 +42,8 @@ public class DonateService {
                 .build();
 
         donateRepository.save(donate);
-
-        return true;
     }
-    public boolean addCenterItemDonate(CreateCenterItemDonateRequest request) {
+    public void addCenterItemDonate(CreateCenterItemDonateRequest request) {
         User user = userRepository.findById(request.getUserUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
@@ -65,8 +63,6 @@ public class DonateService {
                 .build();
 
         donateRepository.save(donate);
-
-        return true;
     }
 
     public List<CenterItem> findPossibleItem(String uuid) {

@@ -28,12 +28,11 @@ public class AnimalService {
 
 
     @Transactional
-    public String delete(String id) {
+    public void delete(String id) {
         Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
             throw new NullPointerException();
         });
         animalRepository.delete(findAnimal);
-        return id;
     }
 
     public FindAnimalByIdResponse findOne(String uuid) {
@@ -71,7 +70,7 @@ public class AnimalService {
     }
 
     @Transactional
-    public boolean update(UpdateAnimalRequest request) {
+    public void update(UpdateAnimalRequest request) {
         String id = request.getUuid();
         Animal findAnimal = animalRepository.findById(id).orElseThrow(() -> {
             throw new NullPointerException();
@@ -95,11 +94,9 @@ public class AnimalService {
             });
             findAnimal.setCenter(findCenter);
         }
-
-        return true;
     }
 
-    public boolean join(CreateAnimalRequest request) {
+    public void join(CreateAnimalRequest request) {
         String animalUuid = UUID.randomUUID().toString();
         Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
             throw new NullPointerException();
@@ -126,19 +123,8 @@ public class AnimalService {
                 .photoUrl(photoUrl)
                 .build();
 
-//        validateDuplicateAnimal(animal); //중복 회원 검증
         animalRepository.save(animal);
-        return true;
     }
-
-    private void validateDuplicateAnimal(Animal animal) {
-        List<Animal> findAnimals = animalRepository.findByName(animal.getName());
-
-        if (!findAnimals.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 동물입니다.");
-        }
-    }
-
 
     public List<Animal> findAnimalBySearch(Map<String, String> map) {
         return animalRepository.findAnimalBySearch(map.get("name"), map.get("specie"), map.get("breed"));

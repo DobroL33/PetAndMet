@@ -51,46 +51,57 @@ public class AnimalApiController {
 
     @GetMapping("api/v1/animal")
     public Result GetAnimal(@RequestParam String uuid) {
-        FindAnimalByIdResponse response = animalService.findOne(uuid);
+        try {
+            FindAnimalByIdResponse response = animalService.findOne(uuid);
 
-        if (response != null) {
             return new Result(true, response, "null");
-        }
 
-        return new Result(false, "null", "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
+        }
     }
 
     @DeleteMapping("api/v1/animal/{id}")
     public Result deleteAnimal(@PathVariable("id") String id) {
-        String deleteId = animalService.delete(id);
 
-        if (deleteId != null) {
+        try {
+            animalService.delete(id);
+
             AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
             return new Result(true, response, "null");
+
+        } catch (Exception e) {
+            AnimalResponse response = new AnimalResponse("500", "동물 정보 삭제 실패");
+            return new Result(false, response, e.getMessage());
         }
-        AnimalResponse response = new AnimalResponse("500", "동물 정보 삭제 실패");
-        return new Result(false, "null", "null");
     }
 
     @PostMapping("api/v1/animal")
     public Result createAnimal(@RequestBody CreateAnimalRequest request) {
+        try {
+            animalService.join(request);
 
-        if (animalService.join(request)) {
             AnimalResponse response = new AnimalResponse("200", "강아지 정보 등록 성공");
             return new Result(true, response, "null");
+
+        } catch (Exception e) {
+            AnimalResponse response = new AnimalResponse("500", "강아지 정보 등록 실패");
+            return new Result(false, response, e.getMessage());
         }
-        AnimalResponse response = new AnimalResponse("500", "강아지 정보 등록 실패");
-        return new Result(false, response, "null");
     }
 
     @PatchMapping("/api/v1/animal")
     public Result updateAnimal(@RequestBody UpdateAnimalRequest request) {
-        if (animalService.update(request)) {
+        try {
+            animalService.update(request);
+
             UpdateAnimalResponse response = new UpdateAnimalResponse("200", "강아지 정보 수정 성공");
             return new Result(true, response, "null");
+
+        } catch (Exception e) {
+            UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 실패");
+            return new Result(false, response, e.getMessage());
         }
-        UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 성공");
-        return new Result(false, response, "null");
     }
 
     @GetMapping("/api/v1/animal/page-count")

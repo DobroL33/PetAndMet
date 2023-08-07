@@ -15,7 +15,7 @@ public interface AnimalRepository extends JpaRepository<Animal, String> {
     @Query("select a from Animal a where a.name = :name")
     List<Animal> findByName(String name);
 
-    @Query("select a from Animal a where a.name = :name and a.specie = :specie and a.breed = :breed")
+    @Query("select a from Animal a where (:name is null or a.name = :name) and (:specie is null or a.specie = :specie) and (:breed is null or a.breed = :breed)")
     List<Animal> findAnimalBySearch(String name, String specie, String breed);
 
     @Query("select count(a) from Animal a where a.center.uuid = :uuid")
