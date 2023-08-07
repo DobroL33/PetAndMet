@@ -1,15 +1,20 @@
 import { useState } from 'react'
 import { useLoginMutation, LoginCredentials } from 'hooks/User/useLoginMutation'
+import { useNavigate } from 'react-router-dom'
 function Login() {
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
 
   const login = useLoginMutation()
+  let navigate = useNavigate();
 
   const handleLogin = () => {
     const credentials: LoginCredentials = { id, password }
     login.mutate(credentials)
     console.log(login.data?.response)
+    if (login.isSuccess === true) {
+        navigate('/');
+    }
   }
   return (
     <section className="flex flex-col items-center h-screen">

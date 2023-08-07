@@ -14,14 +14,28 @@ import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import logo from 'images/new_logo.jpg'
 import { useNavigate } from 'react-router-dom'
+import { useCookies, Cookies } from 'react-cookie'
+import { styled } from '@mui/material/styles'
 
-const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입']
+const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입', '로그아웃', '회원탈퇴']
 const settings = ['입양 절차', '입양 신청', '입양 후기']
 const notify = ['공지 사항', '봉사 신청', 'Q & A']
 const charge = ['충전 하기', '후원 하기', '후원 후기']
 
+const NavButton = styled(Button)(({ theme }) => ({
+  my: 2,
+  color: 'white', 
+  display: 'block'
+}))
+
 function Navbar() {
   let navigate = useNavigate()
+  const [cookie, setCookie, removeCookie] = useCookies(['access_token']);
+
+  const logOut = () => {
+    removeCookie('access_token');
+    navigate('/login')
+  }
 
   const goToLogin = () => {
     navigate('/login')
@@ -145,7 +159,7 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page, index) => (
+              {/* {pages.map((page, index) => (
                 <MenuItem
                   key={page}
                   onClick={
@@ -164,7 +178,32 @@ function Navbar() {
                 >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
+              <MenuItem onClick={handleOpenUserMenu}>
+                <Typography textAlign="center">
+                  {pages[0]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleOpenNotify}>    
+                <Typography textAlign="center">
+                  {pages[1]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleOpenCharge}>
+                <Typography textAlign="center">
+                  {pages[2]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={cookie.access_token ? logOut : goToLogin}>
+                <Typography textAlign="center">
+                  {cookie.access_token ? pages[5] : pages[3]}  
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={cookie.access_token ? logOut : goToSignUP}>
+                <Typography textAlign="center">
+                  {cookie.access_token ? pages[6] : pages[4]}
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
 
@@ -172,28 +211,14 @@ function Navbar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Box sx={{ flexGrow: 1 }}></Box>
-            {pages.map((page, index) => (
-              <Button
-                key={page}
-                onClick={
-                  index === 0
-                    ? handleOpenUserMenu
-                    : index === 1
-                    ? handleOpenNotify
-                    : index === 2
-                    ? handleOpenCharge
-                    : index === 3
-                    ? goToLogin
-                    : index === 4
-                    ? goToSignUP
-                    : handleCloseNavMenu
-                }
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
+              <NavButton onClick={handleOpenUserMenu}>{pages[0]}</NavButton>
+              <NavButton onClick={handleOpenNotify}>{pages[1]}</NavButton>
+              <NavButton onClick={handleOpenCharge}>{pages[2]}</NavButton>
+              <NavButton onClick={cookie.access_token ? logOut : goToLogin}
+              >{cookie.access_token ? pages[5] : pages[3]}</NavButton>
+              <NavButton onClick={cookie.access_token ? logOut : goToSignUP}
+              >{cookie.access_token ? pages[6] : pages[4]}</NavButton>
+            </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             {/* <Tooltip title="">
