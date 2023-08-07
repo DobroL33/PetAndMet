@@ -23,19 +23,19 @@ public class DonateApiController {
     public Result createDonate(@RequestBody CreateAnimalDonateRequest request) {
         if (donateService.addAnimalDonate(request)) {
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         };
         CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
     @PostMapping("api/v1/donate/center")
     public Result createCenterItemDonate(@RequestBody CreateCenterItemDonateRequest request) {
         if (donateService.addCenterItemDonate(request)) {
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         };
         CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @GetMapping("api/v1/donate")
@@ -48,9 +48,9 @@ public class DonateApiController {
                     .map(o -> new PossibleItemResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/donate/user")
@@ -62,9 +62,9 @@ public class DonateApiController {
                     .map(o -> new UserDonateResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/donate/center")
@@ -76,9 +76,9 @@ public class DonateApiController {
                     .map(o -> new CenterDonateResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/donate/centeritem")
@@ -87,7 +87,7 @@ public class DonateApiController {
 
         CenterItemDonateTotalPriceRespoonse response = new CenterItemDonateTotalPriceRespoonse("후원 Total Price 조회 성공", "200", totalPrice);
 
-        return new Result("true", response, "null");
+        return new Result(true, response, "null");
     }
 
 
