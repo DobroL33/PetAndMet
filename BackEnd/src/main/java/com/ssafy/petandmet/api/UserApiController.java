@@ -7,6 +7,7 @@ import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
 import com.ssafy.petandmet.service.S3Service;
 import com.ssafy.petandmet.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -76,6 +77,26 @@ public class UserApiController {
         log.debug(request.toString());
         Token token = userService.login(request);
         return new Result(true, token.getAccessToken(), "null");
+    }
+
+    /**
+     * 토큰 재발행
+     *
+     * @param request jwt 토큰
+     * @return access jwt 토큰
+     */
+    @PostMapping("/refresh")
+    public Result refresh(HttpServletRequest request) {
+        try {
+            Token token = userService.refresh(request);
+
+            if (token != null) {
+                return new Result(true, token.getAccessToken(), "null");
+            }
+            return new Result(false, "토큰 정보가 없습니다.", "null");
+        } catch (Exception e) {
+            return new Result(false, "토큰 정보가 유효하지 않습니다.", "null");
+        }
     }
 
     /**
