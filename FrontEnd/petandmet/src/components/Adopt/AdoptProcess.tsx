@@ -6,6 +6,7 @@ import adopt_process_4 from '../../images/adopt_process_4.png'
 import adopt_process_5 from '../../images/adopt_process_5.png'
 import { Container, Grid, Box, Button } from '@mui/material'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from 'react-router-dom'
 
 interface NumberedDivProps {
   title: string
@@ -77,6 +78,12 @@ const AdoptProcess: React.FC = () => {
     "'입양 후기' 게시판에 입양된 동물의 행복한 일상을 공유해주세요.",
   ]
 
+  let navigate = useNavigate();
+
+  const goToAdoptCheckList = () =>{
+    navigate('/adoptchecklist')
+  }
+
   return (
     <>
       <div style={{ padding: 20 }}>
@@ -92,7 +99,7 @@ const AdoptProcess: React.FC = () => {
           <NumberedDiv img={img} title={title[i]} text={text[i]}></NumberedDiv>
         )
       })}
-      <Button>입양 신청하러 가기</Button>
+      <Button onClick={goToAdoptCheckList}>입양 신청하러 가기</Button>
     </>
   )
 }
