@@ -31,10 +31,10 @@ public class BoardApiController {
         try{
             boardService.join(request);
             BoardResponse response = new BoardResponse("200", "입양후기 게시판 정보 등록 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "입양후기 게시판 정보 등록 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
 
     }
@@ -44,9 +44,9 @@ public class BoardApiController {
     public Result GetAdoptBoard(@RequestParam(value = "id") Long id) {
         try {
             FindBoardByIdResponse response = boardService.findOne(id);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false","null","null");
+            return new Result(false,"null","null");
         }
     }
 
@@ -59,9 +59,9 @@ public class BoardApiController {
                     .map(o -> new FindAllBoardResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
         }
 
     }
@@ -73,10 +73,10 @@ public class BoardApiController {
         try {
             boardService.update(request);
             UpdateBoardResponse response = new UpdateBoardResponse("200", "입양후기 게시판 정보 수정 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             UpdateBoardResponse response = new UpdateBoardResponse("500", "입양후기 게시판 정보 수정 성공");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
 
     }
@@ -88,11 +88,11 @@ public class BoardApiController {
         try {
             Long deleteId = boardService.delete(id);
             BoardResponse response = new BoardResponse("200", "입양후기 게시판 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "입양후기 게시판 정보 삭제 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
 
     }
@@ -106,10 +106,10 @@ public class BoardApiController {
         try{
             boardService.join(request);
             BoardResponse response = new BoardResponse("200", "후원후기 게시판 정보 등록 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "후원후기 게시판 정보 등록 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -118,9 +118,9 @@ public class BoardApiController {
     public Result GetSupportBoard(@RequestParam(value = "id") Long id) {
         try {
             FindBoardByIdResponse response = boardService.findOne(id);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false","null","null");
+            return new Result(false,"null","null");
         }
     }
 
@@ -133,9 +133,9 @@ public class BoardApiController {
                     .map(o -> new FindAllBoardResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
         }
     }
 
@@ -146,10 +146,10 @@ public class BoardApiController {
         try {
             boardService.update(request);
             UpdateBoardResponse response = new UpdateBoardResponse("200", "후원후기 게시판 수정 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             UpdateBoardResponse response = new UpdateBoardResponse("500", "후원후기 게시판 수정 성공");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -160,11 +160,11 @@ public class BoardApiController {
         try {
             Long deleteId = boardService.delete(id);
             BoardResponse response = new BoardResponse("200", "후원후기 게시판 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "후원후기 게시판 정보 삭제 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -177,10 +177,10 @@ public class BoardApiController {
         try{
             boardService.join(request);
             BoardResponse response = new BoardResponse("200", "공지사항 게시판 정보 등록 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "공지사항 게시판 정보 등록 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
 
     }
@@ -190,9 +190,9 @@ public class BoardApiController {
     public Result GetNoticeBoard(@RequestParam(value = "id") Long id) {
         try {
             FindBoardByIdResponse response = boardService.findOne(id);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false","null","null");
+            return new Result(false,"null","null");
         }
     }
 
@@ -205,9 +205,9 @@ public class BoardApiController {
                     .map(o -> new FindAllBoardResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
         }
     }
 
@@ -218,10 +218,10 @@ public class BoardApiController {
         try {
             boardService.update(request);
             UpdateBoardResponse response = new UpdateBoardResponse("200", "공지사항 게시판 수정 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             UpdateBoardResponse response = new UpdateBoardResponse("500", "공지사항 게시판 수정 성공");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -232,11 +232,11 @@ public class BoardApiController {
         try {
             Long deleteId = boardService.delete(id);
             BoardResponse response = new BoardResponse("200", "공지사항 게시판 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "공지사항 게시판 정보 삭제 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -249,10 +249,10 @@ public class BoardApiController {
         try{
             boardService.join(request);
             BoardResponse response = new BoardResponse("200", "QNA 게시판 정보 등록 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "QNA 게시판 정보 등록 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -261,9 +261,9 @@ public class BoardApiController {
     public Result GetQnaBoard(@RequestParam(value = "id") Long id) {
         try {
             FindBoardByIdResponse response = boardService.findOne(id);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false","null","null");
+            return new Result(false,"null","null");
         }
     }
 
@@ -276,9 +276,9 @@ public class BoardApiController {
                     .map(o -> new FindAllBoardResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         } catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
         }
     }
 
@@ -289,10 +289,10 @@ public class BoardApiController {
         try {
             boardService.update(request);
             UpdateBoardResponse response = new UpdateBoardResponse("200", "QNA 게시판 수정 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }catch (Exception e){
             UpdateBoardResponse response = new UpdateBoardResponse("500", "QNA 게시판 수정 성공");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
@@ -303,11 +303,11 @@ public class BoardApiController {
         try {
             Long deleteId = boardService.delete(id);
             BoardResponse response = new BoardResponse("200", "QNA 게시판 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
             BoardResponse response = new BoardResponse("500", "QNA 게시판 정보 삭제 실패");
-            return new Result("false", response, "null");
+            return new Result(false, response, "null");
         }
     }
 
