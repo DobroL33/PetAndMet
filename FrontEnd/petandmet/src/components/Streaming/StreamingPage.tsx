@@ -1,16 +1,14 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { useState, useEffect } from "react";
-import * as React from "react";
-import axios from "axios";
+import CssBaseline from '@mui/material/CssBaseline'
+import Container from '@mui/material/Container'
+import { Button } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { useParams } from "react-router-dom";
-import { resolve } from "dns/promises";
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
+import { useParams } from 'react-router-dom'
 /* ### Streaming - 후원하기 파트
 
 1. 목록 클릭 ⇒ 보호소가 등록한 필요 물품 조회 ( 일단 클릭해서 들어오기 전에 Zustand에 보호소id를 state에 저장하고 들어오는 거 ) 
@@ -22,35 +20,35 @@ import { resolve } from "dns/promises";
 6. TotalPrice도 함께 form에 등록할 거임. */
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: 'center',
   color: theme.palette.text.secondary,
-}));
+}))
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#FFA629",
-  color: "white",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  boxShadow: "none",
-  "&:hover": {
-    backgroundColor: "orange",
+  backgroundColor: '#FFA629',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  boxShadow: 'none',
+  '&:hover': {
+    backgroundColor: 'orange',
   },
-  margin: "5px",
-}));
+  margin: '5px',
+}))
 
 function StreamingPage() {
-  const { animal_uuid } = useParams();
+  const { animal_uuid } = useParams()
   const [Animals, setAnimals] = useState({
     error: null,
     response: null,
-  });
+  })
 
   useEffect(() => {
     const accessToken =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og";
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og'
 
     const test = axios.get<any>(
       `https://i9b302.p.ssafy.io/api/v1/animal?id=aa`,
@@ -59,21 +57,21 @@ function StreamingPage() {
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    );
-    console.log(test);
-  });
+    )
+    console.log(test)
+  })
 
   if (!Animals.response) {
     // Data is still loading
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (Animals.error) {
     // Error occurred during API fetch
-    return <div>Error: {Animals.error}</div>;
+    return <div>Error: {Animals.error}</div>
   }
 
-  const { name, age, specie, message } = Animals.response;
+  const { name, age, specie, message } = Animals.response
 
   return (
     <>
@@ -82,11 +80,11 @@ function StreamingPage() {
       <Container
         sx={{
           my: 5,
-          display: "flex",
-          flexDirection: "column",
-          bgcolor: "#ffffff",
-          height: "45rem",
-          width: "98%",
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: '#ffffff',
+          height: '45rem',
+          width: '98%',
           borderRadius: 5,
         }}
       >
@@ -97,18 +95,18 @@ function StreamingPage() {
             <Grid item xs={12} md={9}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
                 <Box
                   sx={{
-                    backgroundColor: "#7b7777",
+                    backgroundColor: '#7b7777',
                     flex: 1,
-                    height: "100%",
-                    width: "90%",
+                    height: '100%',
+                    width: '90%',
                   }}
                 >
                   <h1 font-size="lg">ㅇㅇ</h1>
@@ -119,15 +117,15 @@ function StreamingPage() {
             <Grid item xs={12} md={3}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                   borderRadius: 5,
                 }}
               >
                 <Box
-                  sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
+                  sx={{ backgroundColor: '#f8d260', flex: 1, borderRadius: 5 }}
                 >
                   후원할 공간입니다
                 </Box>
@@ -135,15 +133,15 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: '100%' }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: "#FFA629",
-                height: "100%",
-                display: "flex",
+                backgroundColor: '#FFA629',
+                height: '100%',
+                display: 'flex',
                 borderRadius: 5,
-                justifyContent: "Left",
+                justifyContent: 'Left',
               }}
             >
               <img
@@ -167,7 +165,7 @@ function StreamingPage() {
         </Grid>
       </Container>
     </>
-  );
+  )
 }
 
-export default StreamingPage;
+export default StreamingPage

@@ -7,7 +7,6 @@ import MainLive from 'components/Live/LiveList'
 import AnimalList from 'components/Animal/AnimalList'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import VolunteerPage from 'components/Volunteer/VolunteerPage'
 
 const btn = ['라이브', '보호동물', '봉사']
 const CustomButton = styled(Button)(({ theme }) => ({
