@@ -146,7 +146,7 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    void 게시판을_수정할수있다(){
+    void 게시판을_수정한다(){
         //given
         User user = User.builder()
                 .uuid("user")
@@ -184,7 +184,7 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    void 게시판을_삭제할수있다(){
+    void 게시판을_삭제한다(){
         //given
         User user = User.builder()
                 .uuid("user")
