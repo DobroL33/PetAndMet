@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import logo from 'images/new_logo.jpg'
-// import { Route, Routes, Link,  useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입']
 const settings = ['입양 절차', '입양 신청', '입양 후기']
@@ -21,6 +21,42 @@ const notify = ['공지 사항', '봉사 신청', 'Q & A']
 const charge = ['충전 하기', '후원 하기', '후원 후기']
 
 function Navbar() {
+  let navigate = useNavigate()
+
+  const goToLogin = () => {
+    navigate('/login')
+  }
+  const goToSignUP = () => {
+    navigate('/register')
+  }
+  const goToAdoptProcess = () => {
+    navigate('/adpotprocess')
+  }
+  const goToAdoptCheckList = () => {
+    navigate('/adoptchecklist')
+  }
+  const goToAdoptReview = () => {
+    navigate('/adoptreview')
+  }
+  const goToNotice = () => {
+    navigate('/notice')
+  }
+  const goToVolunteer = () => {
+    navigate('/volunteer')
+  }
+  const goToQna = () => {
+    navigate('/qna')
+  }
+  const goToCharge = () => {
+    navigate('/donate/charge')
+  }
+  const goToDonate = () => {
+    navigate('/donate/item')
+  }
+  const goToDonateReview = () => {
+    navigate('/donatereview')
+  }
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -119,6 +155,10 @@ function Navbar() {
                       ? handleOpenNotify
                       : index === 2
                       ? handleOpenCharge
+                      : index === 3
+                      ? goToLogin
+                      : index === 4
+                      ? goToSignUP
                       : handleCloseNavMenu
                   }
                 >
@@ -142,6 +182,10 @@ function Navbar() {
                     ? handleOpenNotify
                     : index === 2
                     ? handleOpenCharge
+                    : index === 3
+                    ? goToLogin
+                    : index === 4
+                    ? goToSignUP
                     : handleCloseNavMenu
                 }
                 sx={{ my: 2, color: 'white', display: 'block' }}
@@ -173,8 +217,19 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <MenuItem
+                  key={setting}
+                  onClick={
+                    index === 0
+                      ? goToAdoptProcess
+                      : index === 1
+                      ? goToAdoptCheckList
+                      : index === 2
+                      ? goToAdoptReview
+                      : handleCloseUserMenu
+                  }
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -195,8 +250,19 @@ function Navbar() {
               open={Boolean(anchorElNotify)}
               onClose={handleCloseNotify}
             >
-              {notify.map(item => (
-                <MenuItem key={item} onClick={handleCloseNotify}>
+              {notify.map((item, index) => (
+                <MenuItem
+                  key={item}
+                  onClick={
+                    index === 0
+                      ? goToNotice
+                      : index === 1
+                      ? goToVolunteer
+                      : index === 2
+                      ? goToQna
+                      : handleCloseNotify
+                  }
+                >
                   <Typography textAlign="center">{item}</Typography>
                 </MenuItem>
               ))}
@@ -217,8 +283,19 @@ function Navbar() {
               open={Boolean(anchorElCharge)}
               onClose={handleCloseCharge}
             >
-              {charge.map(item => (
-                <MenuItem key={item} onClick={handleCloseCharge}>
+              {charge.map((item, index) => (
+                <MenuItem
+                  key={item}
+                  onClick={
+                    index === 0
+                      ? goToCharge
+                      : index === 1
+                      ? goToDonate
+                      : index === 2
+                      ? goToDonateReview
+                      : handleCloseCharge
+                  }
+                >
                   <Typography textAlign="center">{item}</Typography>
                 </MenuItem>
               ))}
