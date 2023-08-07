@@ -8,5 +8,6 @@ FROM nginx:1.21
 
 # Copy the built React application from the build-stage
 COPY --from=build-stage app /usr/share/nginx/html
+COPY custom-default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -2,22 +2,22 @@ import Typography from '@mui/material/Typography';
 import List from '../../containers/components/List';
 
 interface Data {
-  번호: string;
-  제목: string | JSX.Element;
-  작성자: string;
-  조회수: number;
-  등록일: string;
+  num: string;
+  title: string | JSX.Element;
+  writter: string;
+  view: number;
+  date: string;
 }
 
 function createData(
-  번호: string,
-  제목: string | JSX.Element,
-  작성자: string,
-  조회수: number,
+  num: string,
+  title: string | JSX.Element,
+  writter: string,
+  view: number,
 ): Data {
   const currentDate: Date = new Date();
-  const 등록일:string = currentDate.toISOString();
-  return { 번호, 제목, 작성자, 조회수, 등록일 };
+  const date:string = currentDate.toISOString();
+  return { num, title, writter, view, date };
 }
 
 const rows = [

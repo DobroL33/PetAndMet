@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import { Container } from '@mui/material';
 
 interface Column {
-  id: '번호' | '제목' | '작성자' | '조회수' | '등록일';
+  id: 'num' | 'title' | 'writter' | 'view' | 'date';
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -18,24 +18,24 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: '번호', label: '번호', minWidth: 170 },
-  { id: '제목', label: '제목', minWidth: 100 },
+  { id: 'num', label: '번호', minWidth: 170 },
+  { id: 'title', label: '제목', minWidth: 100 },
   {
-    id: '작성자',
+    id: 'writter',
     label: '작성자',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: '조회수',
+    id: 'view',
     label: '조회수',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: '등록일',
+    id: 'date',
     label: '등록일',
     minWidth: 170,
     align: 'right',
@@ -44,22 +44,22 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-  번호: string;
-  제목: string | JSX.Element;
-  작성자: string;
-  조회수: number;
-  등록일: string;
+  num: string;
+  title: string | JSX.Element;
+  writter: string;
+  view: number;
+  date: string;
 }
 
 function createData(
-  번호: string,
-  제목: string | JSX.Element,
-  작성자: string,
-  조회수: number,
+  num: string,
+  title: string | JSX.Element,
+  writter: string,
+  view: number,
 ): Data {
   const currentDate: Date = new Date();
-  const 등록일:string = currentDate.toISOString();
-  return { 번호, 제목, 작성자, 조회수, 등록일 };
+  const date:string = currentDate.toISOString();
+  return { num, title, writter, view, date };
 }
 
 interface ListProps{
@@ -104,7 +104,7 @@ function List(props:ListProps) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                     return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.번호}>
+                        <TableRow hover role="checkbox" tabIndex={-1} key={row.num}>
                         {columns.map((column) => {
                             const value = row[column.id];
                             return (
