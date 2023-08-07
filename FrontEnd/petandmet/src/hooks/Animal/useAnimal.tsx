@@ -1,3 +1,5 @@
+// useAnimal.ts 파일
+
 import create from "zustand";
 import { domain } from "../../hooks/customQueryClient";
 import { getAccessTokenFromLocalStorage } from "./useAuth";
@@ -27,32 +29,47 @@ const useAnimal = create<UseAnimalState>((set) => ({
       }
 
       const uuid = "aa"; // UUID를 'aa'로 설정
-      const animalData = await fetchAnimalData(uuid, accessToken);
+      const animalData = await fetchAnimalDataFromApi(uuid, accessToken);
 
-      set((state) => ({
-        ...state,
-        ...animalData,
-      }));
+      // 데이터에서 필요한 값을 추출하여 상태 업데이트
+      set({
+        name: animalData.name,
+        age: animalData.age,
+        // 필요한 추가 정보들도 필요에 따라 업데이트
+      });
     } catch (error) {
       console.error("애완동물 데이터 가져오기 오류:", error);
     }
   },
 }));
 
-async function fetchAnimalData(
+async function fetchAnimalDataFromApi(
   uuid: string,
   accessToken: string
 ): Promise<AnimalData> {
   const url = `${domain}/animal?uuid=${uuid}`;
-  const response = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  ``;
-  console.log({ response });
-  const data: AnimalData = { name: "abc", age: 123 };
-  return data;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // API 응답 데이터의 response 프로퍼티에서 필요한 데이터 추출
+    const responseData = response.data.response;
+    const data: AnimalData = {
+      name: responseData.name,
+      age: responseData.age,
+      // 필요한 추가 정보들도 필요에 따라 추가
+    };
+    console.log(responseData);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("API 요청 에러:", error);
+    throw error;
+  }
 }
 
 export default useAnimal;

@@ -59,6 +59,11 @@ function StreamingPage() {
     fetchAnimalData();
   }, [fetchAnimalData]);
 
+  useEffect(() => {
+    console.log("동물 이름:", animalName); // 상태 업데이트 확인을 위한 출력
+    console.log("동물 나이:", animalAge); // 상태 업데이트 확인을 위한 출력
+  }, [animalName, animalAge]);
+
   return (
     <>
       <CssBaseline />
@@ -136,7 +141,7 @@ function StreamingPage() {
                 alt=""
               />
               {/* <AnimalInfoContainer> */}
-              <h2>{animalName}</h2>
+              <h2>이름 : {animalName}</h2>
               <p>나이: {animalAge}</p>
               {/* </AnimalInfoContainer> */}
             </Box>
