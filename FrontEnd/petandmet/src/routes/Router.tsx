@@ -18,9 +18,12 @@ import QnaForm from '../components/Board/QnaForm'
 import QnaList from '../components/Board/QnaList'
 import VolunteerPage from '../components/Volunteer/VolunteerPage'
 import WalkPage from '../components/Volunteer/walkpage'
+import Navbar from '../components/Main/Navbar'
+
 const App = () => {
   return (
     <BrowserRouter>
+    <Navbar></Navbar>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
