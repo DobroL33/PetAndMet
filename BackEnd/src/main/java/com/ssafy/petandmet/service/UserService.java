@@ -1,23 +1,46 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.config.TokenProvider;
+import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
-import com.ssafy.petandmet.domain.Donate;
+import com.ssafy.petandmet.domain.EmailType;
+import com.ssafy.petandmet.domain.Interest;
 import com.ssafy.petandmet.domain.RoleType;
 import com.ssafy.petandmet.domain.User;
+import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.jwt.Token;
-import com.ssafy.petandmet.dto.user.*;
-import com.ssafy.petandmet.repository.*;
+import com.ssafy.petandmet.dto.user.CheckEmailAuthRequest;
+import com.ssafy.petandmet.dto.user.CreateUserRequest;
+import com.ssafy.petandmet.dto.user.EmailAuthentication;
+import com.ssafy.petandmet.dto.user.FindIdRequest;
+import com.ssafy.petandmet.dto.user.IdCheckRequest;
+import com.ssafy.petandmet.dto.user.InterestAnimalRequest;
+import com.ssafy.petandmet.dto.user.LoginUserRequest;
+import com.ssafy.petandmet.dto.user.ModifyInfoRequest;
+import com.ssafy.petandmet.dto.user.PasswordResetRequest;
+import com.ssafy.petandmet.dto.user.SendEmailAuthRequest;
+import com.ssafy.petandmet.dto.user.UserInfoResponse;
+import com.ssafy.petandmet.repository.AnimalRepository;
+import com.ssafy.petandmet.repository.CenterRepository;
+import com.ssafy.petandmet.repository.EmailAuthenticationRepository;
+import com.ssafy.petandmet.repository.InterestRepository;
+import com.ssafy.petandmet.repository.RefreshTokenRepository;
+import com.ssafy.petandmet.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -32,8 +55,15 @@ public class UserService {
     private final CenterRepository centerRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EmailAuthenticationRepository emailAuthenticationRepository;
+    private final AnimalRepository animalRepository;
+    private final InterestRepository interestRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
     private final DonateRepository donateRepository;
     private final WalkRepository walkRepository;
 
@@ -193,6 +223,9 @@ public class UserService {
                 .code(code)
                 .build();
         emailAuthenticationRepository.save(emailAuthentication);
+        Map<String, String> contents = new HashMap<>();
+        contents.put(EmailType.CODE.toString(), Integer.toString(code));
+        emailService.send(EmailType.CODE.toString(), request.getEmail(), contents);
     }
 
     /**
@@ -223,6 +256,48 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 아이디 찾기
+     * 이메일 인증 코드 확인
+     *
+     * @param request 사용자 이메일, 코드
+     * @return 코드 일치 여부
+     */
+    @Transactional
+    public boolean checkEmailAuthCode(FindIdRequest request) {
+        log.debug("이메일 인증 코드 확인 서비스");
+        Optional<EmailAuthentication> emailAuthentication = emailAuthenticationRepository.findById(request.getEmail());
+        log.debug("emailAuthentication = " + emailAuthentication);
+        if (emailAuthentication.isPresent() && request.getCode() == emailAuthentication.get().getCode()) {
+            emailAuthenticationRepository.delete(emailAuthentication.get());
+            sendIdToEmail(request.getEmail());
+            log.debug("이메일 인증 성공");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 이메일로 사용자의 아이디 전송
+     *
+     * @param email 사용자 이메일
+     */
+    private void sendIdToEmail(String email) {
+        log.debug("메일 전송");
+        Optional<User> user = userRepository.findByUserEmail(email);
+        if (user.isPresent()) {
+            log.debug(user.get().toString());
+            Map<String, String> contents = new HashMap<>();
+            contents.put(EmailType.ID.toString(), getHiddenId(user.get().getId()));
+            emailService.send(EmailType.ID.toString(), email, contents);
+        }
+    }
+
+    private String getHiddenId(String id) {
+        int len = id.length();
+        return id.substring(0, len / 3) + id.substring(len / 3).replaceAll("[a-zA-Z0-9]", "*");
     }
 
     public UserInfoResponse getUserInfo(String uuid) {
@@ -294,6 +369,47 @@ public class UserService {
             user.get().setPhone(request.getPhone());
             userRepository.save(user.get());
         }
+    }
+
+    public boolean interestAnimal(InterestAnimalRequest request) {
+        log.debug("동물 찜하기 서비스");
+        log.debug(request.toString());
+        Optional<Animal> animal = animalRepository.findById(request.getAnimalUuid());
+        Optional<User> user = userRepository.findById(request.getUserUuid());
+        if (animal.isPresent() && user.isPresent()) {
+            Optional<Interest> findInterest = interestRepository.findByUserAnimal(request.getUserUuid(), request.getAnimalUuid());
+            if (findInterest.isPresent()) {
+                interestRepository.delete(findInterest.get());
+                return false;
+            } else {
+                Interest interest = Interest.builder()
+                        .user(user.get())
+                        .animal(animal.get())
+                        .build();
+                interestRepository.save(interest);
+                return true;
+            }
+        }
+        throw new NullPointerException("해당하는 동물이나 사람을 찾을 수 없습니다.");
+    }
+
+    public List<InterestAnimal> getInterestAnimals(Pageable pageable, String userUuid) {
+        System.out.println("userUuid = " + userUuid);
+        return interestRepository.findInterestAnimals(pageable, userUuid);
+    }
+
+    @Transactional
+    public void setPhotoUrl(String userUuid, String fileName) {
+        log.debug(userUuid);
+        userRepository.updatePhotoUrl(userUuid, fileName);
+    }
+
+    public String getPhotoUrl(String userUuid) {
+        Optional<String> photoUrl = userRepository.getPhotoUrl(userUuid);
+        if (photoUrl.isPresent()) {
+            return photoUrl.get();
+        }
+        throw new IllegalStateException("사용자를 찾을 수 없습니다.");
     }
 
     public Long findAnimalFriendliness(AnimalFriendlinessRequest request) {

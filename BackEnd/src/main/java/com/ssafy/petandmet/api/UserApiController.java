@@ -1,15 +1,22 @@
 package com.ssafy.petandmet.api;
 
+import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
+import com.ssafy.petandmet.service.S3Service;
 import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,6 +25,8 @@ import java.util.Optional;
 @Slf4j
 public class UserApiController {
     private final UserService userService;
+    private final S3Service s3Service;
+    private final int INTEREST_ANIMAL_COUNT = 8;
 
     /**
      * 동물 우호도 조회
@@ -196,5 +205,88 @@ public class UserApiController {
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
         uuid.ifPresent(s -> userService.modifyInfo(s, request));
         return new Result("성공", "개인정보 수정", "null");
+    }
+
+    @PostMapping("/find-id")
+    public Result findId(@RequestBody FindIdRequest request) {
+        log.debug("아이디 찾기 컨트롤러");
+        boolean isValid = userService.checkEmailAuthCode(request);
+        log.debug("isValid = " + isValid);
+        if (isValid) {
+            return new Result("성공", "이메일 인증", "null");
+        }
+        return new Result("실패", "이메일 인증", "null");
+    }
+
+    /**
+     * 동물 찜하기
+     *
+     * @param request 사용자 uuid, 동물 uuid
+     * @return 좋아요 결과
+     */
+    @PostMapping("/interest")
+    public Result interestAnimal(@RequestBody InterestAnimalRequest request) {
+        log.debug("동물 찜하기 컨트롤러");
+        try {
+            boolean isInterest = userService.interestAnimal(request);
+            if (isInterest) {
+                return new Result("성공", "좋아요", "null");
+            } else {
+                return new Result("성공", "좋아요 취소", "null");
+            }
+        } catch (NullPointerException e) {
+            return new Result("실패", e.getMessage(), "null");
+        }
+    }
+
+    /**
+     * 사용자가 찜한 동물 조회
+     *
+     * @param pageable INTEREST_ANIMAL_COUNT 만큼 조회
+     * @return 찜한 동물들
+     */
+    @GetMapping("/interest")
+    public Result getInterestAnimals(@PageableDefault(size = INTEREST_ANIMAL_COUNT) Pageable pageable) {
+        String userUuid = SecurityUtil.getCurrentUserUuid().get();
+        List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
+        log.debug("관심 가져오기");
+        return new Result("성공", interestAnimals, "null");
+    }
+
+    /**
+     * 사용자 프로필 업로드
+     *
+     * @param request 사진
+     * @return 업로드 유무
+     * @throws FileUploadException 이미지 업로드 오류
+     */
+    @PostMapping("/profile")
+    public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
+        log.debug("사용자 프로필 사진 등록 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String currentTime = LocalDateTime.now().toString();
+        String fileName = currentTime + request.getImage().getOriginalFilename();
+        log.debug(fileName);
+        boolean isUpload = s3Service.uploadFile(request.getImage(), fileName);
+        userService.setPhotoUrl(uuid.get(), fileName);
+        if (isUpload) {
+            return new Result("성공", "업로드 성공", "null");
+        }
+        return new Result("실패", "업로드 실패", "null");
+    }
+
+    /**
+     * 프로필 사진 불러오기
+     *
+     * @return 만료시간 설정된 url
+     */
+    @GetMapping("/profile")
+    public Result getProfileUrl() {
+        log.debug("사용자 프로필 사진 불러오기 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String photoUrl = userService.getPhotoUrl(uuid.get());
+        String profileUrl = s3Service.getProfileUrl(photoUrl);
+        log.debug(profileUrl);
+        return new Result("성공", profileUrl, "null");
     }
 }

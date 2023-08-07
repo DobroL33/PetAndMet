@@ -39,8 +39,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Center center;
 
-    @OneToOne(mappedBy = "user")
-    private Interest interest;
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Interest> interests = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
@@ -58,7 +59,6 @@ public class User {
 
     @Column(name = "user_password")
     private String password;
-
 
     @Column(name = "user_email")
     private String email;
@@ -83,6 +83,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Donate> donates = new ArrayList<>();
+
+    @Column(name = "user_photo_url")
+    private String photoUrl;
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {

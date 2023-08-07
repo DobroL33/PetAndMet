@@ -122,7 +122,7 @@ public class AnimalService {
                 .photoUrl(request.getPhotoUrl())
                 .build();
 
-        validateDuplicateAnimal(animal); //중복 회원 검증
+//        validateDuplicateAnimal(animal); //중복 회원 검증
         animalRepository.save(animal);
         return true;
     }
@@ -131,7 +131,7 @@ public class AnimalService {
         List<Animal> findAnimals = animalRepository.findByName(animal.getName());
 
         if (!findAnimals.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new IllegalStateException("이미 존재하는 동물입니다.");
         }
     }
 

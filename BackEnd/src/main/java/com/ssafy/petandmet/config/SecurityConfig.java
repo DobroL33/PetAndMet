@@ -21,8 +21,15 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler; //인가 제어
     private final CorsConfig corsConfig; //cors 설정
 
-    private static final String[] DEFAULT_LIST = {
-//            "/docs.html"
+    private static final String[] POST_LIST = {
+            //사용자
+            "api/v1/user", //로그인
+            "api/v1/user/new", //회원가입
+            "api/v1/user/id-check", //아이디 중복 확인
+            "api/v1/user/pwd-reset", //비밀번호 초기화
+            "api/v1/user/send-email-auth", //이메일 인증 코드 전송
+            "api/v1/user/check-email-auth", //이메일 인증 코드 확인
+            "api/v1/user/find-id" //아이디 찾기
     };
 
     private static final String[] WHITE_LIST = {
