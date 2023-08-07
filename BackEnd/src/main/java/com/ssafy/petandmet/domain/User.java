@@ -52,6 +52,7 @@ public class User {
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Point> points = new ArrayList<>();
 
     @Column(name = "user_id")
