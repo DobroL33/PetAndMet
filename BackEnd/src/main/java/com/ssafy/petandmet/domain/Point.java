@@ -25,7 +25,8 @@ public class Point {
 
     private LocalDateTime pointDataTime;
 
-    @OneToMany(mappedBy = "point")
-    private List<User> user = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name="user_uuid")
+    private User user;
 
 }

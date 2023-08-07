@@ -40,11 +40,11 @@ public class Donate {
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "animal_uuid")
     private Animal animal;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "center_uuid")
     private Center center;
 

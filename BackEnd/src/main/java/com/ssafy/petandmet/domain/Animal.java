@@ -11,11 +11,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,7 +43,6 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name = "center_uuid")
-    @JsonIgnore
     private Center center;
 
     @Column(name = "animal_name", unique = false)
@@ -57,14 +58,28 @@ public class Animal {
 
     private LocalDateTime enterDate;
 
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private int enterAge;
+
+    @Enumerated(EnumType.STRING)
+    private AdoptionStatus adoptionStatus;
+
+    private String noticeDate;
+
+    private LocalDateTime adotionStartDate;
+
     @Column(name = "animal_photo_url")
     private String photoUrl;
 
-    @OneToOne(mappedBy = "animal")
-    private Donate donate;
+    @Enumerated(EnumType.STRING)
+    private CharacterType characterType;
 
-    @ManyToOne
-    @JoinColumn(name = "live_id")
+    @OneToMany(mappedBy = "animal")
+    private List<Donate> donate = new ArrayList<>();
+
+    @OneToOne(mappedBy = "animal")
     private Live live;
 
     @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
@@ -72,8 +87,12 @@ public class Animal {
     private List<Interest> interests = new ArrayList<>();
 
     //==연관관계 메서드==//
-//    public void setCenter(Center center) {
-//        this.center = center;
-//        center.setAnimal(this);
-//    }
+    public void setCenter(Center center) {
+        this.center = center;
+        center.getAnimal().add(this);
+    }
+
+    public void setLive(Live live) {
+        this.live = live;
+    }
 }

@@ -45,7 +45,11 @@ public class CenterItem {
 
     private int currentPrice;
 
-    @OneToMany(mappedBy = "centerItem")
+    @OneToMany(mappedBy = "centerItem", orphanRemoval = true)
     @Builder.Default
     private List<Donate> donates = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "live_id")
+    private Live live;
 }

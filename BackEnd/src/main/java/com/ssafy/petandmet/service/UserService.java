@@ -64,6 +64,8 @@ public class UserService {
 
     @Value("${spring.mail.username}")
     private String fromEmail;
+    private final DonateRepository donateRepository;
+    private final WalkRepository walkRepository;
 
     /**
      * 사용자 등록
@@ -408,5 +410,30 @@ public class UserService {
             return photoUrl.get();
         }
         throw new IllegalStateException("사용자를 찾을 수 없습니다.");
+    }
+
+    public Long findAnimalFriendliness(AnimalFriendlinessRequest request) {
+
+        Long totalDoantePrice = donateRepository.findTotalPriceByUserIdAndAnimalId(request.getUserUuid(), request.getAnimalUuid());
+        Long WalkCount = walkRepository.findCountByUserIdAndAnimalId(request.getUserUuid(), request.getAnimalUuid());
+
+        Long friendliness = getAnimalFreindLiness(totalDoantePrice, WalkCount);
+
+        return friendliness;
+    }
+
+    private Long getAnimalFreindLiness(Long totalDoantePrice, Long walkCount) {
+        Long friendliness;
+
+        if (totalDoantePrice >= 50000L) {
+            friendliness = 50L; // 50%
+        } else {
+            friendliness = (long)(totalDoantePrice * 0.001); // 1% 씩 증가
+        }
+        friendliness += walkCount * 10;
+        if (friendliness >= 100L) {
+            friendliness = 100L;
+        }
+        return friendliness;
     }
 }

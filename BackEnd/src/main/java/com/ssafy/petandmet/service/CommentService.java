@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,6 +51,12 @@ public class CommentService {
         }
         commentRepository.delete(findComment.get());
         return Optional.of(id);
+    }
+
+    public List<Comment> findByBoardId(Long board){
+//        Board findBoard = boardRepository.findById(board);
+//        Long boardId = findBoard.getId();
+        return commentRepository.findByBoardId(board);
     }
 
 }
