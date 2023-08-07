@@ -80,6 +80,7 @@ public class Animal {
     private CharacterType characterType;
 
     @OneToMany(mappedBy = "animal")
+    @Builder.Default
     private List<Donate> donate = new ArrayList<>();
 
     @OneToOne(mappedBy = "animal")
