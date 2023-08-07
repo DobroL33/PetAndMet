@@ -4,14 +4,12 @@ import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.CenterItem;
 import com.ssafy.petandmet.domain.Live;
-import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
 import com.ssafy.petandmet.dto.live.CreateLiveRequest;
 import com.ssafy.petandmet.dto.live.UpdateLiveRequest;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterItemRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.LiveRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,7 +44,7 @@ public class LiveService {
         return liveRepository.findLiveDetail(id);
     }
 
-    public boolean createLive(CreateLiveRequest request) {
+    public void createLive(CreateLiveRequest request) {
 
         Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
             throw new NullPointerException();
@@ -72,21 +70,17 @@ public class LiveService {
         live.setCenterItem(centerItems);
 
         liveRepository.save(live);
-        return true;
-
     }
 
-    public boolean deleteLive(Long id) {
+    public void deleteLive(Long id) {
         Live live = liveRepository.findById(id).orElseThrow(() -> {
             throw new NullPointerException();
         });
 
         liveRepository.delete(live);
-
-        return true;
     }
 
-    public boolean updateLive(UpdateLiveRequest request) {
+    public void updateLive(UpdateLiveRequest request) {
         Live live = liveRepository.findById(request.getId()).orElseThrow(() -> {
             throw new NullPointerException();
         });
@@ -109,8 +103,6 @@ public class LiveService {
             live.setCenterItem(centerItems);
         }
         live.setSessionName(request.getSessionName());
-
-        return true;
     }
 
 }

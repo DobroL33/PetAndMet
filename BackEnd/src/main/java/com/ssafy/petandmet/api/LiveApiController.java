@@ -23,32 +23,38 @@ public class LiveApiController {
 
     @PostMapping("api/v1/live")
     public Result createLive(@RequestBody CreateLiveRequest request) {
+        try {
+            liveService.createLive(request);
 
-        if (liveService.createLive(request)) {
             CreateLiveResponse response = new CreateLiveResponse("라이브 등록 성공", "200");
             return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
         }
-        return new Result(false, "null", "null");
     }
 
     @DeleteMapping("api/v1/live")
     public Result deleteLive(@RequestParam Long id) {
+        try {
+            liveService.deleteLive(id);
 
-        if (liveService.deleteLive(id)) {
             DeleteLiveResponse response = new DeleteLiveResponse("라이브 삭제 성공", "200");
             return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
         }
-        return new Result(false, "null", "null");
     }
 
     @PatchMapping("api/v1/live")
     public Result updateLive(@RequestBody UpdateLiveRequest request) {
+        try {
+            liveService.updateLive(request);
 
-        if (liveService.updateLive(request)) {
             DeleteLiveResponse response = new DeleteLiveResponse("라이브 수정 성공", "200");
             return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
         }
-        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live")
