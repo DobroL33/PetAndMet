@@ -6,6 +6,8 @@ import { styled } from '@mui/material/styles';
 import MainLive from '../Live/LiveList';
 import AnimalList from '../Animal/AnimalList';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import VolunteerPage from '../Volunteer/VolunteerPage';
 
 const btn = ['라이브', '보호동물', '봉사']
 const CustomButton = styled(Button)(({ theme }) => ({
@@ -22,7 +24,16 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 function MainPage(){
     const [channel, setChannel] = useState(0);
-
+    let navigate = useNavigate();
+    const goToLiveList = () => {
+      navigate('/livelist')
+    }
+    const goToAnimalList = () => {
+      navigate('/animallist')
+    }
+    const goToVolunteer = () => {
+      navigate('/volunteer')
+    }
     return(
     <>
 
@@ -50,10 +61,15 @@ function MainPage(){
             gap: '8px', // 카드 간 간격 설정
             height: '95%',
           }}>
-            {channel === 1 ? <AnimalList></AnimalList> : <MainLive></MainLive>}
+            {channel === 1 ? <AnimalList></AnimalList> 
+            : <MainLive></MainLive>}
         </Box>
 
-      <CustomButton>더보기</CustomButton> 
+      <CustomButton
+        onClick={channel === 1 ? goToAnimalList 
+        : channel === 2 ? goToVolunteer 
+        : goToLiveList}
+        >더보기</CustomButton> 
       {/* 더보기 눌렀을 시 라이브 리스트, 보호동물 리스트 페이지로 각각 이동 추후개발 */}
       </Container>
         </>
