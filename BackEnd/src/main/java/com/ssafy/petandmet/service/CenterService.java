@@ -2,6 +2,7 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.dto.center.FindCenterByIdResponse;
 import com.ssafy.petandmet.dto.center.UpdateCenterRequest;
 import com.ssafy.petandmet.repository.CenterRepository;
 import jakarta.transaction.Transactional;
@@ -25,26 +26,38 @@ public class CenterService {
     }
 
     //보호소 1개 찾기
-    public Optional<Center> findOne(String uuid) {
-        return centerRepository.findById(uuid);
+    public FindCenterByIdResponse findOne(String uuid) {
+        Center findCenter = centerRepository.findById(uuid).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        FindCenterByIdResponse response = FindCenterByIdResponse.builder()
+                .message("보호소 조회 성공")
+                .status("200")
+                .uuid(findCenter.getUuid())
+                .name(findCenter.getName())
+                .address(findCenter.getAddress())
+                .phone(findCenter.getPhone())
+                .email(findCenter.getEmail())
+                .build();
+
+        return response;
     }
 
     //보호소 정보 수정
-    public void update(UpdateCenterRequest request) {
+    public boolean update(UpdateCenterRequest request) {
         String uuid = request.getUuid();
-        Optional<Center> findCenter = centerRepository.findById(uuid);
-        System.out.println("서비스에서 "+ request.toString());
-        if(findCenter.isEmpty()) {
-            return;
-        }
+        Center findCenter = centerRepository.findById(uuid).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
-        findCenter.get().setName(request.getName());
-        findCenter.get().setAddress(request.getAddress());
-        findCenter.get().setPhone(request.getPhone());
-        findCenter.get().setEmail(request.getEmail());
+        findCenter.setName(request.getName());
+        findCenter.setAddress(request.getAddress());
+        findCenter.setPhone(request.getPhone());
+        findCenter.setEmail(request.getEmail());
 //        System.out.println("서비스에서 uuid"+findCenter.get().getUuid() );
 //        System.out.println("서비스에서 address"+findCenter.get().getAddress() );
 //        System.out.println("서비스에서 phone"+findCenter.get().getPhone() );
 //        System.out.println("서비스에서 name"+findCenter.get().getName() );
+        return true;
     }
 }

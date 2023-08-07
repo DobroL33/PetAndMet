@@ -24,33 +24,38 @@ public class CommentService {
     private final CenterRepository centerRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    public Long join(CreateCommentRequest request){
+    public boolean join(CreateCommentRequest request){
 
-        Center center = centerRepository.findByUuid(request.getCenterUuid());
+        Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 //        System.out.println(center.toString());
-        Optional<User> user = userRepository.findByUserUuid(request.getUserUuid());
+        User user = userRepository.findByUserUuid(request.getUserUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 //        System.out.println(user.toString());
-        Board board = boardRepository.findById(request.getBoardId());
+        Board board = boardRepository.findById(request.getBoardId()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
         Comment comment = Comment.builder()
                 .board(board)
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
-                .user(user.get())
+                .user(user)
                 .build();
 
         commentRepository.save(comment);
-        return comment.getId();
+        return true;
     }
 
     @Transactional
-    public Optional<String> delete(String id) {
-        Optional<Comment> findComment = commentRepository.findById(id);
-        if(findComment.isEmpty()) {
-            return Optional.empty();
-        }
-        commentRepository.delete(findComment.get());
-        return Optional.of(id);
+    public Long delete(Long id) {
+        Comment findComment = commentRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        commentRepository.delete(findComment);
+        return id;
     }
 
     public List<Comment> findByBoardId(Long board){

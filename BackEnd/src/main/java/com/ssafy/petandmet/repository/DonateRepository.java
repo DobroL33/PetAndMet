@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DonateRepository extends JpaRepository<Donate, String> {
+public interface DonateRepository extends JpaRepository<Donate, Long> {
     @Query("select d from Donate d where d.user.uuid = :uuid")
     List<Donate> findAllByUserId(String uuid);
 

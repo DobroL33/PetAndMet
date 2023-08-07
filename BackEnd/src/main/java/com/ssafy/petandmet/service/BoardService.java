@@ -4,6 +4,7 @@ import com.ssafy.petandmet.domain.Board;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.board.CreateBoardRequest;
+import com.ssafy.petandmet.dto.board.FindBoardByIdResponse;
 import com.ssafy.petandmet.dto.board.UpdateBoardRequest;
 import com.ssafy.petandmet.repository.BoardRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
@@ -25,13 +26,14 @@ public class BoardService {
     private final CenterRepository centerRepository;
     private final UserRepository userRepository;
     //게시물 등록
-    public Long join(CreateBoardRequest request) {
+    public boolean join(CreateBoardRequest request) {
 
-        System.out.println(request.toString());
-        Center center = centerRepository.findByUuid(request.getCenterUuid());
-        System.out.println(center.toString());
-        Optional<User> user = userRepository.findByUserUuid(request.getUserUuid());
-        System.out.println(user.get().toString());
+        Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        User user = userRepository.findByUserUuid(request.getUserUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
         Board board = Board.builder()
                 .title(request.getTitle())
@@ -40,49 +42,65 @@ public class BoardService {
                 .photoUrl(request.getPhotoUrl())
                 .type(request.getType())
                 .updatedAt(null)
-                .user(user.get())
+                .user(user)
                 .center(center)
                 .build();
 
         boardRepository.save(board);
-        return board.getId();
+        return true;
     }
 
     //게시물 삭제
     @Transactional
-    public Optional<String> delete(String uuid) {
-        Optional<Board> findBoard = boardRepository.findById(uuid);
-        if(findBoard.isEmpty()) {
-            return Optional.empty();
-        }
-        boardRepository.delete(findBoard.get());
-        return Optional.of(uuid);
+    public Long delete(Long id) {
+        Board findBoard = boardRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+        boardRepository.delete(findBoard);
+        return id;
     }
 
     //게시글 1개 찾기(상세보기)
-    public Optional<Board> findOne(String uuid) {
-        return boardRepository.findById(uuid);
+    public FindBoardByIdResponse findOne(Long id) {
+        Board findBoard = boardRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+
+        FindBoardByIdResponse response = FindBoardByIdResponse.builder()
+                .message("게시판 조회 성공")
+                .status("200")
+                .title(findBoard.getTitle())
+                .content(findBoard.getContent())
+                .createdAt(findBoard.getCreatedAt())
+                .photoUrl(findBoard.getPhotoUrl())
+                .type(findBoard.getType())
+                .updatedAt(findBoard.getUpdatedAt())
+                .userUuid(findBoard.getUser().getUuid())
+                .centerUuid(findBoard.getCenter().getUuid())
+                .build();
+
+        return response;
     }
 
     //게시글 정보 수정
     @Transactional
-    public void update(UpdateBoardRequest request) {
-        String id = request.getId();
-        Optional<Board> findBoard = boardRepository.findById(id);
+    public boolean update(UpdateBoardRequest request) {
+        Long id = request.getId();
+        Board findBoard = boardRepository.findById(id).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
-        if(findBoard.isEmpty()) {
-            return;
-        }
+        findBoard.setTitle(request.getTitle());
+        findBoard.setContent(request.getContent());
+        findBoard.setPhotoUrl(request.getPhotoUrl());
+        findBoard.setUpdatedAt(LocalDateTime.now());
 
-        findBoard.get().setTitle(request.getTitle());
-        findBoard.get().setContent(request.getContent());
-        findBoard.get().setPhotoUrl(request.getPhotoUrl());
-        findBoard.get().setUpdatedAt(LocalDateTime.now());
+        return true;
     }
 
     //페이지
-    public Page<Board> findAll(String uuid, String type, Pageable pageable) {
-        return boardRepository.findBoardByType(type, uuid, pageable);
+    public Page<Board> findAllBoard(String uuid, String type, Pageable pageable) {
+        return boardRepository.findBoardByType(uuid, type, pageable);
     }
 
 
