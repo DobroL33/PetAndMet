@@ -1,4 +1,4 @@
-package com.ssafy.petandmet.dto.board;
+package com.ssafy.petandmet.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

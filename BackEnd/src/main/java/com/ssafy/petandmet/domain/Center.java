@@ -64,6 +64,7 @@ public class Center {
     private List<CenterItem> centerItem = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")
+    @Builder.Default
     private List<Donate> donate = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")

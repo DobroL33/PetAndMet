@@ -35,10 +35,10 @@ public class CenterApiController {
                     .map(o -> new FindAllCenterResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
 
         }
 
@@ -49,10 +49,10 @@ public class CenterApiController {
     public Result GetCenter(@RequestParam(value = "id") String id){
         try {
             FindCenterByIdResponse response = centerService.findOne(id);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
 
         }catch (Exception e){
-            return new Result("false", "null", "null");
+            return new Result(false, "null", "null");
 
         }
 
@@ -65,10 +65,10 @@ public class CenterApiController {
         try {
             centerService.update(request);
             UpdateCenterResponse response = new UpdateCenterResponse("200", "보호소 정보 수정 성공");
-            return  new Result("true", response,"null");
+            return  new Result(true, response,"null");
         }catch (Exception e){
             UpdateCenterResponse response = new UpdateCenterResponse("500", "보호소 정보 수정 실패");
-            return  new Result("false", response,"null");
+            return  new Result(false, response,"null");
         }
 
     }

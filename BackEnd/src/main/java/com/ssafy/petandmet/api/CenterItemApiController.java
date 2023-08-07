@@ -25,20 +25,20 @@ public class CenterItemApiController {
 
         if (centerItemService.addItem(request)) {
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 등록 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         CreateCenterItemResponse response = new CreateCenterItemResponse("품목 등록 실패", "500");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @DeleteMapping("api/v1/center/item/{id}")
     public Result removeCenterItem(@PathVariable Long id) {
         if (centerItemService.removeItem(id)) {
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 삭제 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         CreateCenterItemResponse response = new CreateCenterItemResponse("품목 삭제 실패", "200");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @PatchMapping("api/v1/center/item")
@@ -46,10 +46,10 @@ public class CenterItemApiController {
 
         if (centerItemService.updateItem(request)) {
             CreateCenterItemResponse response = new CreateCenterItemResponse("품목 정보 수정 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         CreateCenterItemResponse response = new CreateCenterItemResponse("품목 정보 수정 실패", "500");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @GetMapping("api/v1/center/item")
@@ -62,9 +62,9 @@ public class CenterItemApiController {
                     .map(o -> new CenterItemResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
 }

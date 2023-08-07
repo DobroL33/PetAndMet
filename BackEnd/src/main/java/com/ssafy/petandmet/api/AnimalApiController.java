@@ -29,9 +29,9 @@ public class AnimalApiController {
                     .map(o -> new FindAllAnimalResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/animal/search")
@@ -44,9 +44,9 @@ public class AnimalApiController {
                     .map(o -> new FindAnimalBySearchResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/animal")
@@ -54,10 +54,10 @@ public class AnimalApiController {
         FindAnimalByIdResponse response = animalService.findOne(uuid);
 
         if (response != null) {
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
 
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @DeleteMapping("api/v1/animal/{id}")
@@ -66,10 +66,10 @@ public class AnimalApiController {
 
         if (deleteId != null) {
             AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         AnimalResponse response = new AnimalResponse("500", "동물 정보 삭제 실패");
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @PostMapping("api/v1/animal")
@@ -77,20 +77,20 @@ public class AnimalApiController {
 
         if (animalService.join(request)) {
             AnimalResponse response = new AnimalResponse("200", "강아지 정보 등록 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         AnimalResponse response = new AnimalResponse("500", "강아지 정보 등록 실패");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @PatchMapping("/api/v1/animal")
     public Result updateAnimal(@RequestBody UpdateAnimalRequest request) {
         if (animalService.update(request)) {
             UpdateAnimalResponse response = new UpdateAnimalResponse("200", "강아지 정보 수정 성공");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
         UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 성공");
-        return new Result("false", response, "null");
+        return new Result(false, response, "null");
     }
 
     @GetMapping("/api/v1/animal/page-count")
@@ -98,6 +98,6 @@ public class AnimalApiController {
         Long findPageCount = animalService.findPageCount(uuid, size);
 
         PageCountResponse response = new PageCountResponse(findPageCount);
-        return new Result("true", response, "null");
+        return new Result(true, response, "null");
     }
 }
