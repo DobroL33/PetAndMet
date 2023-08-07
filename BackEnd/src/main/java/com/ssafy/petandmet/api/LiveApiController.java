@@ -26,9 +26,9 @@ public class LiveApiController {
 
         if (liveService.createLive(request)) {
             CreateLiveResponse response = new CreateLiveResponse("라이브 등록 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @DeleteMapping("api/v1/live")
@@ -36,9 +36,9 @@ public class LiveApiController {
 
         if (liveService.deleteLive(id)) {
             DeleteLiveResponse response = new DeleteLiveResponse("라이브 삭제 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @PatchMapping("api/v1/live")
@@ -46,9 +46,9 @@ public class LiveApiController {
 
         if (liveService.updateLive(request)) {
             DeleteLiveResponse response = new DeleteLiveResponse("라이브 수정 성공", "200");
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live")
@@ -60,9 +60,9 @@ public class LiveApiController {
                     .map(o -> new LiveResponseDto(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live/search")
@@ -74,9 +74,9 @@ public class LiveApiController {
                     .map(o -> new LiveListResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live/detail")
@@ -85,9 +85,9 @@ public class LiveApiController {
 
         if (live != null) {
             LiveDetailResponse response = new LiveDetailResponse(live);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
 }
