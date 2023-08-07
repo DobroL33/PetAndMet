@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   RegisterCredential,
   useRegisterMutation,
-} from '../../hooks/useRegisterMutation'
+} from '../../hooks/User/useRegisterMutation'
 
 function Register() {
   const [id, setId] = useState<string>('')
