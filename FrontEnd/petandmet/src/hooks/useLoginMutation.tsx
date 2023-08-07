@@ -28,7 +28,7 @@ export function useLoginMutation(): UseMutationResult<
   const [cookie, setCookie] = useCookies(['access_token'])
   return useMutation<Token, unknown, LoginCredentials, unknown>(axiosData, {
     onSuccess(data, variables, context) {
-      setCookie('access_token', data.response, {
+      setCookie('access_token', 'bearer ' + data.response, {
         secure: true,
         sameSite: 'strict',
       })
