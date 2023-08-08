@@ -8,8 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,28 +63,34 @@ public class User {
     private String email;
 
     @Column(name = "user_phone")
-    private String phone;
+    @Builder.Default
+    private String phone = "";
 
     @Column(name = "user_name")
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private RoleType roleType;
+    private RoleType roleType = RoleType.USER;
 
-    private int attendance;
-
-    @Enumerated(EnumType.STRING)
-    private DonateGradeType donateGrade;
+    @Builder.Default
+    private int attendance = 0;
 
     @Enumerated(EnumType.STRING)
-    private WalkGradeType walkGrade;
+    @Builder.Default
+    private DonateGradeType donateGrade = DonateGradeType.BRONZE;
+
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private WalkGradeType walkGrade = WalkGradeType.BRONZE;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Donate> donates = new ArrayList<>();
 
     @Column(name = "user_photo_url")
-    private String photoUrl;
+    @Builder.Default
+    private String photoUrl = "";
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
