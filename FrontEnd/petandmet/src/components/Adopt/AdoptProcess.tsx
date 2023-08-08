@@ -25,7 +25,7 @@ const NumberedDiv: React.FC<NumberedDivProps> = ({ title, text, img }) => {
       }}
     >
       <Grid container spacing={2}>
-        <Grid xs={3}>
+        <Grid xs={3} sx={{display : 'flex', alignItems : 'center', justifyContent : 'center'}}>
           <img
             src={img}
             alt={`${img} 이미지`}
