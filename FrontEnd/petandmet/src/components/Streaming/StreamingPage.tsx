@@ -11,7 +11,8 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { useParams } from "react-router-dom";
 
-import useAnimal from "../../hooks/Animal/useAnimal"; // useAnimal의 경로에 맞게 수정해주세요.
+import useAnimal from "../../hooks/Animal/useAnimal";
+import useCenter from "../../hooks/Center/useCenter";
 
 /* ### Streaming - 후원하기 파트
 
@@ -44,7 +45,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 const AnimalInfoContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#bf7070",
   padding: theme.spacing(3),
   borderRadius: "5px",
 }));
@@ -54,6 +55,7 @@ function StreamingPage() {
 
   const fetchAnimalData = useAnimal((state) => state.fetchAnimalData);
   const {
+    animalId: animalId,
     name: animalName,
     age: animalAge,
     gender: animalGender,
@@ -61,11 +63,39 @@ function StreamingPage() {
     // enterDate: enterDate,
   } = useAnimal();
 
+  const fetchCenterData = useCenter((state) => state.fetchCenterData);
+  const {
+    centerId: centerId,
+    name: centerName,
+    address: centerAddress,
+    phone: centerPhone,
+    email: centerEmail,
+    // enterDate: enterDate,
+  } = useCenter();
+
   useEffect(() => {
     fetchAnimalData();
   }, [fetchAnimalData]);
 
-  useEffect(() => {}, [animalName, animalAge, animalGender, animalBreed]);
+  useEffect(() => {}, [
+    animalId,
+    animalName,
+    animalAge,
+    animalGender,
+    animalBreed,
+  ]);
+
+  useEffect(() => {
+    fetchCenterData();
+  }, [fetchCenterData]);
+
+  useEffect(() => {}, [
+    centerId,
+    centerName,
+    centerAddress,
+    centerPhone,
+    centerEmail,
+  ]);
 
   return (
     <>
@@ -121,7 +151,20 @@ function StreamingPage() {
                 <Box
                   sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
                 >
-                  후원할 공간입니다
+                  {/* <AnimalInfoContainer>
+                    <Card.Text>보호소 ID : {centerId}</Card.Text>
+                    <Card.Text>보호소 명 : {centerName}</Card.Text>
+                    <Card.Text>보호소 주소 : {centerAddress}</Card.Text>
+                    <Card.Text>보호소 번호 : {centerPhone}</Card.Text>
+                    <Card.Text>이메일 : {centerEmail}</Card.Text>
+                  </AnimalInfoContainer> */}
+                  <AnimalInfoContainer>
+                    <Card.Text>보호소 ID : {centerId}</Card.Text>
+                    <Card.Text>보호소 명 : {centerName}</Card.Text>
+                    <Card.Text>보호소 주소 : {centerAddress}</Card.Text>
+                    <Card.Text>보호소 번호 : {centerPhone}</Card.Text>
+                    <Card.Text>이메일 : {centerEmail}</Card.Text>
+                  </AnimalInfoContainer>
                 </Box>
               </Box>
             </Grid>
@@ -144,10 +187,14 @@ function StreamingPage() {
                 src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                 alt=""
               />
-              <Card.Text>이름 : {animalName}</Card.Text>
-              <Card.Text>나이 : {animalAge}</Card.Text>
-              <Card.Text>성별 : {animalGender}</Card.Text>
-              <Card.Text>종 : {animalBreed}</Card.Text>
+              <AnimalInfoContainer>
+                {/* <Card.Text>동물ID : {animalId}</Card.Text> */}
+                <Card.Text>이름 : {animalName}</Card.Text>
+                <Card.Text>나이 : {animalAge}</Card.Text>
+                <Card.Text>성별 : {animalGender}</Card.Text>
+                <Card.Text>종 : {animalBreed}</Card.Text>
+              </AnimalInfoContainer>
+
               {/* <Card.Text>들어온 날짜 : {enterDate}</Card.Text> */}
             </Box>
 

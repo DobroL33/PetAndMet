@@ -1,11 +1,10 @@
-// useAnimal.ts 파일
-
 import create from "zustand";
 import { domain } from "../../hooks/customQueryClient";
-import { getAccessTokenFromLocalStorage } from "./useAuth";
+import { getAccessTokenFromLocalStorage } from "../useAuth";
 import axios from "axios";
 
 interface AnimalData {
+  animalId: string;
   name: string;
   age: number;
   gender: string;
@@ -17,6 +16,7 @@ interface UseAnimalState extends AnimalData {
 }
 
 const useAnimal = create<UseAnimalState>((set) => ({
+  animalId: "",
   name: "",
   age: 0,
   gender: "",
@@ -30,11 +30,14 @@ const useAnimal = create<UseAnimalState>((set) => ({
         );
         return;
       }
+      // UUID를 일단 'aa'로 설정, aa를 event를 넣어서 현재 state가 aa 같은 uuid가 다른 동물 uuid로 바뀌게끔한다.
+      // ex )
 
-      const uuid = "aa"; // UUID를 'aa'로 설정
+      const uuid = "aa";
       const animalData = await fetchAnimalDataFromApi(uuid, accessToken);
 
       set({
+        animalId: uuid,
         name: animalData.name,
         age: animalData.age,
         gender: animalData.gender,
@@ -62,6 +65,7 @@ async function fetchAnimalDataFromApi(
     // API 응답 데이터의 response 프로퍼티에서 필요한 데이터 추출
     const responseData = response.data.response;
     const data: AnimalData = {
+      animalId: responseData.animalId,
       name: responseData.name,
       age: responseData.age,
       gender: responseData.gender,
