@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.dto.live;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.Live;
@@ -15,7 +16,9 @@ public class LiveDetailResponse {
 
     private String message;
     private int status;
+    @JsonProperty("live_id")
     private Long liveId;
+    @JsonProperty("session_name")
     private String sessionName;
     private String thumbnail;
     private CenterDto center;
@@ -47,8 +50,11 @@ public class LiveDetailResponse {
         private int age;
         private String specie;
         private String breed;
+        @JsonProperty("find_place")
         private String findPlace;
+        @JsonProperty("enter_date")
         private LocalDateTime enterDate;
+        @JsonProperty("photo_url")
         private String photoUrl;
 
         public AnimalDto(Animal animal) {
