@@ -33,7 +33,19 @@ public class Live {
     @JoinColumn(name = "center_uuid")
     private Center center;
 
-    @OneToMany(mappedBy = "live")
+    @OneToOne
+    @JoinColumn(name = "animal_uuid")
+    private Animal animal;
+
+    @OneToMany(mappedBy = "live", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<Animal> animal = new ArrayList<>();
+    private List<CenterItem> centerItems = new ArrayList<>();
+
+    //==연관관계 메서드==//
+    public void setCenterItem(List<CenterItem> centerItems) {
+        this.centerItems.clear();
+        this.centerItems.addAll(centerItems);
+        centerItems.stream()
+                .forEach(o -> o.setLive(this));
+    }
 }

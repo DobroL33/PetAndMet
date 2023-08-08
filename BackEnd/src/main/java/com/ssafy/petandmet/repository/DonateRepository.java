@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DonateRepository extends JpaRepository<Donate, String> {
+public interface DonateRepository extends JpaRepository<Donate, Long> {
     @Query("select d from Donate d where d.user.uuid = :uuid")
     List<Donate> findAllByUserId(String uuid);
 
@@ -17,4 +17,7 @@ public interface DonateRepository extends JpaRepository<Donate, String> {
 
     @Query("select d from Donate d where d.center.uuid = :uuid")
     List<Donate> findAllByCenterId(String uuid);
+
+    @Query("select sum(d.price) from Donate d where d.center.uuid = :uuid and d.centerItem.id = :id")
+    Long findCenterItemDonateTotalPrice(String uuid, Long id);
 }

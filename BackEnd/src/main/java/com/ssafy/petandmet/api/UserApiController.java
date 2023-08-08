@@ -1,16 +1,23 @@
 package com.ssafy.petandmet.api;
 
 import com.ssafy.petandmet.domain.Point;
+import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
 import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
+import com.ssafy.petandmet.service.S3Service;
 import com.ssafy.petandmet.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserApiController {
     private final UserService userService;
+    private final S3Service s3Service;
+    private final int INTEREST_ANIMAL_COUNT = 8;
 
     /**
      * 마일리지 조회
@@ -53,10 +62,10 @@ public class UserApiController {
         try {
             Long response = userService.findAnimalFriendliness(request);
 
-            return new Result("성공", new AnimalFrindlinessResponse(response), "null");
+            return new Result(true, new AnimalFrindlinessResponse(response), "null");
 
         } catch ( Exception e) {
-            return new Result("실패", "null", e.getMessage());
+            return new Result(false, "null", e.getMessage());
         }
     }
 
@@ -73,10 +82,10 @@ public class UserApiController {
         try {
             userService.join(request);
         } catch (IllegalStateException e) {
-            return new Result("실패", "null", e.getMessage());
+            return new Result(false, "null", e.getMessage());
         }
 
-        return new Result("성공", "", "null");
+        return new Result(true, "", "null");
     }
 
     /**
@@ -89,7 +98,27 @@ public class UserApiController {
     public Result login(@RequestBody LoginUserRequest request) {
         log.debug(request.toString());
         Token token = userService.login(request);
-        return new Result("성공", token.getAccessToken(), "null");
+        return new Result(true, token.getAccessToken(), "null");
+    }
+
+    /**
+     * 토큰 재발행
+     *
+     * @param request jwt 토큰
+     * @return access jwt 토큰
+     */
+    @PostMapping("/refresh")
+    public Result refresh(HttpServletRequest request) {
+        try {
+            Token token = userService.refresh(request);
+
+            if (token != null) {
+                return new Result(true, token.getAccessToken(), "null");
+            }
+            return new Result(false, "토큰 정보가 없습니다.", "null");
+        } catch (Exception e) {
+            return new Result(false, "토큰 정보가 유효하지 않습니다.", "null");
+        }
     }
 
     /**
@@ -104,7 +133,7 @@ public class UserApiController {
         log.debug(authorization);
         String accessToken = authorization.substring(7);
         userService.logout(accessToken);
-        return new Result("성공", "로그아웃하였습니다.", "null");
+        return new Result(true, "로그아웃하였습니다.", "null");
     }
 
     /**
@@ -119,9 +148,9 @@ public class UserApiController {
         log.debug(request.toString());
         boolean isExist = userService.isDuplicateId(request);
         if (!isExist) {
-            return new Result("성공", "존재하는 아이디가 없습니다.", "null");
+            return new Result(true, "존재하는 아이디가 없습니다.", "null");
         }
-        return new Result("성공", "존재하는 아이디가 있습니다.", "null");
+        return new Result(true, "존재하는 아이디가 있습니다.", "null");
     }
 
     /**
@@ -135,7 +164,7 @@ public class UserApiController {
         log.debug("이메일 인증 코드 전송 컨트롤러");
         log.debug(request.toString());
         userService.sendEmailAuthCode(request);
-        return new Result("성공", "이메일 인증 코드 전송", "null");
+        return new Result(true, "이메일 인증 코드 전송", "null");
     }
 
     /**
@@ -151,9 +180,9 @@ public class UserApiController {
         boolean isValid = userService.checkEmailAuthCode(request);
         log.debug("isValid = " + isValid);
         if (isValid) {
-            return new Result("성공", "이메일 인증 코드 확인", "null");
+            return new Result(true, "이메일 인증 코드 확인", "null");
         }
-        return new Result("실패", "이메일 인증 코드 확인", "null");
+        return new Result(false, "이메일 인증 코드 확인", "null");
     }
 
     /**
@@ -171,7 +200,7 @@ public class UserApiController {
         if (uuid.isPresent()) {
             userInfoResponse = userService.getUserInfo(uuid.get());
         }
-        return new Result("성공", userInfoResponse, "null");
+        return new Result(true, userInfoResponse, "null");
     }
 
 
@@ -188,10 +217,10 @@ public class UserApiController {
             boolean isWithdrawal = userService.withdrawal(uuid.get());
 
             if (isWithdrawal) {
-                return new Result("성공", "회원 탈퇴", "null");
+                return new Result(true, "회원 탈퇴", "null");
             }
         }
-        return new Result("실패", "회원 탈퇴", "null");
+        return new Result(false, "회원 탈퇴", "null");
     }
 
     /**
@@ -204,7 +233,7 @@ public class UserApiController {
     public Result passwordReset(@RequestBody PasswordResetRequest request) {
         log.debug("임시 비밀번호 초기화 컨트롤러");
         userService.passwordReset(request);
-        return new Result("성공", "비밀번호 초기화", "null");
+        return new Result(true, "비밀번호 초기화", "null");
     }
 
     /**
@@ -218,6 +247,89 @@ public class UserApiController {
         log.debug("개인 정보 수정 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
         uuid.ifPresent(s -> userService.modifyInfo(s, request));
-        return new Result("성공", "개인정보 수정", "null");
+        return new Result(true, "개인정보 수정", "null");
+    }
+
+    @PostMapping("/find-id")
+    public Result findId(@RequestBody FindIdRequest request) {
+        log.debug("아이디 찾기 컨트롤러");
+        boolean isValid = userService.checkEmailAuthCode(request);
+        log.debug("isValid = " + isValid);
+        if (isValid) {
+            return new Result(true, "이메일 인증", "null");
+        }
+        return new Result(false, "이메일 인증", "null");
+    }
+
+    /**
+     * 동물 찜하기
+     *
+     * @param request 사용자 uuid, 동물 uuid
+     * @return 좋아요 결과
+     */
+    @PostMapping("/interest")
+    public Result interestAnimal(@RequestBody InterestAnimalRequest request) {
+        log.debug("동물 찜하기 컨트롤러");
+        try {
+            boolean isInterest = userService.interestAnimal(request);
+            if (isInterest) {
+                return new Result(true, "좋아요", "null");
+            } else {
+                return new Result(true, "좋아요 취소", "null");
+            }
+        } catch (NullPointerException e) {
+            return new Result(false, e.getMessage(), "null");
+        }
+    }
+
+    /**
+     * 사용자가 찜한 동물 조회
+     *
+     * @param pageable INTEREST_ANIMAL_COUNT 만큼 조회
+     * @return 찜한 동물들
+     */
+    @GetMapping("/interest")
+    public Result getInterestAnimals(@PageableDefault(size = INTEREST_ANIMAL_COUNT) Pageable pageable) {
+        String userUuid = SecurityUtil.getCurrentUserUuid().get();
+        List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
+        log.debug("관심 가져오기");
+        return new Result(true, interestAnimals, "null");
+    }
+
+    /**
+     * 사용자 프로필 업로드
+     *
+     * @param request 사진
+     * @return 업로드 유무
+     * @throws FileUploadException 이미지 업로드 오류
+     */
+    @PostMapping("/profile")
+    public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
+        log.debug("사용자 프로필 사진 등록 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String currentTime = LocalDateTime.now().toString();
+        String fileName = currentTime + request.getImage().getOriginalFilename();
+        log.debug(fileName);
+        boolean isUpload = s3Service.uploadFile(request.getImage(), fileName);
+        userService.setPhotoUrl(uuid.get(), fileName);
+        if (isUpload) {
+            return new Result(true, "업로드 성공", "null");
+        }
+        return new Result(false, "업로드 실패", "null");
+    }
+
+    /**
+     * 프로필 사진 불러오기
+     *
+     * @return 만료시간 설정된 url
+     */
+    @GetMapping("/profile")
+    public Result getProfileUrl() {
+        log.debug("사용자 프로필 사진 불러오기 컨트롤러");
+        Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
+        String photoUrl = userService.getPhotoUrl(uuid.get());
+        String profileUrl = s3Service.getProfileUrl(photoUrl);
+        log.debug(profileUrl);
+        return new Result(true, profileUrl, "null");
     }
 }

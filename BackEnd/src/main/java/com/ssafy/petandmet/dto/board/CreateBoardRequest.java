@@ -1,6 +1,7 @@
 package com.ssafy.petandmet.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class CreateBoardRequest {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Builder
     public CreateBoardRequest(String id, String userUuid, String centerUuid, String title, String content, String photoUrl, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userUuid = userUuid;

@@ -1,7 +1,6 @@
 package com.ssafy.petandmet.dto.animal;
 
 import com.ssafy.petandmet.domain.Animal;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,13 +15,29 @@ public class FindAnimalBySearchResponse {
     private String centerUuid;
     private LocalDateTime enteredDate;
 
+    private AdoptionStatus adoptionStatus;
+    private LocalDateTime adoptionStartDate;
+    private Gender gender;
+    private int enterAge;
+    private String noticeDate;
+
+    private CharacterType character;
+
     public FindAnimalBySearchResponse(Animal animal) {
         this.name = animal.getName();
         this.age = animal.getAge();
         this.specie = animal.getSpecie();
         this.breed = animal.getBreed();
         this.findPlace = animal.getFindPlace();
-        this.centerUuid = animal.getCenter().getUuid();
+        if (animal.getCenter() != null) {
+            this.centerUuid = animal.getCenter().getUuid();
+        }
         this.enteredDate = animal.getEnterDate();
+        this.adoptionStatus = animal.getAdoptionStatus();
+        this.adoptionStartDate = animal.getAdoptionStartDate();
+        this.gender = animal.getGender();
+        this.enterAge = animal.getEnterAge();
+        this.noticeDate = animal.getNoticeDate();
+        this.character = animal.getCharacterType();
     }
 }

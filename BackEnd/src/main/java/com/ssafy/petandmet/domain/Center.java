@@ -26,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "user")
+@ToString(exclude = {"user", "animals"})
 public class Center {
 
     @Id
@@ -37,8 +37,9 @@ public class Center {
     @JoinColumn(name = "user_uuid")
     private User user;
 
-    @OneToOne(mappedBy = "center", fetch = FetchType.LAZY)
-    private Animal animal;
+    @OneToMany(mappedBy = "center", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Animal> animals = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")
     @Builder.Default
@@ -63,6 +64,7 @@ public class Center {
     private List<CenterItem> centerItem = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")
+    @Builder.Default
     private List<Donate> donate = new ArrayList<>();
 
     @OneToMany(mappedBy = "center")

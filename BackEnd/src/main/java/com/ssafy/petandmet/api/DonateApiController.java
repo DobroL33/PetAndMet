@@ -3,6 +3,7 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.domain.CenterItem;
 import com.ssafy.petandmet.domain.Donate;
 import com.ssafy.petandmet.dto.animal.Result;
+import com.ssafy.petandmet.dto.centerItem.CenterItemDonateTotalPriceRespoonse;
 import com.ssafy.petandmet.dto.donate.*;
 import com.ssafy.petandmet.service.DonateService;
 import lombok.RequiredArgsConstructor;
@@ -20,26 +21,31 @@ public class DonateApiController {
 
     @PostMapping("api/v1/donate/animal")
     public Result createDonate(@RequestBody CreateAnimalDonateRequest request) {
-        if (donateService.addAnimalDonate(request)) {
+        try {
+            donateService.addAnimalDonate(request);
+
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
-            return new Result("true", response, "null");
-        };
-        CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result("false", response, "null");
+            return new Result(true, response, "null");
+        } catch (Exception e) {
+            CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
+            return new Result(false, response, e.getMessage());
+        }
     }
     @PostMapping("api/v1/donate/center")
     public Result createCenterItemDonate(@RequestBody CreateCenterItemDonateRequest request) {
-        if (donateService.addCenterItemDonate(request)) {
+        try {
+            donateService.addCenterItemDonate(request);
+
             CreateDonateResponse response = new CreateDonateResponse("후원 성공", "200");
-            return new Result("true", response, "null");
-        };
-        CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
-        return new Result("false", response, "null");
+            return new Result(true, response, "null");
+        } catch (Exception e) {
+            CreateDonateResponse response = new CreateDonateResponse("후원 실패", "500");
+            return new Result(false, response, e.getMessage());
+        }
     }
 
     @GetMapping("api/v1/donate")
     public Result getPossibleDonateItem(@RequestParam String uuid) {
-
         List<CenterItem> possibleCenterItem = donateService.findPossibleItem(uuid);
 
         if (!possibleCenterItem.isEmpty()) {
@@ -47,9 +53,9 @@ public class DonateApiController {
                     .map(o -> new PossibleItemResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/donate/user")
@@ -61,9 +67,9 @@ public class DonateApiController {
                     .map(o -> new UserDonateResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/donate/center")
@@ -75,9 +81,18 @@ public class DonateApiController {
                     .map(o -> new CenterDonateResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
+    }
+
+    @GetMapping("api/v1/donate/centeritem")
+    public Result getCenterItemDonateTotalPrice(@RequestParam String uuid, @RequestParam Long id) {
+        Long totalPrice = donateService.findCenterItemDonateTotalPrice(uuid, id);
+
+        CenterItemDonateTotalPriceRespoonse response = new CenterItemDonateTotalPriceRespoonse("후원 Total Price 조회 성공", "200", totalPrice);
+
+        return new Result(true, response, "null");
     }
 
 

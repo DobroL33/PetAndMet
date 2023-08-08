@@ -1,6 +1,7 @@
 package com.ssafy.petandmet.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public class CreateCommentRequest {
     private String content;
     private LocalDateTime createdAt;
 
+    @Builder
     public CreateCommentRequest(String id, String userUuid, String centerUuid, Long boardId, String content, LocalDateTime createdAt){
         this.id = id;
         this.userUuid = userUuid;

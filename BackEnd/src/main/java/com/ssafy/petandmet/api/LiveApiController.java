@@ -1,18 +1,15 @@
 package com.ssafy.petandmet.api;
 
 import com.ssafy.petandmet.domain.Live;
+import com.ssafy.petandmet.dto.animal.AnimalResponse;
 import com.ssafy.petandmet.dto.animal.Result;
-import com.ssafy.petandmet.dto.live.LiveDetailResponse;
-import com.ssafy.petandmet.dto.live.LiveListResponse;
-import com.ssafy.petandmet.dto.live.LiveResponseDto;
+import com.ssafy.petandmet.dto.live.*;
 import com.ssafy.petandmet.service.LiveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +21,42 @@ public class LiveApiController {
 
     private final LiveService liveService;
 
+    @PostMapping("api/v1/live")
+    public Result createLive(@RequestBody CreateLiveRequest request) {
+        try {
+            liveService.createLive(request);
+
+            CreateLiveResponse response = new CreateLiveResponse("라이브 등록 성공", "200");
+            return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
+        }
+    }
+
+    @DeleteMapping("api/v1/live")
+    public Result deleteLive(@RequestParam Long id) {
+        try {
+            liveService.deleteLive(id);
+
+            DeleteLiveResponse response = new DeleteLiveResponse("라이브 삭제 성공", "200");
+            return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
+        }
+    }
+
+    @PatchMapping("api/v1/live")
+    public Result updateLive(@RequestBody UpdateLiveRequest request) {
+        try {
+            liveService.updateLive(request);
+
+            DeleteLiveResponse response = new DeleteLiveResponse("라이브 수정 성공", "200");
+            return new Result(true, response, "null");
+        } catch (Exception e) {
+            return new Result(false, "null", e.getMessage());
+        }
+    }
+
     @GetMapping("api/v1/live")
     public Result getLiveList(@PageableDefault(size = 10) Pageable pageable) {
         Page<Live> liveList = liveService.findLiveList(pageable);
@@ -33,9 +66,9 @@ public class LiveApiController {
                     .map(o -> new LiveResponseDto(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live/search")
@@ -47,9 +80,9 @@ public class LiveApiController {
                     .map(o -> new LiveListResponse(o))
                     .collect(toList());
 
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
     @GetMapping("api/v1/live/detail")
@@ -58,9 +91,9 @@ public class LiveApiController {
 
         if (live != null) {
             LiveDetailResponse response = new LiveDetailResponse(live);
-            return new Result("true", response, "null");
+            return new Result(true, response, "null");
         }
-        return new Result("false", "null", "null");
+        return new Result(false, "null", "null");
     }
 
 }

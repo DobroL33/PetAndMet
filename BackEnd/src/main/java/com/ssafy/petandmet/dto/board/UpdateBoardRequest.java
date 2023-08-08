@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class UpdateBoardRequest {
 
-    private String id;
+    private Long id;
     private String user;
     private String center;
     private String title;
@@ -19,7 +19,7 @@ public class UpdateBoardRequest {
     private LocalDateTime updatedAt;
 
     @Builder
-    public UpdateBoardRequest(String id, String user, String center, String title, String content, String photoUrl, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public UpdateBoardRequest(Long id, String user, String center, String title, String content, String photoUrl, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.center = center;
