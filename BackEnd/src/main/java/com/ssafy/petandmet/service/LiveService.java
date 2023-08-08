@@ -53,7 +53,7 @@ public class LiveService {
             throw new NullPointerException();
         });
 
-        List<CenterItem> centerItems = request.getCenterItemUuid().stream()
+        List<CenterItem> centerItems = request.getCenterItemId().stream()
                 .map(o -> {
                     CenterItem centerItem = centerItemRepository.findById(o).orElseThrow(() -> {
                         throw new NullPointerException();
@@ -91,8 +91,8 @@ public class LiveService {
             });
             live.setAnimal(animal);
         }
-        if (request.getCenterItemUuid() != null) {
-            List<CenterItem> centerItems = request.getCenterItemUuid().stream()
+        if (request.getCenterItemId() != null) {
+            List<CenterItem> centerItems = request.getCenterItemId().stream()
                     .map(o -> {
                         CenterItem centerItem = centerItemRepository.findById(o).orElseThrow(() -> {
                             throw new NullPointerException();
