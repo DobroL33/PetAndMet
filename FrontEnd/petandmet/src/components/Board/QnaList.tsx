@@ -46,7 +46,7 @@ function QnaList() {
   let navigate = useNavigate()
 
   const goToCreateForm = () => {
-    navigate('/qnadorm')
+    navigate('/qnaform')
   }
 
   return (
