@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
@@ -134,12 +134,12 @@ public class AnimalService {
                 .characterType(request.getCharacter())
                 .photoUrl(fileName)
                 .build();
-
+        log.debug(animal.toString());
         animalRepository.save(animal);
     }
 
-    public List<Animal> findAnimalBySearch(Map<String, String> map) {
-        return animalRepository.findAnimalBySearch(map.get("name"), map.get("specie"), map.get("breed"));
+    public Page<FindAnimalBySearchResponse> findAnimalBySearch(Map<String, String> map, Pageable pageable) {
+        return animalRepository.findAnimalBySearch(map.get("name"), map.get("specie"), map.get("breed"), pageable);
     }
 
     public Page<Animal> findAll(Pageable pageable) {
