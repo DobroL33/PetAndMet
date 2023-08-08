@@ -70,6 +70,7 @@ public class User {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private RoleType roleType = RoleType.USER;
 
     @Builder.Default
