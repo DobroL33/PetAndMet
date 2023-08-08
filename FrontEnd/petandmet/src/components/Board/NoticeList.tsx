@@ -1,5 +1,8 @@
 import Typography from '@mui/material/Typography'
 import List from 'containers/components/List'
+import { Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+
 interface Data {
   num: string
   title: string | JSX.Element
@@ -39,6 +42,12 @@ const rows = [
 ]
 
 function NoticeList() {
+  let navigate = useNavigate()
+
+  const goToCreateForm = () => {
+    navigate('/noticeform')
+  }
+  
   return (
     <>
       <div style={{ padding: 20 }}>
@@ -50,6 +59,16 @@ function NoticeList() {
         </Typography>
         <List rows={rows}></List>
       </div>
+
+      <div style={{textAlign : 'end', width : '90%'}}>
+        <Button sx={{bgcolor : '#FFBC5F',
+                    color : 'white', 
+                    '&:hover': {bgcolor: 'orange'},
+                    marginTop: '1rem', 
+                  }}
+                onClick={goToCreateForm}
+          >작성</Button>
+       </div>
     </>
   )
 }
