@@ -8,7 +8,7 @@ export function setAccessTokenToLocalStorage(accessToken: string) {
 // Function to get the access token from the local storage
 export function getAccessTokenFromLocalStorage(): string | null {
   const accessToken =
-    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhNzRhNGYxMi0wMGEwLTRhY2EtYjkyNi05NzY4NTMyYWUyZmUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxNDQ1NDAzfQ.aJuZiPW-odYVELCmSxeSyXGX3TSmmr0KIyYIO56BWHNvDV2WQSO68BIzAE6GQ6SSSEmMXT2czz-9w4KbMbcDsw";
+    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5NTMwNTZlMS0wZWNmLTQ3NDYtOGFlNy1hNjJmYTg2YWZlYjciLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxNDYyMDI4fQ.LbopDegq4yWq9v5INKAvGwU4DhaZEoW9T6QbH52aXWqj_alcefuf4y31_kMzy8BcWmfzIFnbPs_imlyPBqbzIw";
   console.log("useAuth 에서의 액세스 토큰은 " + accessToken);
   return accessToken ? accessToken : null;
 }

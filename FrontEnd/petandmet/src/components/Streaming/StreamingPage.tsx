@@ -4,8 +4,8 @@ import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import * as React from "react";
-import axios from "axios";
 
+import Card from "react-bootstrap/Card";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -53,16 +53,19 @@ function StreamingPage() {
   const { animal_uuid } = useParams();
 
   const fetchAnimalData = useAnimal((state) => state.fetchAnimalData);
-  const { name: animalName, age: animalAge } = useAnimal();
+  const {
+    name: animalName,
+    age: animalAge,
+    gender: animalGender,
+    breed: animalBreed,
+    // enterDate: enterDate,
+  } = useAnimal();
 
   useEffect(() => {
     fetchAnimalData();
   }, [fetchAnimalData]);
 
-  useEffect(() => {
-    console.log("동물 이름:", animalName); // 상태 업데이트 확인을 위한 출력
-    console.log("동물 나이:", animalAge); // 상태 업데이트 확인을 위한 출력
-  }, [animalName, animalAge]);
+  useEffect(() => {}, [animalName, animalAge, animalGender, animalBreed]);
 
   return (
     <>
@@ -135,15 +138,17 @@ function StreamingPage() {
                 justifyContent: "Left",
               }}
             >
+              {/* 이미지는 보호소 - 동물 등록 - 동물 이미지 업로드 - 업로드된 이미지 DB - animalImg 추가해주기 && animalImg를 DB에 photoURL로 바인딩 */}
               <img
                 className="h-28 m-5 md-3"
                 src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                 alt=""
               />
-              {/* <AnimalInfoContainer> */}
-              <h2>이름 : {animalName}</h2>
-              <p>나이: {animalAge}</p>
-              {/* </AnimalInfoContainer> */}
+              <Card.Text>이름 : {animalName}</Card.Text>
+              <Card.Text>나이 : {animalAge}</Card.Text>
+              <Card.Text>성별 : {animalGender}</Card.Text>
+              <Card.Text>종 : {animalBreed}</Card.Text>
+              {/* <Card.Text>들어온 날짜 : {enterDate}</Card.Text> */}
             </Box>
 
             {/* Bottom Left */}

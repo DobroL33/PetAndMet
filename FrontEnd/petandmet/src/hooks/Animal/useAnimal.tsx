@@ -8,7 +8,8 @@ import axios from "axios";
 interface AnimalData {
   name: string;
   age: number;
-  // 필요한 추가 속성들을 추가할 수 있습니다.
+  gender: string;
+  breed: string;
 }
 
 interface UseAnimalState extends AnimalData {
@@ -18,6 +19,8 @@ interface UseAnimalState extends AnimalData {
 const useAnimal = create<UseAnimalState>((set) => ({
   name: "",
   age: 0,
+  gender: "",
+  breed: "",
   fetchAnimalData: async () => {
     try {
       const accessToken = getAccessTokenFromLocalStorage();
@@ -31,11 +34,11 @@ const useAnimal = create<UseAnimalState>((set) => ({
       const uuid = "aa"; // UUID를 'aa'로 설정
       const animalData = await fetchAnimalDataFromApi(uuid, accessToken);
 
-      // 데이터에서 필요한 값을 추출하여 상태 업데이트
       set({
         name: animalData.name,
         age: animalData.age,
-        // 필요한 추가 정보들도 필요에 따라 업데이트
+        gender: animalData.gender,
+        breed: animalData.breed,
       });
     } catch (error) {
       console.error("애완동물 데이터 가져오기 오류:", error);
@@ -61,10 +64,9 @@ async function fetchAnimalDataFromApi(
     const data: AnimalData = {
       name: responseData.name,
       age: responseData.age,
-      // 필요한 추가 정보들도 필요에 따라 추가
+      gender: responseData.gender,
+      breed: responseData.breed,
     };
-    console.log(responseData);
-    console.log(data);
     return data;
   } catch (error) {
     console.error("API 요청 에러:", error);
