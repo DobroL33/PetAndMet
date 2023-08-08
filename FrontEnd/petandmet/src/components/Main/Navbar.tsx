@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies, Cookies } from 'react-cookie'
 import { styled } from '@mui/material/styles'
 
-const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입', '로그아웃', '회원탈퇴']
+const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입', '로그아웃', '마이페이지']
 const settings = ['입양 절차', '입양 신청', '입양 후기']
 const notify = ['공지 사항', '봉사 신청', 'Q & A']
 const charge = ['충전 하기', '후원 하기', '후원 후기']
@@ -32,45 +32,64 @@ function Navbar() {
   const logOut = () => {
     removeCookie('access_token');
     navigate('/login')
+    handleCloseNavMenu()
   }
-
   const goToLogin = () => {
     navigate('/login')
+    handleCloseNavMenu()
   }
   const goToSignUP = () => {
     navigate('/register')
+    handleCloseNavMenu()
   }
   const goToAdoptProcess = () => {
     navigate('/adpotprocess')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
   }
   const goToAdoptCheckList = () => {
     navigate('/adoptchecklist')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
   }
   const goToAdoptReview = () => {
     navigate('/adoptreview')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
   }
   const goToNotice = () => {
     navigate('/notice')
-    handleCloseNotify
+    handleCloseNotify()
+    handleCloseNavMenu()
   }
   const goToVolunteer = () => {
     navigate('/volunteer')
-    handleCloseNotify
+    handleCloseNotify()
+    handleCloseNavMenu()
   }
   const goToQna = () => {
     navigate('/qna')
-    handleCloseNotify
+    handleCloseNotify()
+    handleCloseNavMenu()
   }
   const goToCharge = () => {
     navigate('/donate/charge')
-    handleCloseCharge
-
+    handleCloseCharge()
+    handleCloseNavMenu()
   }
   const goToDonate = () => {
     navigate('/donate/item')
+    handleCloseCharge()
+    handleCloseNavMenu()
   }
   const goToDonateReview = () => {
     navigate('/donatereview')
+    handleCloseCharge()
+    handleCloseNavMenu()
+  }
+  const goToMyPage = () => {
+    navigate('/mypage')
+    handleCloseNavMenu()
   }
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -161,26 +180,6 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {/* {pages.map((page, index) => (
-                <MenuItem
-                  key={page}
-                  onClick={
-                    index === 0
-                      ? handleOpenUserMenu
-                      : index === 1
-                      ? handleOpenNotify
-                      : index === 2
-                      ? handleOpenCharge
-                      : index === 3
-                      ? goToLogin
-                      : index === 4
-                      ? goToSignUP
-                      : handleCloseNavMenu
-                  }
-                >
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))} */}
               <MenuItem onClick={handleOpenUserMenu}>
                 <Typography textAlign="center">
                   {pages[0]}
@@ -201,7 +200,7 @@ function Navbar() {
                   {cookie.access_token ? pages[5] : pages[3]}  
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={cookie.access_token ? logOut : goToSignUP}>
+              <MenuItem onClick={cookie.access_token ? goToMyPage : goToSignUP}>
                 <Typography textAlign="center">
                   {cookie.access_token ? pages[6] : pages[4]}
                 </Typography>
@@ -218,7 +217,7 @@ function Navbar() {
               <NavButton onClick={handleOpenCharge}>{pages[2]}</NavButton>
               <NavButton onClick={cookie.access_token ? logOut : goToLogin}
               >{cookie.access_token ? pages[5] : pages[3]}</NavButton>
-              <NavButton onClick={cookie.access_token ? logOut : goToSignUP}
+              <NavButton onClick={cookie.access_token ? goToMyPage : goToSignUP}
               >{cookie.access_token ? pages[6] : pages[4]}</NavButton>
             </Box>
 
