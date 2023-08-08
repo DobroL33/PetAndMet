@@ -47,13 +47,13 @@ function createData(
         <List rows={rows}></List>
       </div>
       <div style={{textAlign : 'end', width : '90%'}}>
-        <Button sx={{bgcolor : '#FFBC5F',
-                    color : 'white', 
-                    '&:hover': {bgcolor: 'orange'},
-                    marginTop: '1rem', 
+      <Button sx={{bgcolor : '#FFBC5F', color : 'white', 
+                  '&:hover': {
+                    bgcolor: 'orange', // Change the hover color to orange
+                    },
                   }}
-                onClick={goToCreateForm}
-          >작성</Button>
+                  onClick={goToCreateForm}
+        >작성</Button>
        </div>
     </>
   )

@@ -83,7 +83,7 @@ function List(props:ListProps) {
   return (
     <>
     <Container>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ width: '100%'}}>
         <TableContainer sx={{ maxHeight: "100%"}}>
             <Table stickyHeader aria-label="sticky table">
             <TableHead>

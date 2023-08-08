@@ -1,8 +1,16 @@
 import { Button, Container, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import InputForm from 'containers/components/Form'
+import { useNavigate } from 'react-router-dom'
 
 function DonateForm() {
+
+  let navigate = useNavigate()
+
+  const goToBack =() => {
+    navigate(-1)
+  }
+
   return (
     <>
       <Container>
@@ -34,6 +42,7 @@ function DonateForm() {
               '&:hover': { backgroundColor: '#FA8072' },
               color: 'black',
             }}
+            onClick={goToBack}
           >
             돌아가기
           </Button>

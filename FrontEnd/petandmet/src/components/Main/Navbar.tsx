@@ -51,15 +51,20 @@ function Navbar() {
   }
   const goToNotice = () => {
     navigate('/notice')
+    handleCloseNotify
   }
   const goToVolunteer = () => {
     navigate('/volunteer')
+    handleCloseNotify
   }
   const goToQna = () => {
     navigate('/qna')
+    handleCloseNotify
   }
   const goToCharge = () => {
     navigate('/donate/charge')
+    handleCloseCharge
+
   }
   const goToDonate = () => {
     navigate('/donate/item')
