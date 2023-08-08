@@ -27,6 +27,7 @@ import CenterPage from 'components/Center/CenterPage'
 import Charge from 'components/Donate/Charge'
 import ItemList from 'components/Item/ItemList'
 import ItemDetail from 'containers/components/ItemDetail'
+import StreamingPage from 'components/Streaming/StreamingPage'
 const App = () => {
   return (
     <BrowserRouter>
@@ -65,6 +66,7 @@ const App = () => {
         <Route path="/donate/charge" element={<Charge />} />
         <Route path="/donate/item" element={<ItemList />} />
         <Route path="/donate/item/:id" element={<ItemDetail />} />
+        <Route path="/livelist/streaming/:id" element={<StreamingPage/>}/>
       </Routes>
     </BrowserRouter>
   )
