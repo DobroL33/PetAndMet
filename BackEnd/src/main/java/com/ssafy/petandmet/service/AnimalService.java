@@ -2,20 +2,25 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
-import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
-import com.ssafy.petandmet.dto.animal.FindAnimalByIdResponse;
-import com.ssafy.petandmet.dto.animal.UpdateAnimalRequest;
+import com.ssafy.petandmet.dto.animal.*;
+import com.ssafy.petandmet.dto.user.UserProfileUploadRequest;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
+import com.ssafy.petandmet.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +30,8 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
 
     private final CenterRepository centerRepository;
+
+    private final S3Service s3Service;
 
 
     @Transactional
@@ -40,6 +47,9 @@ public class AnimalService {
         Animal findAnimal = animalRepository.findById(uuid).orElseThrow(() -> {
             throw new NullPointerException();
         });
+
+        String profileUrl = s3Service.getProfileUrl(findAnimal.getPhotoUrl());
+        findAnimal.setPhotoUrl(profileUrl);
 
         FindAnimalByIdResponse response = FindAnimalByIdResponse.builder()
                 .message("강아지 조회 성공")
@@ -96,14 +106,16 @@ public class AnimalService {
         }
     }
 
-    public void join(CreateAnimalRequest request) {
+    public void join(MultipartFile image, CreateAnimalRequest request) throws FileUploadException {
         String animalUuid = UUID.randomUUID().toString();
         Center center = centerRepository.findById(request.getCenterUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
 
         String currentTime = LocalDateTime.now().toString();
-        String photoUrl = currentTime + request.getPhoto().getOriginalFilename();
+        String fileName = currentTime + image.getOriginalFilename();
+
+        s3Service.uploadFile(image, fileName);
 
         Animal animal = Animal.builder()
                 .uuid(animalUuid)
@@ -120,7 +132,7 @@ public class AnimalService {
                 .enterAge(request.getEnterAge())
                 .adoptionStatus(request.getAdoptionStatus())
                 .characterType(request.getCharacter())
-                .photoUrl(photoUrl)
+                .photoUrl(fileName)
                 .build();
 
         animalRepository.save(animal);
