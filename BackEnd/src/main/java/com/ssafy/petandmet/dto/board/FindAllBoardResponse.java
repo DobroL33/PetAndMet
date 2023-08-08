@@ -19,7 +19,9 @@ public class FindAllBoardResponse {
     @JsonProperty("board_photo_url")
     private String photoUrl;
     private String type;
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
+    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
     public FindAllBoardResponse(Board board) {
