@@ -26,22 +26,43 @@ public class SecurityConfig {
             "api/v1/user", //로그인
             "api/v1/user/new", //회원가입
             "api/v1/user/id-check", //아이디 중복 확인
-            "api/v1/user/pwd-reset", //비밀번호 초기화
             "api/v1/user/send-email-auth", //이메일 인증 코드 전송
             "api/v1/user/check-email-auth", //이메일 인증 코드 확인
-            "api/v1/user/find-id" //아이디 찾기
-    };
-
-    private static final String[] WHITE_LIST = {
-            "/api/v1/**"
-    };
-
-    private static final String[] USER_LIST = {
-            "/api/v1/user"
+            "api/v1/user/pwd-reset", //비밀번호 초기화
+            "api/v1/user/find-id", //아이디 찾기
     };
 
     private static final String[] GET_LIST = {
-            "/api/v1/center"
+            //동물
+            "api/v1/animal", //동물 전체 목록 조회
+            "api/v1/animal/detail", //동물 상세 조회
+            "api/v1/animal/search", //동물 필터링 조회
+            //보호소
+            "api/v1/center", //보호소 페이징 가져오기
+            "api/v1/center/detail", //특정 보호소 정보 가져오기
+            "api/v1/center/item", //보호소가 등록한 물품 조회
+            //라이브
+            "api/v1/live", //현재 방송중인 라이브 전체 조회
+            "api/v1/live/search", //현재 방송중인 라이브 전체 조회
+            "api/v1/live/detail", //라이브 상세 조회
+            //후원
+            "api/v1/donate", //사용자가 후원 가능한 물품 조회
+            //게시판
+            "api/v1/board/adopt", //입양 후기 게시글 전체 조회
+            "api/v1/board/adopt/detail", //입양 후기 게시글 상세 조회
+            "api/v1/board/support", //후원 후기 게시글 전체 조회
+            "api/v1/board/support/detail", //후원 후기 게시글 상세 조회
+            "api/v1/board/notice", //공지사항 게시글 전체 조회
+            "api/v1/board/notice/detail", //공지사항 게시글 상세 조회
+            "api/v1/board/qna", //QNA 게시글 전체 조회
+            "api/v1/board/qna/detail", //QNA 게시글 상세 조회
+            //산책
+            "api/v1//walk/time", //산책 신청 가능한 시간 조회
+    };
+
+    private static final String[] SWAGGER_LIST = {
+            "/v3/api-docs/**",
+            "/swagger*/**"
     };
 
 
@@ -60,28 +81,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     try {
                         auth
-                                .requestMatchers(HttpMethod.POST, "api/v1/user").permitAll() //로그인 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/new").permitAll() //회원가입 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/id-check").permitAll() //아이디 중복확인 API
-                                .requestMatchers(HttpMethod.POST, "api/v1/user/pwd-reset").permitAll() //임시 비밀번호 초기화 API
-                                //게시판
-                                .requestMatchers(HttpMethod.POST, "api/v1/board/adopt").hasAnyRole("USER") //입양후기 게시판 작성
-                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/adopt").hasAnyRole("USER","CENTER") //입양후기 게시판 수정
-                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/adopt/{id}").hasAnyRole("USER","CENTER") //입양후기 게시판 삭제
-                                .requestMatchers(HttpMethod.POST, "api/v1/board/support").hasAnyRole("CENTER") //후원후기 게시판 작성
-                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/support").hasAnyRole("CENTER") //후원후기 게시판 수정
-                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/support/{id}").hasAnyRole("CENTER") //후원후기 게시판 삭제
-                                .requestMatchers(HttpMethod.POST, "api/v1/board/notice").hasAnyRole("CENTER") //공지사항 게시판 작성
-                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/notice").hasAnyRole("CENTER") //공지사항 게시판 수정
-                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/notice/{id}").hasAnyRole("CENTER") //공지사항 게시판 삭제
-                                .requestMatchers(HttpMethod.POST, "api/v1/board/qna").hasAnyRole("USER","CENTER") //QNA 게시판 작성
-                                .requestMatchers(HttpMethod.PATCH, "api/v1/board/qna").hasAnyRole("USER","CENTER") //QNA 게시판 수정
-                                .requestMatchers(HttpMethod.DELETE, "api/v1/board/qna/{id}").hasAnyRole("USER","CENTER") //QNA 게시판 삭제
-                                .requestMatchers(HttpMethod.POST, "api/v1/comment/qna").hasAnyRole("USER","CENTER") //QNA 댓글 작성
-                                .requestMatchers(HttpMethod.DELETE, "api/v1/comment/qna/{comment_id}").hasAnyRole("USER","CENTER") //QNA 댓글 삭제
-//                                .requestMatchers(WHITE_LIST).permitAll()
-//                                .requestMatchers(DEFAULT_LIST).permitAll()
-//                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .requestMatchers(SWAGGER_LIST).permitAll()
+                                .requestMatchers(HttpMethod.POST, POST_LIST).permitAll()
+                                .requestMatchers(HttpMethod.GET, GET_LIST).permitAll()
                                 .anyRequest().authenticated()
                         ;
                     } catch (Exception e) {
