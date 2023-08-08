@@ -73,6 +73,7 @@ public class UserService {
     private String fromEmail;
     private final DonateRepository donateRepository;
     private final WalkRepository walkRepository;
+    private final PointRepository pointRepository;
 
     /**
      * 사용자 등록
@@ -442,6 +443,10 @@ public class UserService {
             friendliness = 100L;
         }
         return friendliness;
+    }
+
+    public List<Point> findMileage(String uuid) {
+        return pointRepository.findMileage(uuid);
     }
 
     public Token refresh(HttpServletRequest request) {

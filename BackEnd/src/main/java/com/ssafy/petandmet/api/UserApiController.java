@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.api;
 
+import com.ssafy.petandmet.domain.Point;
 import com.ssafy.petandmet.dto.animal.InterestAnimal;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.jwt.Token;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +30,26 @@ public class UserApiController {
     private final UserService userService;
     private final S3Service s3Service;
     private final int INTEREST_ANIMAL_COUNT = 8;
+
+    /**
+     * 마일리지 조회
+     *
+     * @param request 사용자 UUID
+     * @return 전체 마일리지 조회
+     */
+    @GetMapping("/mileage")
+    public Result findMileage(@RequestParam String uuid) {
+        List<Point> findMileage = userService.findMileage(uuid);
+
+        if (!findMileage.isEmpty()) {
+            List<MileageResponse> response = findMileage
+                    .stream()
+                    .map(o -> new MileageResponse(o))
+                    .collect(Collectors.toList());
+            return new Result("성공", response, "null");
+        }
+        return new Result("false", "null", "null");
+    }
 
     /**
      * 동물 우호도 조회
