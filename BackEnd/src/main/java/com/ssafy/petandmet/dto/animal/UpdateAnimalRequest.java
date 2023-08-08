@@ -1,5 +1,6 @@
 package com.ssafy.petandmet.dto.animal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,18 +15,23 @@ public class UpdateAnimalRequest {
     private int age;
     private String specie;
     private String breed;
+    @JsonProperty("find_place")
     private String findPlace;
+    @JsonProperty("center_uuid")
     private String centerUuid;
-
+    @JsonProperty("enter_date")
     private LocalDateTime enterDate;
+    @JsonProperty("adoption_status")
     private AdoptionStatus adoptionStatus;
     private Gender gender;
+    @JsonProperty("enter_age")
     private int enterAge;
+    @JsonProperty("notice_date")
     private String noticeDate;
+    @JsonProperty("adoption_start_date")
     private LocalDateTime adoptionStartDate;
-
     private CharacterType character;
-
+    @JsonProperty("photo_url")
     private String photoUrl;
 
     @Builder
