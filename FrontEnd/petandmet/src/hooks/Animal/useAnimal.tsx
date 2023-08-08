@@ -30,10 +30,8 @@ const useAnimal = create<UseAnimalState>((set) => ({
         );
         return;
       }
-      // UUID를 일단 'aa'로 설정, aa를 event를 넣어서 현재 state가 aa 같은 uuid가 다른 동물 uuid로 바뀌게끔한다.
-      // ex )
 
-      const uuid = "aa";
+      const uuid = "aa"; // UUID를 'aa'로 설정
       const animalData = await fetchAnimalDataFromApi(uuid, accessToken);
 
       set({
@@ -53,7 +51,7 @@ async function fetchAnimalDataFromApi(
   uuid: string,
   accessToken: string
 ): Promise<AnimalData> {
-  const url = `${domain}/animal?uuid=${uuid}`;
+  const url = `${domain}/animal/detail?uuid=${uuid}`;
 
   try {
     const response = await axios.get(url, {
@@ -77,5 +75,4 @@ async function fetchAnimalDataFromApi(
     throw error;
   }
 }
-
 export default useAnimal;

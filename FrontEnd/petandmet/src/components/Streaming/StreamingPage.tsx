@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 
 import useAnimal from "../../hooks/Animal/useAnimal";
 import useCenter from "../../hooks/Center/useCenter";
+import CenterList from "./Streaming/Center";
 
 /* ### Streaming - 후원하기 파트
 
@@ -151,13 +152,6 @@ function StreamingPage() {
                 <Box
                   sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
                 >
-                  {/* <AnimalInfoContainer>
-                    <Card.Text>보호소 ID : {centerId}</Card.Text>
-                    <Card.Text>보호소 명 : {centerName}</Card.Text>
-                    <Card.Text>보호소 주소 : {centerAddress}</Card.Text>
-                    <Card.Text>보호소 번호 : {centerPhone}</Card.Text>
-                    <Card.Text>이메일 : {centerEmail}</Card.Text>
-                  </AnimalInfoContainer> */}
                   <AnimalInfoContainer>
                     <Card.Text>보호소 ID : {centerId}</Card.Text>
                     <Card.Text>보호소 명 : {centerName}</Card.Text>
@@ -165,6 +159,7 @@ function StreamingPage() {
                     <Card.Text>보호소 번호 : {centerPhone}</Card.Text>
                     <Card.Text>이메일 : {centerEmail}</Card.Text>
                   </AnimalInfoContainer>
+                  <CenterList></CenterList>
                 </Box>
               </Box>
             </Grid>
