@@ -4,11 +4,13 @@ import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.dto.animal.*;
 import com.ssafy.petandmet.service.AnimalService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalApiController {
 
     private final AnimalService animalService;
@@ -24,7 +27,7 @@ public class AnimalApiController {
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Page<Animal> findAnimal = animalService.findAll(pageable);
 
-        if(!findAnimal.isEmpty()) {
+        if (!findAnimal.isEmpty()) {
             List<FindAllAnimalResponse> response = findAnimal.stream()
                     .map(o -> new FindAllAnimalResponse(o))
                     .collect(toList());
@@ -35,16 +38,15 @@ public class AnimalApiController {
     }
 
     @GetMapping("api/v1/animal/search")
-    public Result GetAnimalBySearch(@RequestParam Map<String, String> map) {
+    public Result GetAnimalBySearch(@RequestParam Map<String, String> map, @PageableDefault(size = 10) Pageable pageable) {
+        log.debug(pageable.toString());
+        Page<FindAnimalBySearchResponse> findAnimal = animalService.findAnimalBySearch(map, pageable);
+        Map<String, Object> result = new HashMap<>();
+        result.put("animals", findAnimal.getContent());
+        result.put("total", findAnimal.getTotalElements());
 
-        List<Animal> findAnimal = animalService.findAnimalBySearch(map);
-
-        if(!findAnimal.isEmpty()) {
-            List<FindAnimalBySearchResponse> response = findAnimal.stream()
-                    .map(o -> new FindAnimalBySearchResponse(o))
-                    .collect(toList());
-
-            return new Result(true, response, "null");
+        if (!findAnimal.isEmpty()) {
+            return new Result(true, result, "null");
         }
         return new Result(false, "null", "null");
     }
@@ -78,6 +80,7 @@ public class AnimalApiController {
 
     @PostMapping("api/v1/animal")
     public Result createAnimal(@RequestBody CreateAnimalRequest request) {
+        log.debug(request.toString());
         try {
             animalService.join(request);
 

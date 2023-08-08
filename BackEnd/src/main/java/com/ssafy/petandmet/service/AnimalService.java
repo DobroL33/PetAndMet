@@ -4,22 +4,24 @@ import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.dto.animal.CreateAnimalRequest;
 import com.ssafy.petandmet.dto.animal.FindAnimalByIdResponse;
+import com.ssafy.petandmet.dto.animal.FindAnimalBySearchResponse;
 import com.ssafy.petandmet.dto.animal.UpdateAnimalRequest;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
@@ -103,7 +105,7 @@ public class AnimalService {
         });
 
         String currentTime = LocalDateTime.now().toString();
-        String photoUrl = currentTime + request.getPhoto().getOriginalFilename();
+//        String photoUrl = currentTime + request.getPhoto().getOriginalFilename();
 
         Animal animal = Animal.builder()
                 .uuid(animalUuid)
@@ -120,14 +122,14 @@ public class AnimalService {
                 .enterAge(request.getEnterAge())
                 .adoptionStatus(request.getAdoptionStatus())
                 .characterType(request.getCharacter())
-                .photoUrl(photoUrl)
+//                .photoUrl(photoUrl)
                 .build();
-
+        log.debug(animal.toString());
         animalRepository.save(animal);
     }
 
-    public List<Animal> findAnimalBySearch(Map<String, String> map) {
-        return animalRepository.findAnimalBySearch(map.get("name"), map.get("specie"), map.get("breed"));
+    public Page<FindAnimalBySearchResponse> findAnimalBySearch(Map<String, String> map, Pageable pageable) {
+        return animalRepository.findAnimalBySearch(map.get("name"), map.get("specie"), map.get("breed"), pageable);
     }
 
     public Page<Animal> findAll(Pageable pageable) {
