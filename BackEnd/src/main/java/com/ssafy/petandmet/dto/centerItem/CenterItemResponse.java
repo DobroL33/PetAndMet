@@ -19,12 +19,11 @@ public class CenterItemResponse {
     @JsonProperty("item_target_price")
     private int itemTargetPrice;
 
-    @Builder
-    public CenterItemResponse(CenterItem centerItem) {
-        this.centerItemId = centerItem.getId();
-        this.centerUuid = centerItem.getCenter().getUuid();
-        this.itemName = centerItem.getItemName();
-        this.itemUrl = centerItem.getItemUrl();
-        this.itemTargetPrice = centerItem.getTargetPrice();
+    public CenterItemResponse(Long centerItemId, String centerUuid, String itemName, String itemUrl, int itemTargetPrice) {
+        this.centerItemId = centerItemId;
+        this.centerUuid = centerUuid;
+        this.itemName = itemName;
+        this.itemUrl = itemUrl;
+        this.itemTargetPrice = itemTargetPrice;
     }
 }
