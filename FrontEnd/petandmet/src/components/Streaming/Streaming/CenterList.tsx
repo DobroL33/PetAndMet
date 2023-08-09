@@ -23,9 +23,7 @@ function CenterList() {
       <h2>보호소 목록</h2>
       <ul>
         {centerList.map((center) => (
-          <li key={center.centerId}>
-            {center.name} - {center.centerId}
-          </li>
+          <li key={center.centerId}>{center.name}</li>
         ))}
       </ul>
     </div>
