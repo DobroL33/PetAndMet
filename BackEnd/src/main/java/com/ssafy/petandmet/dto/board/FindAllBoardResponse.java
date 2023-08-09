@@ -24,15 +24,14 @@ public class FindAllBoardResponse {
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
-    public FindAllBoardResponse(Board board) {
-        this.id = board.getId();
-        this.userUuid = board.getUser().getUuid();
-        this.centerUuid = board.getCenter().getUuid();
-        this.title = board.getTitle();
-        this.content = board.getContent();
-        this.photoUrl = board.getPhotoUrl();
-        this.type = board.getType();
-        this.createdAt = board.getCreatedAt();
-        this.updatedAt = board.getUpdatedAt();
+    public FindAllBoardResponse(Long id, String userUuid, String centerUuid, String title, String content, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.userUuid = userUuid;
+        this.centerUuid = centerUuid;
+        this.title = title;
+        this.content = content;
+        this.type = type;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
