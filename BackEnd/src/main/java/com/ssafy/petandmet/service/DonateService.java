@@ -3,6 +3,7 @@ package com.ssafy.petandmet.service;
 import com.ssafy.petandmet.domain.*;
 import com.ssafy.petandmet.dto.donate.CreateAnimalDonateRequest;
 import com.ssafy.petandmet.dto.donate.CreateCenterItemDonateRequest;
+import com.ssafy.petandmet.exception.MileageException;
 import com.ssafy.petandmet.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class DonateService {
     private final AnimalRepository animalRepository;
 
     public void addAnimalDonate(CreateAnimalDonateRequest request) {
+
+        System.out.println("request.getUserUuid() = " + request.getUserUuid());
+        Long findMileage = userRepository.findMileage(request.getUserUuid());
+
+        System.out.println("findMileage = " + findMileage);
+        if ( findMileage < request.getDonatePrice() ) {
+            throw new MileageException("마일리지를 충전 해 주세요!");
+        }
+
         User user = userRepository.findById(request.getUserUuid()).orElseThrow(() -> {
             throw new NullPointerException();
         });
