@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PointChargeDto {
+public class PointRequestDto {
 
-    private String id;
-    private Long amount;
-
+    private String uuid;
+    private Long mileage;
 }

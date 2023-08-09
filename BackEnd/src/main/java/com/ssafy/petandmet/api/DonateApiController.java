@@ -54,7 +54,7 @@ public class DonateApiController {
     }
 
     //후원가능한 필요물품 전체목록 가져오기
-    @GetMapping("api/v1/donate")
+    @GetMapping("api/v1/donate/item")
     public Result getPossibleDonateItem(@RequestParam String uuid) {
         Map<String, Object> response = new HashMap<>();
         try {

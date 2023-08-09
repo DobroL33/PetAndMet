@@ -12,7 +12,7 @@ public interface LiveRepository extends JpaRepository<Live, Long> {
     @Query("select l from Live l where l.center.uuid = :uuid")
     List<Live> findLiveListByCenter(String uuid);
 
-    @Query("select l from Live l join fetch l.animal a where l.id = :id")
+    @Query("select l from Live l left join fetch l.animal a where l.id = :id")
     Live findLiveDetail(Long id);
 }
 

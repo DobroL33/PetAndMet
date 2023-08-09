@@ -3,30 +3,47 @@ package com.ssafy.petandmet.api;
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.dto.animal.*;
 import com.ssafy.petandmet.service.AnimalService;
+import com.ssafy.petandmet.service.S3Service;
+import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalApiController {
 
     private final AnimalService animalService;
+
+    private final S3Service s3Service;
 
     @GetMapping("api/v1/animal")
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Page<Animal> findAnimal = animalService.findAll(pageable);
 
-        if(!findAnimal.isEmpty()) {
+        if (!findAnimal.isEmpty()) {
             List<FindAllAnimalResponse> response = findAnimal.stream()
-                    .map(o -> new FindAllAnimalResponse(o))
+                    .map(o -> {
+                        if (o.getPhotoUrl() != null) {
+                            String profileUrl = s3Service.getProfileUrl(o.getPhotoUrl());
+                            o.setPhotoUrl(profileUrl);
+                            return new FindAllAnimalResponse(o);
+                        }
+                        o.setPhotoUrl(null);
+                        return new FindAllAnimalResponse(o);
+                    })
                     .collect(toList());
 
             return new Result(true, response, "null");
@@ -35,16 +52,15 @@ public class AnimalApiController {
     }
 
     @GetMapping("api/v1/animal/search")
-    public Result GetAnimalBySearch(@RequestParam Map<String, String> map) {
+    public Result GetAnimalBySearch(@RequestParam Map<String, String> map, @PageableDefault(size = 10) Pageable pageable) {
+        log.debug(pageable.toString());
+        Page<FindAnimalBySearchResponse> findAnimal = animalService.findAnimalBySearch(map, pageable);
+        Map<String, Object> result = new HashMap<>();
+        result.put("animals", findAnimal.getContent());
+        result.put("total", findAnimal.getTotalElements());
 
-        List<Animal> findAnimal = animalService.findAnimalBySearch(map);
-
-        if(!findAnimal.isEmpty()) {
-            List<FindAnimalBySearchResponse> response = findAnimal.stream()
-                    .map(o -> new FindAnimalBySearchResponse(o))
-                    .collect(toList());
-
-            return new Result(true, response, "null");
+        if (!findAnimal.isEmpty()) {
+            return new Result(true, result, "null");
         }
         return new Result(false, "null", "null");
     }
@@ -77,9 +93,9 @@ public class AnimalApiController {
     }
 
     @PostMapping("api/v1/animal")
-    public Result createAnimal(@RequestBody CreateAnimalRequest request) {
+    public Result createAnimal(@ModelAttribute CreateAnimalRequest request) {
         try {
-            animalService.join(request);
+            animalService.join(request.getImage(), request);
 
             AnimalResponse response = new AnimalResponse(200, "강아지 정보 등록 성공");
             return new Result(true, response, "null");
@@ -89,6 +105,7 @@ public class AnimalApiController {
             return new Result(false, response, e.getMessage());
         }
     }
+
 
     @PatchMapping("/api/v1/animal")
     public Result updateAnimal(@RequestBody UpdateAnimalRequest request) {

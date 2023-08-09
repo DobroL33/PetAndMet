@@ -35,11 +35,25 @@ public class UserApiController {
      * 마일리지 조회
      *
      * @param request 사용자 UUID
-     * @return 전체 마일리지 조회
+     * @return 사용자 마일리지 조회
+     */
+    @GetMapping("/mileage/{uuid}")
+    public Result findMileage(@PathVariable String uuid) {
+        Long findMileage = userService.findMileage(uuid);
+
+        UserMileageResponse response = new UserMileageResponse(findMileage);
+        return new Result(true, response, "null");
+    }
+
+    /**
+     * 마일리지 충전 내역 조회
+     *
+     * @param request 사용자 UUID
+     * @return 전체 마일리지 충전 내역 조회
      */
     @GetMapping("/mileage")
-    public Result findMileage(@RequestParam String uuid) {
-        List<Point> findMileage = userService.findMileage(uuid);
+    public Result findMileageLog(@RequestParam String uuid) {
+        List<Point> findMileage = userService.findMileageLog(uuid);
 
         if (!findMileage.isEmpty()) {
             List<MileageResponse> response = findMileage
@@ -112,12 +126,10 @@ public class UserApiController {
         try {
             Token token = userService.refresh(request);
 
-            if (token != null) {
-                return new Result(true, token.getAccessToken(), "null");
-            }
-            return new Result(false, "토큰 정보가 없습니다.", "null");
+            return new Result(true, token.getAccessToken(), "null");
+
         } catch (Exception e) {
-            return new Result(false, "토큰 정보가 유효하지 않습니다.", "null");
+            return new Result(false, "토큰 정보가 유효하지 않습니다.", e.getMessage());
         }
     }
 

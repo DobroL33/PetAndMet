@@ -2,14 +2,13 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Point;
 import com.ssafy.petandmet.domain.User;
-import com.ssafy.petandmet.dto.charge.PointChargeDto;
+import com.ssafy.petandmet.dto.charge.PointRequestDto;
 import com.ssafy.petandmet.repository.PointRepository;
 import com.ssafy.petandmet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,18 +18,34 @@ public class PointService {
 
     private final PointRepository pointRepository;
 
-    public void chargePoint(PointChargeDto pointChargeDto) {
+    public void chargePoint(PointRequestDto request) {
 
-        Optional<User> user = userRepository.findById(pointChargeDto.getId());
+        User user = userRepository.findById(request.getUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
 
-        if (!user.isPresent()) {
-            return;
-        }
+        user.setMileage(user.getMileage() + request.getMileage());
 
         Point point = Point.builder()
-                .pointAmount(pointChargeDto.getAmount())
+                .pointAmount(request.getMileage())
                 .pointDataTime(LocalDateTime.now())
-                .user(user.get())
+                .user(user)
+                .build();
+        pointRepository.save(point);
+    }
+
+    public void reducePoint(PointRequestDto request) {
+
+        User user = userRepository.findById(request.getUuid()).orElseThrow(() -> {
+            throw new NullPointerException();
+        });
+
+        user.setMileage(user.getMileage() - request.getMileage());
+
+        Point point = Point.builder()
+                .pointAmount(-request.getMileage())
+                .pointDataTime(LocalDateTime.now())
+                .user(user)
                 .build();
         pointRepository.save(point);
     }

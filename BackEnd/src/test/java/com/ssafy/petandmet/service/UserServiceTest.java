@@ -90,7 +90,7 @@ public class UserServiceTest {
         given(pointRepository.findMileage(user.getUuid())).willReturn(List.of(point1, point2));
 
          //when
-        List<Point> findMileage = userService.findMileage(user.getUuid());
+        List<Point> findMileage = userService.findMileageLog(user.getUuid());
 
         //then
         then(pointRepository).should().findMileage(user.getUuid());

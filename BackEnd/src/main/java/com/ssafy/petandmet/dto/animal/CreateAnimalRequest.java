@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAnimalRequest {
+public class CreateAnimalRequest implements Serializable {
     private String name;
     private int age;
     private String specie;
@@ -36,5 +37,5 @@ public class CreateAnimalRequest {
     
     private CharacterType character;
 
-    private MultipartFile photo;
+    private MultipartFile image;
 }

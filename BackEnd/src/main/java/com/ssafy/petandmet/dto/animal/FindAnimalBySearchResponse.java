@@ -1,6 +1,5 @@
 package com.ssafy.petandmet.dto.animal;
 
-import com.ssafy.petandmet.domain.Animal;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -23,21 +22,19 @@ public class FindAnimalBySearchResponse {
 
     private CharacterType character;
 
-    public FindAnimalBySearchResponse(Animal animal) {
-        this.name = animal.getName();
-        this.age = animal.getAge();
-        this.specie = animal.getSpecie();
-        this.breed = animal.getBreed();
-        this.findPlace = animal.getFindPlace();
-        if (animal.getCenter() != null) {
-            this.centerUuid = animal.getCenter().getUuid();
-        }
-        this.enteredDate = animal.getEnterDate();
-        this.adoptionStatus = animal.getAdoptionStatus();
-        this.adoptionStartDate = animal.getAdoptionStartDate();
-        this.gender = animal.getGender();
-        this.enterAge = animal.getEnterAge();
-        this.noticeDate = animal.getNoticeDate();
-        this.character = animal.getCharacterType();
+    public FindAnimalBySearchResponse(String name, int age, String specie, String breed, String findPlace, String centerUuid, LocalDateTime enteredDate, AdoptionStatus adoptionStatus, LocalDateTime adoptionStartDate, Gender gender, int enterAge, String noticeDate, CharacterType character) {
+        this.name = name;
+        this.age = age;
+        this.specie = specie;
+        this.breed = breed;
+        this.findPlace = findPlace;
+        this.centerUuid = centerUuid;
+        this.enteredDate = enteredDate;
+        this.adoptionStatus = adoptionStatus;
+        this.adoptionStartDate = adoptionStartDate;
+        this.gender = gender;
+        this.enterAge = enterAge;
+        this.noticeDate = noticeDate;
+        this.character = character;
     }
 }
