@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class BoardResponse {
 
+    private int status;
     private String message;
-    private String status;
 
 }
