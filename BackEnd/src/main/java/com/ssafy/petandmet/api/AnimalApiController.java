@@ -4,7 +4,6 @@ import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.dto.animal.*;
 import com.ssafy.petandmet.service.AnimalService;
 import com.ssafy.petandmet.service.S3Service;
-import com.ssafy.petandmet.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -93,9 +91,10 @@ public class AnimalApiController {
     }
 
     @PostMapping("api/v1/animal")
-    public Result createAnimal(@ModelAttribute CreateAnimalRequest request) {
+    public Result createAnimal(@RequestPart CreateAnimalRequest request, @RequestPart(required = false) MultipartFile image) {
         try {
-            animalService.join(request.getImage(), request);
+            log.debug(request.toString());
+            animalService.join(image, request);
 
             AnimalResponse response = new AnimalResponse(200, "강아지 정보 등록 성공");
             return new Result(true, response, "null");

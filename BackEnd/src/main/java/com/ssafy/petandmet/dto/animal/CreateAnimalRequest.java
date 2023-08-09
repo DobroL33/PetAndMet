@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,8 +33,6 @@ public class CreateAnimalRequest implements Serializable {
     private String noticeDate;
     @JsonProperty("adoption_start_date")
     private LocalDateTime adoptionStartDate;
-    
-    private CharacterType character;
 
-    private MultipartFile image;
+    private CharacterType character;
 }

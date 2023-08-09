@@ -113,10 +113,12 @@ public class AnimalService {
             throw new NullPointerException();
         });
 
-        String currentTime = LocalDateTime.now().toString();
-        String fileName = currentTime + image.getOriginalFilename();
-
-        s3Service.uploadFile(image, fileName);
+        String fileName = "";
+        if (image != null) {
+            String currentTime = LocalDateTime.now().toString();
+            fileName = currentTime + image.getOriginalFilename();
+            s3Service.uploadFile(image, fileName);
+        }
 
         Animal animal = Animal.builder()
                 .uuid(animalUuid)
