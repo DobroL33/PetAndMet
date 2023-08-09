@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://i9b302.p.ssafy.io", description = "Default Server URL")})
+@OpenAPIDefinition(servers = {@Server(url = "http://localhost:8080", description = "Local Server URL"),
+        @Server(url = "${server.ec2-url}", description = "EC2 Server URL")})
 @SpringBootApplication
 public class PetandmetApplication {
 
