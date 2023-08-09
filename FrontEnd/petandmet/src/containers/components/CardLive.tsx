@@ -7,18 +7,6 @@ import Typography from '@mui/material/Typography'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import logo from 'images/logo.png'
 
-interface Animal {
-  animal_photo_url : string | null
-  name: string | null
-  age: string | null
-  specie: string | null
-  breed: string | null
-}
-
-interface CardInfoProps {
-  animal: Animal; // 동물 데이터를 받아오는 props
-}
-
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
@@ -34,9 +22,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }))
 
-const AnimalInfo = ['이름', '나이', '종류', '품종']
+const AnimalInfo = ['이름', '나이', '성별', '보호일']
 
-function CardInfo({ animal }: CardInfoProps) {
+function CardInfoLive() {
   // const [expanded, setExpanded] = React.useState(false);
 
   // const handleExpandClick = () => {
@@ -45,37 +33,21 @@ function CardInfo({ animal }: CardInfoProps) {
 
   return (
     <Card sx={{ maxWidth: 250, borderRadius: 5 }}>
-      {animal.animal_photo_url && typeof animal.animal_photo_url === 'string' ? (
-        <CardMedia
-          component="img"
-          image={animal.animal_photo_url}
-          style={{ width: '100%', height: '100%' }}
-          alt={logo}
-        />
-        ) : (
-        <CardMedia
-          component="img"
-          image={logo}
-          style={{ width: '100%' }}
-          alt={logo}
-        />    
-      )}
+      <CardMedia
+        component="img"
+        image={logo}
+        style={{ width: '100%' }}
+        alt="Paella dish"
+      />
       <CardContent sx={{ padding: '0 !important', textAlign: 'left' }}>
         <Typography variant="body2" color="text.secondary">
-        <div style={{ marginTop: '10px' }}>
-        {AnimalInfo.map((info) => (
-          <>
-            <span>{info} : </span>
-            <span>
-              {info === '이름' && animal?.name}
-              {info === '나이' && animal?.age}
-              {info === '분류' && animal?.specie}
-              {info === '종' && animal?.breed}
-            </span>
-            <br />
-          </>
-        ))}
-      </div>
+          {AnimalInfo.map((info, idx) => (
+            <>
+              <span>{info} : </span>
+              <span>000</span>
+              <br />
+            </>
+          ))}
           <IconButton aria-label="add to favorites">
             <FavoriteIcon />
           </IconButton>
@@ -90,5 +62,5 @@ function CardInfo({ animal }: CardInfoProps) {
   )
 }
 
-export default CardInfo
+export default CardInfoLive
 export {}
