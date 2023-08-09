@@ -457,15 +457,14 @@ public class UserService {
 
     public Token refresh(HttpServletRequest request) {
         String jwtToken = resolveToken(request);
-
-        if (jwtToken != null && tokenProvider.validateToken(jwtToken)) {
+        log.debug(jwtToken);
+        if (jwtToken != null && !tokenProvider.validateToken(jwtToken)) {
             Token refreshToken = refreshTokenRepository.findById(jwtToken).orElseThrow(() -> {
                 throw new NullPointerException();
             });
 
             Authentication authentication = tokenProvider.getAuthentication(jwtToken);
             Token token = tokenProvider.regenerateToken(authentication, refreshToken);
-
             refreshTokenRepository.delete(refreshToken);
             refreshTokenRepository.save(token);
 
