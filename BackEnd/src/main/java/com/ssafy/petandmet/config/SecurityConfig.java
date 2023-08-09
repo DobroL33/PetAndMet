@@ -30,6 +30,7 @@ public class SecurityConfig {
             "api/v1/user/check-email-auth", //이메일 인증 코드 확인
             "api/v1/user/pwd-reset", //비밀번호 초기화
             "api/v1/user/find-id", //아이디 찾기
+            "api/v1/user/refresh", //토큰 재발행
     };
 
     private static final String[] GET_LIST = {
