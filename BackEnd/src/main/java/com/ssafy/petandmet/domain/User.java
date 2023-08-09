@@ -37,7 +37,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Center center;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Interest> interests = new ArrayList<>();
 
@@ -75,6 +75,9 @@ public class User {
 
     @Builder.Default
     private int attendance = 0;
+
+    @Builder.Default
+    private Long mileage = 0L;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

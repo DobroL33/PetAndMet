@@ -447,8 +447,12 @@ public class UserService {
         return friendliness;
     }
 
-    public List<Point> findMileage(String uuid) {
+    public List<Point> findMileageLog(String uuid) {
         return pointRepository.findMileage(uuid);
+    }
+
+    public Long findMileage(String uuid) {
+        return userRepository.findMileage(uuid);
     }
 
     public Token refresh(HttpServletRequest request) {
@@ -470,6 +474,7 @@ public class UserService {
 
         return null;
     }
+
 
     private String resolveToken(HttpServletRequest request) {
         final String BEARER_PREFIX = "Bearer ";
