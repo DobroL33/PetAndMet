@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CommentResponse {
 
+    private int status;
     private String message;
-    private String status;
 
 }

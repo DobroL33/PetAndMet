@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,79 +23,112 @@ public class LiveApiController {
 
     private final LiveService liveService;
 
+    //라이브 등록
     @PostMapping("api/v1/live")
     public Result createLive(@RequestBody CreateLiveRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             liveService.createLive(request);
-
-            CreateLiveResponse response = new CreateLiveResponse("라이브 등록 성공", "200");
+            response.put("status", 200);
+            response.put("message", "라이브 등록 성공");
             return new Result(true, response, "null");
         } catch (Exception e) {
-            return new Result(false, "null", e.getMessage());
+            response.put("status", 500);
+            response.put("message", "라이브 등록 실패");
+            return new Result(false, response, "null");
         }
     }
 
+    //라이브 삭제
     @DeleteMapping("api/v1/live")
     public Result deleteLive(@RequestParam Long id) {
+        Map<String, Object> response = new HashMap<>();
         try {
             liveService.deleteLive(id);
-
-            DeleteLiveResponse response = new DeleteLiveResponse("라이브 삭제 성공", "200");
+            response.put("status", 200);
+            response.put("message", "라이브 삭제 성공");
             return new Result(true, response, "null");
         } catch (Exception e) {
-            return new Result(false, "null", e.getMessage());
+            response.put("status", 500);
+            response.put("message", "라이브 삭제 실패");
+            return new Result(false, response, "null");
         }
     }
 
+    //라이브 수정
     @PatchMapping("api/v1/live")
     public Result updateLive(@RequestBody UpdateLiveRequest request) {
+        Map<String, Object> response = new HashMap<>();
         try {
             liveService.updateLive(request);
-
-            DeleteLiveResponse response = new DeleteLiveResponse("라이브 수정 성공", "200");
+            response.put("status", 200);
+            response.put("message", "라이브 수정 성공");
             return new Result(true, response, "null");
         } catch (Exception e) {
-            return new Result(false, "null", e.getMessage());
+            response.put("status", 500);
+            response.put("message", "라이브 수정 실패");
+            return new Result(false, response,"null");
         }
     }
 
+    //라이브 전체조회
     @GetMapping("api/v1/live")
     public Result getLiveList(@PageableDefault(size = 10) Pageable pageable) {
-        Page<Live> liveList = liveService.findLiveList(pageable);
-
-        if (!liveList.isEmpty()) {
-            List<LiveResponseDto> response = liveList.stream()
+        Map<String, Object> response = new HashMap<>();
+        try{
+            Page<Live> liveList = liveService.findLiveList(pageable);
+            List<LiveResponseDto> live = liveList.stream()
                     .map(o -> new LiveResponseDto(o))
                     .collect(toList());
 
+            response.put("status", 200);
+            response.put("message", "라이브 전체조회 성공");
+            response.put("total", live.stream().count());
+            response.put("lives",live);
             return new Result(true, response, "null");
+        }catch (Exception e){
+            response.put("status", 500);
+            response.put("message", "라이브 전체조회 실패");
+            return new Result(false, response,"null");
         }
-        return new Result(false, "null", "null");
     }
 
+    //라이브 필터링 조회
     @GetMapping("api/v1/live/search")
     public Result getLiveListByCenterUuid(@RequestParam String uuid) {
-        List<Live> liveList = liveService.findLiveListByCenter(uuid);
-
-        if (!liveList.isEmpty()) {
-            List<LiveListResponse> response = liveList.stream()
+        Map<String, Object> response = new HashMap<>();
+        try{
+            List<Live> liveList = liveService.findLiveListByCenter(uuid);
+            List<LiveListResponse> live = liveList.stream()
                     .map(o -> new LiveListResponse(o))
                     .collect(toList());
-
+            response.put("status", 200);
+            response.put("message", "라이브 필터링 조회 성공");
+            response.put("total", live.stream().count());
+            response.put("lives",live);
             return new Result(true, response, "null");
+        }catch (Exception e){
+            response.put("status", 500);
+            response.put("message", "라이브 필터링 조회 실패");
+            return new Result(false, response,"null");
         }
-        return new Result(false, "null", "null");
     }
 
+    //라이브 상세조회
     @GetMapping("api/v1/live/detail")
     public Result getLiveDetail(@RequestParam Long id) {
-        Live live = liveService.findLiveDetail(id);
+        Map<String, Object> response = new HashMap<>();
+        try {
+            response.put("status", 200);
+            response.put("message", "라이브 상세조회 성공");
+            response.put("board", liveService.findLiveDetail(id));
 
-        if (live != null) {
-            LiveDetailResponse response = new LiveDetailResponse(live);
             return new Result(true, response, "null");
+        }catch (Exception e){
+            response.put("status", 500);
+            response.put("message", "라이브 상세조회 조회 실패");
+            return new Result(false, response,"null");
         }
-        return new Result(false, "null", "null");
     }
 
 }

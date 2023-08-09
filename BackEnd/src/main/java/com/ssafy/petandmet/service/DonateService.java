@@ -1,6 +1,7 @@
 package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.*;
+import com.ssafy.petandmet.dto.centerItem.CenterItemResponse;
 import com.ssafy.petandmet.dto.donate.CreateAnimalDonateRequest;
 import com.ssafy.petandmet.dto.donate.CreateCenterItemDonateRequest;
 import com.ssafy.petandmet.exception.MileageException;
@@ -75,7 +76,7 @@ public class DonateService {
         donateRepository.save(donate);
     }
 
-    public List<CenterItem> findPossibleItem(String uuid) {
+    public List<CenterItemResponse> findPossibleItem(String uuid) {
         return centerItemRepository.findAllByCenterId(uuid);
     }
 

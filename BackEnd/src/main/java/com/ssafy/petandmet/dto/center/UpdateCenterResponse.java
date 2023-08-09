@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class UpdateCenterResponse {
 
-    private String status;
+    private int status;
     private String message;
 }

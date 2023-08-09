@@ -83,11 +83,11 @@ public class AnimalApiController {
         try {
             animalService.delete(id);
 
-            AnimalResponse response = new AnimalResponse("200", "동물 정보 삭제 성공");
+            AnimalResponse response = new AnimalResponse(200, "동물 정보 삭제 성공");
             return new Result(true, response, "null");
 
         } catch (Exception e) {
-            AnimalResponse response = new AnimalResponse("500", "동물 정보 삭제 실패");
+            AnimalResponse response = new AnimalResponse(500, "동물 정보 삭제 실패");
             return new Result(false, response, e.getMessage());
         }
     }
@@ -97,11 +97,11 @@ public class AnimalApiController {
         try {
             animalService.join(request.getImage(), request);
 
-            AnimalResponse response = new AnimalResponse("200", "강아지 정보 등록 성공");
+            AnimalResponse response = new AnimalResponse(200, "강아지 정보 등록 성공");
             return new Result(true, response, "null");
 
         } catch (Exception e) {
-            AnimalResponse response = new AnimalResponse("500", "강아지 정보 등록 실패");
+            AnimalResponse response = new AnimalResponse(500, "강아지 정보 등록 실패");
             return new Result(false, response, e.getMessage());
         }
     }
@@ -112,11 +112,11 @@ public class AnimalApiController {
         try {
             animalService.update(request);
 
-            UpdateAnimalResponse response = new UpdateAnimalResponse("200", "강아지 정보 수정 성공");
+            UpdateAnimalResponse response = new UpdateAnimalResponse(200, "강아지 정보 수정 성공");
             return new Result(true, response, "null");
 
         } catch (Exception e) {
-            UpdateAnimalResponse response = new UpdateAnimalResponse("500", "강아지 정보 수정 실패");
+            UpdateAnimalResponse response = new UpdateAnimalResponse(500, "강아지 정보 수정 실패");
             return new Result(false, response, e.getMessage());
         }
     }

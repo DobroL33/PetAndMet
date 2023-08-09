@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateCenterItemResponse {
+public class Result<T> {
 
-    private int status;
-    private String message;
+    private boolean success;
+    private T response;
+    private String error;
+
 }

@@ -3,6 +3,7 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.CenterItem;
+import com.ssafy.petandmet.dto.centerItem.CenterItemResponse;
 import com.ssafy.petandmet.dto.centerItem.CreateCenterItemRequest;
 import com.ssafy.petandmet.dto.centerItem.UpdateCenterItemRequest;
 import com.ssafy.petandmet.repository.CenterItemRepository;
@@ -53,7 +54,7 @@ public class CenterItemService {
         centerItem.setTargetPrice(request.getItemTargetPrice());
     }
 
-    public List<CenterItem> findCenterItem(String uuid) {
+    public List<CenterItemResponse> findCenterItem(String uuid) {
         return centerItemRepository.findAllByCenterId(uuid);
     }
 }
