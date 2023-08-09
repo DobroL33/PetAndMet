@@ -4,6 +4,7 @@ import com.ssafy.petandmet.domain.Board;
 import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.dto.board.CreateBoardRequest;
+import com.ssafy.petandmet.dto.board.FindAllBoardResponse;
 import com.ssafy.petandmet.dto.board.FindBoardByIdResponse;
 import com.ssafy.petandmet.dto.board.UpdateBoardRequest;
 import com.ssafy.petandmet.repository.BoardRepository;
@@ -99,9 +100,7 @@ public class BoardService {
     }
 
     //페이지
-    public Page<Board> findAllBoard(String uuid, String type, Pageable pageable) {
+    public Page<FindAllBoardResponse> findAllBoard(String uuid, String type, Pageable pageable) {
         return boardRepository.findBoardByType(uuid, type, pageable);
     }
-
-
 }
