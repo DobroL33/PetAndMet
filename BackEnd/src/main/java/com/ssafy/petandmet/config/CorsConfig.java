@@ -16,7 +16,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8000", "https://i9b302.p.ssafy.io"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://i9b302.p.ssafy.io"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH"));
         source.registerCorsConfiguration("/**", config);
