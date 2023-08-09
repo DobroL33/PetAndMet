@@ -113,7 +113,7 @@ public class TokenProvider {
                 .setSubject(userUuid)       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                 .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
-                .signWith(getSignKey(),SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .signWith(getSignKey(), SignatureAlgorithm.HS512)    // header "alg": "HS512"
                 .compact();
     }
 
@@ -145,7 +145,6 @@ public class TokenProvider {
             log.warn("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.warn("만료된 JWT 토큰입니다.");
-
         } catch (UnsupportedJwtException e) {
             log.warn("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {

@@ -438,7 +438,7 @@ public class UserService {
         if (totalDoantePrice >= 50000L) {
             friendliness = 50L; // 50%
         } else {
-            friendliness = (long)(totalDoantePrice * 0.001); // 1% 씩 증가
+            friendliness = (long) (totalDoantePrice * 0.001); // 1% 씩 증가
         }
         friendliness += walkCount * 10;
         if (friendliness >= 100L) {
@@ -459,13 +459,17 @@ public class UserService {
         String jwtToken = resolveToken(request);
         log.debug(jwtToken);
         if (jwtToken != null && !tokenProvider.validateToken(jwtToken)) {
-            Token refreshToken = refreshTokenRepository.findById(jwtToken).orElseThrow(() -> {
+            Optional<Token> refreshToken = refreshTokenRepository.findById(jwtToken);
+            if (refreshToken.isEmpty()) {
                 throw new NullPointerException();
-            });
+            }
+//            Token refreshToken = refreshTokenRepository.findById(jwtToken).orElseThrow(() -> {
+//
+//            });
 
             Authentication authentication = tokenProvider.getAuthentication(jwtToken);
-            Token token = tokenProvider.regenerateToken(authentication, refreshToken);
-            refreshTokenRepository.delete(refreshToken);
+            Token token = tokenProvider.regenerateToken(authentication, refreshToken.get());
+            refreshTokenRepository.delete(refreshToken.get());
             refreshTokenRepository.save(token);
 
             return token;
