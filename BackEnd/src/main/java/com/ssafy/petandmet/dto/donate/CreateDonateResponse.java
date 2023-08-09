@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateDonateResponse {
 
+    private int status;
     private String message;
-    private String status;
 }
