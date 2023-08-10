@@ -8,6 +8,7 @@ import com.ssafy.petandmet.dto.user.*;
 import com.ssafy.petandmet.service.UserService;
 import com.ssafy.petandmet.service.S3Service;
 import com.ssafy.petandmet.util.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class UserApiController {
      * @return 사용자 마일리지 조회
      */
     @GetMapping("/mileage/{uuid}")
+    @Operation(summary = "사용자 마일리지 조회", description = "현재 사용자의 마일리지를 조회합니다.")
     public Result findMileage(@PathVariable String uuid) {
         Long findMileage = userService.findMileage(uuid);
 
@@ -52,6 +54,7 @@ public class UserApiController {
      * @return 전체 마일리지 충전 내역 조회
      */
     @GetMapping("/mileage")
+    @Operation(summary = "사용자 마일리지 충전 내역 조회", description = "사용자가 마일리지를 충전했던 내역을 조회합니다.")
     public Result findMileageLog(@RequestParam String uuid) {
         List<Point> findMileage = userService.findMileageLog(uuid);
 
@@ -72,6 +75,7 @@ public class UserApiController {
      * @return 우호도 Percent
      */
     @PostMapping("/animal-friendliness")
+    @Operation(summary = "사용자와 동물 사이의 호감도 조회", description = "사용자와 특정 동물사이의 호감도를 조회합니다.")
     public Result getAnimalFriendless(@RequestBody AnimalFriendlinessRequest request) {
         try {
             Long response = userService.findAnimalFriendliness(request);
@@ -90,6 +94,7 @@ public class UserApiController {
      * @return 회원가입 결과
      */
     @PostMapping("/new")
+    @Operation(summary = "사용자 회원가입", description = "사용자가 회원가입(사용자/보호소)합니다.")
     public Result CreateUser(@RequestBody CreateUserRequest request) {
         log.debug(request.toString());
         log.debug("사용자 등록 컨트롤러");
@@ -109,6 +114,7 @@ public class UserApiController {
      * @return access jwt 토큰
      */
     @PostMapping
+    @Operation(summary = "사용자 로그인", description = "사용자가 로그인합니다.")
     public Result login(@RequestBody LoginUserRequest request) {
         log.debug(request.toString());
         Token token = userService.login(request);
@@ -122,6 +128,7 @@ public class UserApiController {
      * @return access jwt 토큰
      */
     @PostMapping("/refresh")
+    @Operation(summary = "토큰 재발행", description = "만료된 토큰을 다시 발행합니다.")
     public Result refresh(HttpServletRequest request) {
         try {
             Token token = userService.refresh(request);
@@ -140,6 +147,7 @@ public class UserApiController {
      * @return 로그아웃 결과
      */
     @DeleteMapping
+    @Operation(summary = "사용자 로그아웃", description = "사용자가 로그아웃합니다.")
     public Result logout(@RequestHeader(value = "Authorization") String authorization) {
         log.debug("로그아웃 컨트롤러");
         log.debug(authorization);
@@ -155,6 +163,7 @@ public class UserApiController {
      * @return 중복 여부 결과
      */
     @PostMapping("/id-check")
+    @Operation(summary = "아이디 중복확인", description = "회원가입시 아이디가 이미 있는지 확인합니다.")
     public Result isDuplicateId(@RequestBody IdCheckRequest request) {
         log.debug("아이디 중복확인 컨트롤러");
         log.debug(request.toString());
@@ -172,6 +181,7 @@ public class UserApiController {
      * @return 전송 여부
      */
     @PostMapping("/send-email-auth")
+    @Operation(summary = "이메일 인증 코드 전송", description = "중복확인 및 사용자 본인인증을 위해 이메일로 인증코드를 전송합니다.")
     public Result sendEmailAuthenticationCode(@RequestBody SendEmailAuthRequest request) {
         log.debug("이메일 인증 코드 전송 컨트롤러");
         log.debug(request.toString());
@@ -186,6 +196,7 @@ public class UserApiController {
      * @return 코드 일치 여부
      */
     @PostMapping("/check-email-auth")
+    @Operation(summary = "이메일 인증 코드 확인", description = "중복확인 및 사용자 본인인증을 위해 이메일로 받은 인증코드를 확인합니다.")
     public Result checkEmailAuthenticationCode(@RequestBody CheckEmailAuthRequest request) {
         log.debug("이메일 인증 코드 확인 컨트롤러");
         log.debug(request.toString());
@@ -204,6 +215,7 @@ public class UserApiController {
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('USER')")
+    @Operation(summary = "사용자 마이페이지", description = "사용자의 마이페이지를 조회합니다.")
     public Result getUserInfo() {
         log.debug("사용자 마이페이지 컨트롤러");
         UserInfoResponse userInfoResponse = null;
@@ -222,6 +234,7 @@ public class UserApiController {
      * @return 탈퇴 여부
      */
     @DeleteMapping("/withdrawal")
+    @Operation(summary = "회원 탈퇴", description = "사용자가 회원을 탈퇴합니다.")
     public Result withdrawal() {
         log.debug("회원 탈퇴 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
@@ -242,6 +255,7 @@ public class UserApiController {
      * @return 초기화 여부
      */
     @PostMapping("/pwd-reset")
+    @Operation(summary = "임의 비밀번호 초기화", description = "비밀번호 찾기시 사용자 아이디와 이메일을 확인해서 이메일로 임시 비밀번호 전송합니다.")
     public Result passwordReset(@RequestBody PasswordResetRequest request) {
         log.debug("임시 비밀번호 초기화 컨트롤러");
         userService.passwordReset(request);
@@ -255,6 +269,7 @@ public class UserApiController {
      * @return 개인 정보 수정 결과
      */
     @PatchMapping
+    @Operation(summary = "회원 정보 수정", description = "사용자가 회원정보(별명, 전화번호)를 수정합니다.")
     public Result modifyInfo(@RequestBody ModifyInfoRequest request) {
         log.debug("개인 정보 수정 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
@@ -263,6 +278,7 @@ public class UserApiController {
     }
 
     @PostMapping("/find-id")
+    @Operation(summary = "아이디 찾기", description = "사용자의 아이디를 이메일 인증을 통해 아이디를 찾습니다.")
     public Result findId(@RequestBody FindIdRequest request) {
         log.debug("아이디 찾기 컨트롤러");
         boolean isValid = userService.checkEmailAuthCode(request);
@@ -280,6 +296,7 @@ public class UserApiController {
      * @return 좋아요 결과
      */
     @PostMapping("/interest")
+    @Operation(summary = "동물 찜하기", description = "사용자가 특정동물을 찜합니다.")
     public Result interestAnimal(@RequestBody InterestAnimalRequest request) {
         log.debug("동물 찜하기 컨트롤러");
         try {
@@ -301,6 +318,7 @@ public class UserApiController {
      * @return 찜한 동물들
      */
     @GetMapping("/interest")
+    @Operation(summary = "사용자별 찜한 동물 조회", description = "사용자가 찜한 동물을 모두 조회합니다.")
     public Result getInterestAnimals(@PageableDefault(size = INTEREST_ANIMAL_COUNT) Pageable pageable) {
         String userUuid = SecurityUtil.getCurrentUserUuid().get();
         List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
@@ -316,6 +334,7 @@ public class UserApiController {
      * @throws FileUploadException 이미지 업로드 오류
      */
     @PostMapping("/profile")
+    @Operation(summary = "사용자 프로필 업로드", description = "사용자가 변경하고싶은 프로필 사진을 업로드합니다.")
     public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
         log.debug("사용자 프로필 사진 등록 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
@@ -336,6 +355,7 @@ public class UserApiController {
      * @return 만료시간 설정된 url
      */
     @GetMapping("/profile")
+    @Operation(summary = "프로필 사진 불러오기", description = "사용자가 변경/업로드한 사진을 조회합니다.")
     public Result getProfileUrl() {
         log.debug("사용자 프로필 사진 불러오기 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
