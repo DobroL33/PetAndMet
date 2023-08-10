@@ -1,35 +1,43 @@
-import { Box } from '@mui/material';
-import CardInfoLive from 'containers/components/CardLive';
-//라이브 가능 동물 데이터를 받는다면 animals 활성화
+import { Box } from "@mui/material";
+import CardInfoLive from "containers/components/CardLive";
+import useLiveList from "../../hooks/Live/useLiveList";
+import useAnimal from "hooks/Animal/useAnimal";
+import React, { useEffect } from "react";
+
 interface LiveListProps {
   num?: number;
-  // animals: Animal[];
 }
-// num 값에는 라이브가능 동물 수가 들어갈 예정
-function LiveList({ num =10 }: LiveListProps) {
-  let livesToShow : any = []
-  
-  if (num !== undefined) {
-    livesToShow = Array.from({length : num})
-  }
+
+function LiveList({ num = 10 }: LiveListProps) {
+  const { liveList, fetchLiveList } = useLiveList();
+  const { fetchAnimalData } = useAnimal();
+
+  useEffect(() => {
+    fetchLiveList();
+    // 종속성 배열을 비워 둡니다.
+  }, []);
 
   return (
     <>
-    <Box
-      sx={{
-        mt: 1,
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)', // 이 부분을 추가하여 카드를 자동으로 정렬합니다.
-        gap: '8px', // 카드 간 간격 설정
-        height: '95%',
-      }}
-    >
-      {livesToShow.map((item:any, idx:number) => (
-        <CardInfoLive key={idx} />
+      <Box
+        sx={{
+          mt: 1,
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "8px",
+          height: "95%",
+        }}
+      >
+        {liveList.map((live, idx) => (
+          <CardInfoLive
+            key={idx}
+            live={live}
+            fetchAnimalData={() => fetchAnimalData(live.animalUuid)}
+          />
         ))}
-    </Box>
+      </Box>
     </>
-  )
+  );
 }
-export default LiveList
-export {}
+
+export default LiveList;
