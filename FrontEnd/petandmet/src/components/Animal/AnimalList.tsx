@@ -17,6 +17,9 @@ function AnimalList({ num = 15 }: AnimalListProps) {
     axios
       .get("https://i9b302.p.ssafy.io/api/v1/animal?page=0")
       .then((response) => {
+        console.log("response는요");
+        console.log(response);
+        console.log("response.data.response는요");
         console.log(response.data.response);
         setAnimalsToShow(response.data.response);
       })
