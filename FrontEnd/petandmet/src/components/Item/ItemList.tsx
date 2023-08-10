@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Grid,
   Box,
@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import pay from 'images/kakaopay.png'
+import CenterDataList from 'hooks/Center/CenterMutation';
 
 const data = [
   {
@@ -36,7 +37,6 @@ const data = [
 interface LoadProps {
   loading?: boolean
 }
-const centers = ['A보호소', 'B보호소', 'C보호소']
 
 function List(props: LoadProps) {
   const { loading = false } = props
@@ -44,6 +44,17 @@ function List(props: LoadProps) {
   const handleChange = (event: SelectChangeEvent) => {
     setCenter(event.target.value)
   }
+  
+  const [centerNames, setCenterNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const centersData = await CenterDataList();
+      const centerNames = centersData.map((center: any) => center.name);
+      setCenterNames(centerNames);
+    };
+    fetchData();
+  }, []);
 
   return (
     <Container>
@@ -66,7 +77,7 @@ function List(props: LoadProps) {
             label="보호소"
             onChange={handleChange}
           >
-            {centers.map((cent, idx) => (
+            {centerNames.map((cent:any, idx:number) => (
               <MenuItem value={idx}>{cent}</MenuItem>
             ))}
           </Select>
