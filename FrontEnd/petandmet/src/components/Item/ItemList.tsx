@@ -12,6 +12,8 @@ import {
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import pay from 'images/kakaopay.png'
 import CenterDataList from 'hooks/Center/CenterMutation';
+import axios from 'axios';
+import { domain } from 'hooks/customQueryClient';
 
 const data = [
   {
@@ -41,28 +43,56 @@ interface LoadProps {
 function List(props: LoadProps) {
   const { loading = false } = props
   const [center, setCenter] = useState('')
+  const [uid, setUid] = useState('')
   const handleChange = (event: SelectChangeEvent) => {
     setCenter(event.target.value)
   }
   
-  const [centerNames, setCenterNames] = useState<string[]>([]);
-
+  const [centers, setCenters] = useState<string[]>([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       const centersData = await CenterDataList();
-      const centerNames = centersData.map((center: any) => center.name);
-      setCenterNames(centerNames);
+      // const centers = centersData.map((center: any) => center.);
+      setCenters(centersData);
+      console.log(centersData)
     };
     fetchData();
   }, []);
+  
 
+  const [centerItem, setCenterItem] = useState<string[]>([]);
+
+  const CenterItemList =async () => {
+    try{
+      const res = await axios.get(`${domain}/center/item?uuid=${uid}`)
+      console.log(res)
+      const centerItem = res.data.response.centerItems
+      console.log(centerItem)
+      return centerItem
+    } catch(error){
+      console.log(error)
+      return [];
+    }
+  }
+  
+  useEffect(() => {
+    const fetchItem =async () => {
+      const centersItem = await CenterItemList()
+      setCenterItem(centersItem)
+      console.log(centerItem)
+    }
+    fetchItem()
+  },[uid])
+
+  if (centerItem.length !== 0) {
   return (
     <Container>
       <div style={{ padding: 20 }}>
         <Typography
           variant="h4"
           style={{ color: '#FFA629', fontWeight: 'bold' }}
-        >
+          >
           후원 물품 목록
         </Typography>
       </div>
@@ -76,10 +106,10 @@ function List(props: LoadProps) {
             value={center}
             label="보호소"
             onChange={handleChange}
-          >
-            {centerNames.map((cent:any, idx:number) => (
-              <MenuItem value={idx}>{cent}</MenuItem>
-            ))}
+            >
+            {centers.map((cent:any) => (
+              <MenuItem value={cent.uuid} onClick={() => setUid(cent.uuid)}>{cent.name}</MenuItem>
+              ))}
           </Select>
         </FormControl>
       </div>
@@ -92,13 +122,13 @@ function List(props: LoadProps) {
             <Box sx={{ width: '100%', my: 5 }}>
               {item ? (
                 <img
-                  style={{ width: '100%', height: 200, objectFit: 'cover' }}
-                  alt={item.title}
-                  src={item.src}
+                style={{ width: '100%', height: 200, objectFit: 'cover' }}
+                alt={item.title}
+                src={item.src}
                 />
-              ) : (
-                <Skeleton variant="rectangular" width="100%" height={200} />
-              )}
+                ) : (
+                  <Skeleton variant="rectangular" width="100%" height={200} />
+                  )}
               {item ? (
                 <Box sx={{ pr: 2 }}>
                   <Typography gutterBottom variant="body2">
@@ -108,7 +138,7 @@ function List(props: LoadProps) {
                     display="block"
                     variant="caption"
                     color="text.secondary"
-                  >
+                    >
                     {item.price}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
@@ -128,7 +158,39 @@ function List(props: LoadProps) {
     </Container>
   )
 }
+else{
+  return(
+    <>
+    <div style={{ padding: 20 }}>
+        <Typography
+          variant="h4"
+          style={{ color: '#FFA629', fontWeight: 'bold' }}
+          >
+          후원 물품 목록
+        </Typography>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <FormControl sx={{ width: '25%' }}>
+          <InputLabel id="demo-simple-select-label">보호소</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={center}
+            label="보호소"
+            onChange={handleChange}
+            >
+            {centers.map((cent:any) => (
+              <MenuItem value={cent.uuid} onClick={() => setUid(cent.uuid)}>{cent.name}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
 
+      <h1>등록된 후원 물품이 없습니다.</h1>
+    </>
+  )
+}
+}
 function ItemList() {
   return (
     <Box sx={{ overflow: 'hidden' }}>
