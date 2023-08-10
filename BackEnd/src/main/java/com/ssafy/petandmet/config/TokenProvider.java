@@ -104,6 +104,54 @@ public class TokenProvider {
                 .build();
     }
 
+    public Token testGenerateToken(Authentication authentication) {
+        log.debug("authentication = " + authentication);
+        log.debug("토큰 생성");
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        log.debug("authorities = " + authorities);
+
+        long now = (new Date()).getTime();
+        log.debug("now = " + now);
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION_TIME);
+        log.debug("accessTokenExpiresIn = " + accessTokenExpiresIn);
+        String accessToken = createAccessToken(authentication.getName(), authorities, accessTokenExpiresIn);
+        log.debug("123123");
+//        log.debug("accessToken = " + accessToken);
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(getSignKey(), SignatureAlgorithm.HS512)
+                .compact();
+
+        return Token.builder()
+                .type(AUTHENTICATION_PREFIX)
+                .accessToken(accessToken)
+//                .accessTokenExpired(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public Token testRegenerateToken(Authentication authentication, Token token) {
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRATION_TIME);
+        String accessToken = createAccessToken(authentication.getName(), authorities, accessTokenExpiresIn);
+
+        return Token.builder()
+                .type(AUTHENTICATION_PREFIX)
+                .accessToken(accessToken)
+                .refreshToken(token.getRefreshToken())
+                .build();
+    }
+
     public String createAccessToken(String userUuid, String authorities, Date accessTokenExpiresIn) {
         log.debug("userUuid = " + userUuid);
         log.debug("authorities = " + authorities);
