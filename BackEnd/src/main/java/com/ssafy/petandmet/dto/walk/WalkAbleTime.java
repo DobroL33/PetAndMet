@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class WalkTime {
+public class WalkAbleTime {
     private int time;
     private boolean flag;
 }
