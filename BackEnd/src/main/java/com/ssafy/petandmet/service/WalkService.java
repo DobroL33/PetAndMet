@@ -5,7 +5,8 @@ import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.domain.Walk;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
-import com.ssafy.petandmet.dto.walk.WalkTime;
+import com.ssafy.petandmet.dto.walk.UserWalkTime;
+import com.ssafy.petandmet.dto.walk.WalkAbleTime;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.UserRepository;
@@ -34,19 +35,19 @@ public class WalkService {
     private final WalkRepository walkRepository;
 
     @Transactional
-    public List<WalkTime> getWalkTimes(Map<String, String> map) {
+    public List<WalkAbleTime> getWalkTimes(Map<String, String> map) {
         final Set<Integer> times = new HashSet<>(List.of(1, 2, 3, 4));
 
         LocalDate date = LocalDate.parse(map.get("date"));
         List<Integer> impossibleTimes = walkRepository.findWalkTimeByUserAndAnimal(map.get("animal_uuid"), map.get("user_uuid"), date);
         log.debug(impossibleTimes.toString());
 
-        List<WalkTime> ableTimes = new ArrayList<>();
+        List<WalkAbleTime> ableTimes = new ArrayList<>();
         for (int time : times) {
             if (impossibleTimes.contains(time)) {
-                ableTimes.add(new WalkTime(time, false));
+                ableTimes.add(new WalkAbleTime(time, false));
             } else {
-                ableTimes.add(new WalkTime(time, true));
+                ableTimes.add(new WalkAbleTime(time, true));
             }
         }
         log.debug(ableTimes.toString());
@@ -76,5 +77,9 @@ public class WalkService {
             }
         }
         throw new IllegalStateException("입력 정보가 잘못되었습니다.");
+    }
+
+    public List<UserWalkTime> getUserWalkTime(String userUuid) {
+        return walkRepository.getUserWalkTime(userUuid);
     }
 }
