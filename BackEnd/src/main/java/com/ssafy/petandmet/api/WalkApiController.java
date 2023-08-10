@@ -1,11 +1,15 @@
 package com.ssafy.petandmet.api;
 
+import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import com.ssafy.petandmet.dto.animal.Result;
+import com.ssafy.petandmet.dto.walk.SignWalkRequest;
 import com.ssafy.petandmet.dto.walk.WalkTime;
 import com.ssafy.petandmet.service.WalkService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,4 +41,26 @@ public class WalkApiController {
         return new Result(true, result, "null");
     }
 
+
+    /**
+     * 산책 등록
+     *
+     * @param request 센터 uuid, 동물 uuid, 연월일, 시간
+     * @return 산책 등록 결과
+     */
+    @PostMapping
+    public Result signWalk(@RequestBody SignWalkRequest request) {
+        log.debug(request.toString());
+        Map<String, Object> result = new HashMap<>();
+        try {
+            walkService.signWalk(request);
+            result.put("status", HttpStatus.SC_OK);
+            result.put("message", "산책 등록 성공");
+            return new Result(true, result, null);
+        } catch (Exception e) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", e.getMessage());
+            return new Result(true, result, null);
+        }
+    }
 }

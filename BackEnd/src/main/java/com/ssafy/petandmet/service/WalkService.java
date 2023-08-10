@@ -1,7 +1,16 @@
 package com.ssafy.petandmet.service;
 
+import com.ssafy.petandmet.domain.Animal;
+import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.domain.User;
+import com.ssafy.petandmet.domain.Walk;
+import com.ssafy.petandmet.dto.walk.SignWalkRequest;
 import com.ssafy.petandmet.dto.walk.WalkTime;
+import com.ssafy.petandmet.repository.AnimalRepository;
+import com.ssafy.petandmet.repository.CenterRepository;
+import com.ssafy.petandmet.repository.UserRepository;
 import com.ssafy.petandmet.repository.WalkRepository;
+import com.ssafy.petandmet.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +21,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class WalkService {
+    private final UserRepository userRepository;
+    private final CenterRepository centerRepository;
+    private final AnimalRepository animalRepository;
     private final WalkRepository walkRepository;
 
     @Transactional
@@ -38,5 +51,30 @@ public class WalkService {
         }
         log.debug(ableTimes.toString());
         return ableTimes;
+    }
+
+    @Transactional
+    public void signWalk(SignWalkRequest request) {
+        Optional<String> userUuid = SecurityUtil.getCurrentUserUuid();
+        if (userUuid.isPresent()) {
+            Optional<User> user = userRepository.findByUserUuid(userUuid.get());
+            Optional<Center> center = centerRepository.findById(request.getCenterUuid());
+            Optional<Animal> animal = animalRepository.findById(request.getAnimalUuid());
+            if (user.isPresent() && center.isPresent() && animal.isPresent()) {
+                if (walkRepository.isExistWalkTime(animal.get().getUuid(), userUuid.get(), center.get().getUuid(), request.getDate(), request.getTime()))
+                    throw new IllegalStateException("입력 정보가 잘못되었습니다.");
+
+                Walk walk = Walk.builder()
+                        .user(user.get())
+                        .animal(animal.get())
+                        .center(center.get())
+                        .date(request.getDate())
+                        .time(request.getTime())
+                        .build();
+                walkRepository.save(walk);
+                return;
+            }
+        }
+        throw new IllegalStateException("입력 정보가 잘못되었습니다.");
     }
 }
