@@ -7,6 +7,7 @@ import com.ssafy.petandmet.dto.center.UpdateCenterRequest;
 import com.ssafy.petandmet.dto.center.UpdateCenterResponse;
 import com.ssafy.petandmet.dto.center.FindAllCenterResponse;
 import com.ssafy.petandmet.service.CenterService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class CenterApiController {
 
     //보호소 전제 조회
     @GetMapping
+    @Operation(summary = "보호소 전체조회", description = "모든 보호소를 조회합니다.")
     public Result findAll(@PageableDefault(size = 10) Pageable pageable) {
         Map<String, Object> response = new HashMap<>();
         try{
@@ -54,6 +56,7 @@ public class CenterApiController {
 
     //보호소 한개 찾기
     @GetMapping("/detail")
+    @Operation(summary = "보호소 상세조회", description = "1곳의 특정 보호소의 상세정보를 알려준다.")
     public Result GetCenter(@RequestParam(value = "id") String id){
         Map<String, Object> response = new HashMap<>();
         try {
@@ -73,6 +76,7 @@ public class CenterApiController {
 
     //보호소 정보 수정
     @PatchMapping
+    @Operation(summary = "보호소 수정", description = "보호소의 정보를 수정합니다.")
     public Result updateCenter(@RequestBody UpdateCenterRequest request){
         Map<String, Object> response = new HashMap<>();
         try {

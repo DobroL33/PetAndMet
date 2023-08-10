@@ -5,6 +5,7 @@ import com.ssafy.petandmet.dto.animal.AnimalResponse;
 import com.ssafy.petandmet.dto.animal.Result;
 import com.ssafy.petandmet.dto.live.*;
 import com.ssafy.petandmet.service.LiveService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class LiveApiController {
 
     //라이브 등록
     @PostMapping("api/v1/live")
+    @Operation(summary = "라이브 등록", description = "라이브를 등록합니다.")
     public Result createLive(@RequestBody CreateLiveRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -41,6 +43,7 @@ public class LiveApiController {
 
     //라이브 삭제
     @DeleteMapping("api/v1/live")
+    @Operation(summary = "라이브 삭제", description = "라이브를 삭제합니다.")
     public Result deleteLive(@RequestParam Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -57,6 +60,7 @@ public class LiveApiController {
 
     //라이브 수정
     @PatchMapping("api/v1/live")
+    @Operation(summary = "라이브 수정", description = "라이브를 수정합니다.")
     public Result updateLive(@RequestBody UpdateLiveRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -73,6 +77,7 @@ public class LiveApiController {
 
     //라이브 전체조회
     @GetMapping("api/v1/live")
+    @Operation(summary = "라이브 전체조회", description = "라이브를 전체조회합니다.")
     public Result getLiveList(@PageableDefault(size = 10) Pageable pageable) {
         Map<String, Object> response = new HashMap<>();
         try{
@@ -95,6 +100,7 @@ public class LiveApiController {
 
     //라이브 필터링 조회
     @GetMapping("api/v1/live/search")
+    @Operation(summary = "라이브 필터링 조회", description = "라이브를 필터링을 통해 조회합니다.")
     public Result getLiveListByCenterUuid(@RequestParam String uuid) {
         Map<String, Object> response = new HashMap<>();
         try{
@@ -116,12 +122,15 @@ public class LiveApiController {
 
     //라이브 상세조회
     @GetMapping("api/v1/live/detail")
+    @Operation(summary = "라이브 상세조회", description = "1곳의 특정 라이브의 상세정보를 알려준다.")
     public Result getLiveDetail(@RequestParam Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
+            Live live = liveService.findLiveDetail(id);
             response.put("status", 200);
             response.put("message", "라이브 상세조회 성공");
-            response.put("board", liveService.findLiveDetail(id));
+            LiveDetailResponse live_detail = new LiveDetailResponse(live);
+            response.put("live", live_detail);
 
             return new Result(true, response, "null");
         }catch (Exception e){
