@@ -4,10 +4,13 @@ import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import com.ssafy.petandmet.dto.walk.Result;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
 import com.ssafy.petandmet.dto.walk.WalkAbleTime;
+import com.ssafy.petandmet.dto.walk.WalkTime;
 import com.ssafy.petandmet.service.WalkService;
 import com.ssafy.petandmet.util.SecurityUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -85,5 +88,27 @@ public class WalkApiController {
         result.put("message", "등록한 산책 불러오기 성공.");
         result.put("user_walk_times", walkService.getUserWalkTime(userUuid.get()));
         return new Result(true, result, null);
+    }
+
+    @DeleteMapping("/user")
+    public Result deleteUserWalkTime(@Valid @RequestBody WalkTime request) {
+        log.debug("request = " + request.toString());
+        Map<String, Object> result = new HashMap<>();
+        Optional<String> userUuid = SecurityUtil.getCurrentUserUuid();
+        if (userUuid.isEmpty()) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", "사용자 정보가 존재하지 않습니다.");
+            return new Result(false, null, result);
+        }
+        try {
+            result.put("status", HttpStatus.SC_OK);
+            result.put("message", "산책 삭제 성공");
+            walkService.deleteUserWalkTime(userUuid.get(), request);
+            return new Result(true, result, null);
+        } catch (Exception e) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", e.getMessage());
+            return new Result(false, null, result);
+        }
     }
 }

@@ -82,4 +82,12 @@ public class WalkService {
     public List<WalkTime> getUserWalkTime(String userUuid) {
         return walkRepository.getUserWalkTime(userUuid);
     }
+
+    public void deleteUserWalkTime(String userUuid, WalkTime request) {
+        Optional<Walk> walk = walkRepository.getWalkTime(request.getDate(), request.getTime(), userUuid, request.getAnimalUuid(), request.getCenterUuid());
+        if (walk.isEmpty()) {
+            throw new IllegalStateException("요청이 올바르지 않습니다.");
+        }
+        walkRepository.delete(walk.get());
+    }
 }

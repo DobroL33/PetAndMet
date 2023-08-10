@@ -3,10 +3,12 @@ package com.ssafy.petandmet.dto.walk;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.petandmet.domain.StatusType;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@RequiredArgsConstructor
 public class WalkTime {
     private LocalDate date;
     private int time;

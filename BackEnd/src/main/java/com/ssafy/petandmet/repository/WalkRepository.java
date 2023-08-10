@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WalkRepository extends JpaRepository<Walk, String> {
@@ -26,4 +27,7 @@ public interface WalkRepository extends JpaRepository<Walk, String> {
     @Query("select new com.ssafy.petandmet.dto.walk.WalkTime(w.date, w.time, w.animal.uuid, w.center.uuid, w.user.uuid, w.status) " +
             "from Walk w where w.user.uuid = :userUuid")
     List<WalkTime> getUserWalkTime(String userUuid);
+
+    @Query("select w from Walk w where w.date = :date and w.time = :time and w.user.uuid = :userUuid and w.animal.uuid = :animalUuid and w.center.uuid = :centerUuid")
+    Optional<Walk> getWalkTime(LocalDate date, int time, String userUuid, String animalUuid, String centerUuid);
 }
