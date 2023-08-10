@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import CardInfo from 'containers/components/Card'
+import CardInfoLive from 'containers/components/CardLive';
 //라이브 가능 동물 데이터를 받는다면 animals 활성화
 interface LiveListProps {
   num?: number;
@@ -25,7 +25,7 @@ function LiveList({ num =10 }: LiveListProps) {
       }}
     >
       {livesToShow.map((item:any, idx:number) => (
-        <CardInfo key={idx} />
+        <CardInfoLive key={idx} />
         ))}
     </Box>
     </>

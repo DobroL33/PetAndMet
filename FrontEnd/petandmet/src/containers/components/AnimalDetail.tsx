@@ -4,10 +4,16 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { useState } from 'react'
+import { useState, useEffect, } from 'react'
 import { Button, Container, Grid } from '@mui/material'
 import logo from 'images/logo.png'
 import { styled } from '@mui/material/styles'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
+
+
 
 function createData(
   관리번호: string,
@@ -24,18 +30,9 @@ function createData(
   입소당시나이: string
 ) {
   return {
-    관리번호,
-    공고번호,
-    입양상태,
-    지역분류,
-    종류,
-    품종,
-    성별,
-    발견장소,
-    구조일,
-    공고일,
-    입양신청시작일시,
-    입소당시나이,
+    관리번호, 공고번호, 입양상태, 지역분류,
+    종류, 품종, 성별, 발견장소,
+    구조일,공고일, 입양신청시작일시, 입소당시나이,
   }
 }
 
@@ -52,6 +49,23 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }))
 
 export default function AnimalDetail() {
+  const [animalDetail, setAnimalDetail] = useState<any[]>([]);
+  const navigate = useNavigate()
+  const { animal_uuid } = useParams(); // 동물 UUID 값을 가져옴
+
+  useEffect(() => {
+      axios.get(`https://i9b302.p.ssafy.io/api/v1/animal/detail?uuid=${animal_uuid}`)
+        .then((response) => {
+          console.log(animal_uuid)
+          console.log(response); 
+          setAnimalDetail(response.data.response);
+        })
+        .catch((error) => {
+          console.log('오류')
+          console.log(error);
+        });
+  }, []);
+
   type AnimalData = ReturnType<typeof createData>
 
   const [animalData, setAnimalData] = useState<AnimalData[]>([])
