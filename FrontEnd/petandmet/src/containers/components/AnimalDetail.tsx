@@ -4,7 +4,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { useState, useEffect, } from 'react'
+import { useState } from 'react'
 import { Button, Container, Grid } from '@mui/material'
 import logo from 'images/logo.png'
 import { styled } from '@mui/material/styles'
@@ -12,27 +12,25 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-
-
-
 function createData(
-  관리번호: string,
-  공고번호: string,
-  입양상태: string,
-  지역분류: string,
-  종류: string,
-  품종: string,
-  성별: string,
-  발견장소: string,
-  구조일: string,
-  공고일: string,
-  입양신청시작일시: string,
-  입소당시나이: string
+  photo_url : string | null,
+  center_uuid: string | null,
+  name: string | null,
+  adoption_status: string | null,
+  character: string | null,
+  breed: string | null,
+  specie: string | null,
+  gender: string | null,
+  find_place: string | null,
+  enter_date: string | null,
+  notice_date: string | null,
+  adoption_start_date: string | null,
+  age: number | null
 ) {
   return {
-    관리번호, 공고번호, 입양상태, 지역분류,
-    종류, 품종, 성별, 발견장소,
-    구조일,공고일, 입양신청시작일시, 입소당시나이,
+    photo_url, center_uuid, name, adoption_status, character,
+    breed, specie, gender, find_place,
+    enter_date,notice_date, adoption_start_date, age,
   }
 }
 
@@ -49,119 +47,107 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }))
 
 export default function AnimalDetail() {
-  const [animalDetail, setAnimalDetail] = useState<any[]>([]);
+  const [animalDetail, setAnimalDetail] = useState<AnimalData | null>(null); // 객체나 null로 초기화
   const navigate = useNavigate()
-  const { animal_uuid } = useParams(); // 동물 UUID 값을 가져옴
+  const { animal_uuid } = useParams<{ animal_uuid: string }>();
+  // 동물 UUID 값을 가져옴
+  if (!animalDetail) {  // animalDetail이 비어있을 때만 요청
+    axios.get(`https://i9b302.p.ssafy.io/api/v1/animal/detail?uuid=${animal_uuid}`)
+      .then((response) => {
 
-  useEffect(() => {
-      axios.get(`https://i9b302.p.ssafy.io/api/v1/animal/detail?uuid=${animal_uuid}`)
-        .then((response) => {
-          console.log(animal_uuid)
-          console.log(response); 
-          setAnimalDetail(response.data.response);
-        })
-        .catch((error) => {
-          console.log('오류')
-          console.log(error);
-        });
-  }, []);
+        setAnimalDetail(response.data.response);
+        console.log(animalDetail)
+
+      })
+      .catch((error) => {
+        console.log('오류')
+        console.log(error);
+      });
+  }
+  // console.log(animalDetail)
+
+  const goToBack =() => {
+    navigate(-1)
+  }
+
 
   type AnimalData = ReturnType<typeof createData>
 
-  const [animalData, setAnimalData] = useState<AnimalData[]>([])
-  const rows = [
-    createData(
-      '23-1-213',
-      '미지정',
-      '임시보호',
-      '동구',
-      '개',
-      '믹스',
-      '수컷',
-      '000동 000 부근',
-      '2023-07-18',
-      '미지정',
-      '미지정',
-      '2년(추정)'
-    ),
-  ]
-  useState(() => {
-    setAnimalData(rows)
-  })
-
   return (
-    <Container>
-      <Grid>
-        <img src={logo} alt="ddd" />
+    <Container sx={{mt : 10}}>
+      <Grid sx={{display:'flex', justifyContent:'center', mb: 3}}>
+        {animalDetail && animalDetail.photo_url && (
+          <img src={animalDetail.photo_url} alt={logo} />
+        )}
       </Grid>
 
       <TableContainer component={Paper} sx={{ borderRadius: 5 }}>
         <Table sx={{ borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
           <TableBody>
             <TableCell sx={{ backgroundColor: '#FFBC5F', width: '20%' }}>
-              <TableRow>관리번호</TableRow>
+              <TableRow>관리 보호소</TableRow>
               <hr />
-              <TableRow>공고번호</TableRow>
+              <TableRow>이름</TableRow>
               <hr />
-              <TableRow>입양상태</TableRow>
+              <TableRow>입양 상태</TableRow>
               <hr />
-              <TableRow>지역분류</TableRow>
-              <hr />
-              <TableRow>종류</TableRow>
+              <TableRow>성격</TableRow>
               <hr />
               <TableRow>품종</TableRow>
+              <hr />
+              <TableRow>종류</TableRow>
             </TableCell>
-            {rows.map(row => (
-              <TableCell key={row.관리번호} sx={{ width: '30%' }}>
-                <TableRow component="th" scope="row">
-                  {row.관리번호}
-                </TableRow>
+            {animalDetail && ( // 객체가 존재할 때만 렌더링
+              <TableCell sx={{ width: '30%' }}>
+                <TableRow>{animalDetail.center_uuid}</TableRow>
                 <hr />
-                <TableRow>{row.공고번호}</TableRow>
+                <TableRow>{animalDetail.name}</TableRow>
                 <hr />
-                <TableRow>{row.입양상태}</TableRow>
+                <TableRow>{animalDetail.adoption_status}</TableRow>
                 <hr />
-                <TableRow>{row.지역분류}</TableRow>
+                <TableRow>{animalDetail.character}</TableRow>
                 <hr />
-                <TableRow>{row.종류}</TableRow>
+                <TableRow>{animalDetail.breed}</TableRow>
                 <hr />
-                <TableRow>{row.품종}</TableRow>
+                <TableRow>{animalDetail.specie}</TableRow>
+                <hr />
               </TableCell>
-            ))}
+            )}
 
             <TableCell sx={{ backgroundColor: '#FFBC5F', width: '20%' }}>
               <TableRow>성별</TableRow>
               <hr />
-              <TableRow>발견장소</TableRow>
+              <TableRow>발견 장소</TableRow>
               <hr />
-              <TableRow>구조일</TableRow>
+              <TableRow>만료일</TableRow>
               <hr />
               <TableRow>공고일</TableRow>
               <hr />
-              <TableRow>입양신청시작일시</TableRow>
+              <TableRow>입양 시작 가능 일시</TableRow>
               <hr />
-              <TableRow>입소당시나이</TableRow>
+              <TableRow>나이 (추정)</TableRow>
             </TableCell>
-            {rows.map(row => (
-              <TableCell key={row.관리번호} sx={{ width: '30%' }}>
-                <TableRow>{row.성별}</TableRow>
+            {animalDetail && (
+              <TableCell sx={{ width: '30%' }}>
+                <TableRow>{animalDetail.gender}</TableRow>
                 <hr />
-                <TableRow>{row.발견장소}</TableRow>
+                <TableRow>{animalDetail.find_place}</TableRow>
                 <hr />
-                <TableRow>{row.구조일}</TableRow>
+                <TableRow>{animalDetail.enter_date}</TableRow>
                 <hr />
-                <TableRow>{row.공고일}</TableRow>
+                <TableRow>{animalDetail.notice_date}</TableRow>
                 <hr />
-                <TableRow>{row.입양신청시작일시}</TableRow>
+                <TableRow>{animalDetail.adoption_start_date}</TableRow>
                 <hr />
-                <TableRow>{row.입소당시나이}</TableRow>
+                <TableRow>{animalDetail.age}</TableRow>
+                <hr />
               </TableCell>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid sx={{ margin: '30px', display: '' }}>
-        <CustomButton>사용자 - 돌아가기</CustomButton>
+      <Grid sx={{ margin: '30px'}}>
+        <CustomButton onClick={goToBack}>사용자 - 돌아가기</CustomButton>
         <CustomButton>관리자 - 작성 & 수정</CustomButton>
         <CustomButton>관리자 -삭제</CustomButton>
       </Grid>
