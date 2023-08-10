@@ -66,6 +66,17 @@ export default function AnimalDetail() {
   }
   // console.log(animalDetail)
 
+  axios.get('https://i9b302.p.ssafy.io/api/v1/user')
+  .then((res) => {
+    console.log(res)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+
+
+
+
   const goToBack =() => {
     navigate(-1)
   }
