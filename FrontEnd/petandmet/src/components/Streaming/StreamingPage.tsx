@@ -27,24 +27,24 @@ import DonationItemsList from "./Streaming/DonationItemsList";
 6. TotalPrice도 함께 form에 등록할 거임. */
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: 'center',
   color: theme.palette.text.secondary,
-}));
+}))
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#FFA629",
-  color: "white",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  boxShadow: "none",
-  "&:hover": {
-    backgroundColor: "orange",
+  backgroundColor: '#FFA629',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  boxShadow: 'none',
+  '&:hover': {
+    backgroundColor: 'orange',
   },
-  margin: "5px",
-}));
+  margin: '5px',
+}))
 
 const AnimalInfoContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#bf7070",
@@ -106,11 +106,11 @@ function StreamingPage() {
       <Container
         sx={{
           my: 5,
-          display: "flex",
-          flexDirection: "column",
-          bgcolor: "#ffffff",
-          height: "45rem",
-          width: "98%",
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: '#ffffff',
+          height: '45rem',
+          width: '98%',
           borderRadius: 5,
         }}
       >
@@ -121,18 +121,18 @@ function StreamingPage() {
             <Grid item xs={12} md={9}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
                 <Box
                   sx={{
-                    backgroundColor: "#7b7777",
+                    backgroundColor: '#7b7777',
                     flex: 1,
-                    height: "100%",
-                    width: "90%",
+                    height: '100%',
+                    width: '90%',
                   }}
                 >
                   {/* 동물 데이터의 이름과 나이 출력 */}
@@ -143,15 +143,15 @@ function StreamingPage() {
             <Grid item xs={12} md={3}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                   borderRadius: 5,
                 }}
               >
                 <Box
-                  sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
+                  sx={{ backgroundColor: '#f8d260', flex: 1, borderRadius: 5 }}
                 >
                   <AnimalInfoContainer>
                     <Card.Text>보호소 ID : {centerId}</Card.Text>
@@ -167,15 +167,15 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: '100%' }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: "#FFA629",
-                height: "100%",
-                display: "flex",
+                backgroundColor: '#FFA629',
+                height: '100%',
+                display: 'flex',
                 borderRadius: 5,
-                justifyContent: "Left",
+                justifyContent: 'Left',
               }}
             >
               {/* 이미지는 보호소 - 동물 등록 - 동물 이미지 업로드 - 업로드된 이미지 DB - animalImg 추가해주기 && animalImg를 DB에 photoURL로 바인딩 */}
@@ -200,7 +200,7 @@ function StreamingPage() {
         </Grid>
       </Container>
     </>
-  );
+  )
 }
 
-export default StreamingPage;
+export default StreamingPage

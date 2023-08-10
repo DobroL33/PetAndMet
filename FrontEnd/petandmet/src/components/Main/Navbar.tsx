@@ -1,55 +1,130 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import logo from '../../images/new_logo.jpg';
-// import { Route, Routes, Link,  useNavigate} from 'react-router-dom';
+import * as React from 'react'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Menu from '@mui/material/Menu'
+import MenuIcon from '@mui/icons-material/Menu'
+import Container from '@mui/material/Container'
+import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
+import logo from 'images/new_logo.jpg'
+import { useNavigate } from 'react-router-dom'
+import { useCookies, Cookies } from 'react-cookie'
+import { styled } from '@mui/material/styles'
 
-const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입'];
-const settings = ['입양 절차', '입양 신청', '입양 후기'];
-const notify = ['공지 사항', '봉사 신청', 'Q & A'];
-const charge = ['충전 하기', '후원 하기', '후원 후기'];
+const pages = ['입양', '참여 소통', '후원', '로그인', '회원가입', '로그아웃', '마이페이지']
+const settings = ['입양 절차', '입양 신청', '입양 후기']
+const notify = ['공지 사항', '봉사 신청', 'Q & A']
+const charge = ['충전 하기', '후원 하기', '후원 후기']
+
+const NavButton = styled(Button)(({ theme }) => ({
+  my: 2,
+  color: 'white', 
+  display: 'block'
+}))
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const [anchorElNotify, setAnchorElNotify] = React.useState<null | HTMLElement>(null);
-  const [anchorElCharge, setAnchorElCharge] = React.useState<null | HTMLElement>(null);
+  let navigate = useNavigate()
+  const [cookie, setCookie, removeCookie] = useCookies(['access_token']);
+
+  const logOut = () => {
+    removeCookie('access_token');
+    navigate('/login')
+    handleCloseNavMenu()
+  }
+  const goToLogin = () => {
+    navigate('/login')
+    handleCloseNavMenu()
+  }
+  const goToSignUP = () => {
+    navigate('/register')
+    handleCloseNavMenu()
+  }
+  const goToAdoptProcess = () => {
+    navigate('/adpotprocess')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
+  }
+  const goToAdoptCheckList = () => {
+    navigate('/adoptchecklist')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
+  }
+  const goToAdoptReview = () => {
+    navigate('/adoptreview')
+    handleCloseUserMenu()
+    handleCloseNavMenu()
+  }
+  const goToNotice = () => {
+    navigate('/notice')
+    handleCloseNotify()
+    handleCloseNavMenu()
+  }
+  const goToVolunteer = () => {
+    navigate('/volunteer')
+    handleCloseNotify()
+    handleCloseNavMenu()
+  }
+  const goToQna = () => {
+    navigate('/qna')
+    handleCloseNotify()
+    handleCloseNavMenu()
+  }
+  const goToCharge = () => {
+    navigate('/donate/charge')
+    handleCloseCharge()
+    handleCloseNavMenu()
+  }
+  const goToDonate = () => {
+    navigate('/donate/item')
+    handleCloseCharge()
+    handleCloseNavMenu()
+  }
+  const goToDonateReview = () => {
+    navigate('/donatereview')
+    handleCloseCharge()
+    handleCloseNavMenu()
+  }
+  const goToMyPage = () => {
+    navigate('/mypage')
+    handleCloseNavMenu()
+  }
+
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  )
+  const [anchorElNotify, setAnchorElNotify] =
+    React.useState<null | HTMLElement>(null)
+  const [anchorElCharge, setAnchorElCharge] =
+    React.useState<null | HTMLElement>(null)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
+    setAnchorElNav(event.currentTarget)
+  }
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+    setAnchorElNav(null)
+  }
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
   const handleOpenNotify = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNotify(event.currentTarget);
-  };
+    setAnchorElNotify(event.currentTarget)
+  }
   const handleCloseNotify = () => {
-    setAnchorElNotify(null);
-  };
+    setAnchorElNotify(null)
+  }
   const handleOpenCharge = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElCharge(event.currentTarget);
-  };
+    setAnchorElCharge(event.currentTarget)
+  }
   const handleCloseCharge = () => {
-    setAnchorElCharge(null);
-  };
+    setAnchorElCharge(null)
+  }
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#FFA629' }}>
@@ -61,31 +136,31 @@ function Navbar() {
             component="a"
             href="/"
             sx={{
-                mr: 2,
-                display: { xs: 'flex', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+              mr: 2,
+              display: { xs: 'flex', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
-            <img alt='logo' src={logo} style={{width: 100}}/>              
+            <img alt="logo" src={logo} style={{ width: 100 }} />
           </Typography>
-          <Box sx = {{flexGrow : 1}}></Box>
+          <Box sx={{ flexGrow: 1 }}></Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <Box sx={{flexGrow: 1}}></Box>
-            <Box sx={{flexGrow: 1}}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <Box sx={{ flexGrow: 1 }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-              <MenuIcon />
-            </IconButton>
+                <MenuIcon />
+              </IconButton>
             </Box>
             <Menu
               id="menu-appbar"
@@ -105,44 +180,46 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page, index) => (
-                <MenuItem key={page} onClick={
-                    index === 0
-                      ? handleOpenUserMenu
-                      : index === 1
-                      ? handleOpenNotify
-                      : index === 2
-                      ? handleOpenCharge
-                      : handleCloseNavMenu
-                  }>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleOpenUserMenu}>
+                <Typography textAlign="center">
+                  {pages[0]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleOpenNotify}>    
+                <Typography textAlign="center">
+                  {pages[1]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleOpenCharge}>
+                <Typography textAlign="center">
+                  {pages[2]}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={cookie.access_token ? logOut : goToLogin}>
+                <Typography textAlign="center">
+                  {cookie.access_token ? pages[5] : pages[3]}  
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={cookie.access_token ? goToMyPage : goToSignUP}>
+                <Typography textAlign="center">
+                  {cookie.access_token ? pages[6] : pages[4]}
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
-          
+
           {/* 작아질 때 */}
-          
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-           <Box sx={{flexGrow: 1}}></Box>
-            {pages.map((page, index) => (
-              <Button
-                key={page}
-                onClick={
-                  index === 0
-                    ? handleOpenUserMenu
-                    : index === 1
-                    ? handleOpenNotify
-                    : index === 2
-                    ? handleOpenCharge
-                    : handleCloseNavMenu
-                }
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
+            <Box sx={{ flexGrow: 1 }}></Box>
+              <NavButton onClick={handleOpenUserMenu}>{pages[0]}</NavButton>
+              <NavButton onClick={handleOpenNotify}>{pages[1]}</NavButton>
+              <NavButton onClick={handleOpenCharge}>{pages[2]}</NavButton>
+              <NavButton onClick={cookie.access_token ? logOut : goToLogin}
+              >{cookie.access_token ? pages[5] : pages[3]}</NavButton>
+              <NavButton onClick={cookie.access_token ? goToMyPage : goToSignUP}
+              >{cookie.access_token ? pages[6] : pages[4]}</NavButton>
+            </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             {/* <Tooltip title="">
@@ -166,8 +243,19 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <MenuItem
+                  key={setting}
+                  onClick={
+                    index === 0
+                      ? goToAdoptProcess
+                      : index === 1
+                      ? goToAdoptCheckList
+                      : index === 2
+                      ? goToAdoptReview
+                      : handleCloseUserMenu
+                  }
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -188,8 +276,19 @@ function Navbar() {
               open={Boolean(anchorElNotify)}
               onClose={handleCloseNotify}
             >
-              {notify.map((item) => (
-                <MenuItem key={item} onClick={handleCloseNotify}>
+              {notify.map((item, index) => (
+                <MenuItem
+                  key={item}
+                  onClick={
+                    index === 0
+                      ? goToNotice
+                      : index === 1
+                      ? goToVolunteer
+                      : index === 2
+                      ? goToQna
+                      : handleCloseNotify
+                  }
+                >
                   <Typography textAlign="center">{item}</Typography>
                 </MenuItem>
               ))}
@@ -210,8 +309,19 @@ function Navbar() {
               open={Boolean(anchorElCharge)}
               onClose={handleCloseCharge}
             >
-              {charge.map((item) => (
-                <MenuItem key={item} onClick={handleCloseCharge}>
+              {charge.map((item, index) => (
+                <MenuItem
+                  key={item}
+                  onClick={
+                    index === 0
+                      ? goToCharge
+                      : index === 1
+                      ? goToDonate
+                      : index === 2
+                      ? goToDonateReview
+                      : handleCloseCharge
+                  }
+                >
                   <Typography textAlign="center">{item}</Typography>
                 </MenuItem>
               ))}
@@ -220,7 +330,7 @@ function Navbar() {
         </Toolbar>
       </Container>
     </AppBar>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar

@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult } from 'react-query'
-import { domain } from '../customQueryClient'
+import { domain } from 'hooks/customQueryClient'
 import axios, { AxiosResponse } from 'axios'
 
 export interface RegisterCredential {

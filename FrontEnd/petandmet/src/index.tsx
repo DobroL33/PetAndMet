@@ -5,7 +5,7 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import 'tailwindcss/tailwind.css'
 import { QueryClientProvider } from 'react-query'
-import { queryClient } from './hooks/customQueryClient'
+import { queryClient } from 'hooks/customQueryClient'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 

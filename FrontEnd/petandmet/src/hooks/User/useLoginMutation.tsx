@@ -1,4 +1,5 @@
 import { useMutation, UseMutationResult } from 'react-query'
+import { useCookies } from 'react-cookie'
 import axios from 'axios'
 
 interface Token {
@@ -24,7 +25,13 @@ export function useLoginMutation(): UseMutationResult<
   LoginCredentials,
   unknown
 > {
+  const [cookie, setCookie] = useCookies(['access_token'])
   return useMutation<Token, unknown, LoginCredentials, unknown>(axiosData, {
-    onSuccess(data, variables, context) {},
+    onSuccess(data, variables, context) {
+      setCookie('access_token', 'bearer ' + data.response, {
+        secure: true,
+        sameSite: 'strict',
+      })
+    },
   })
 }
