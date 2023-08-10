@@ -7,19 +7,26 @@ import {
 } from '@mui/material'
 import pay from 'images/kakaopay.png'
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const options = [5000, 10000, 15000, 20000, 50000]
 
 function ItemDetail() {
-  const [selectedOption, setSelectedOption] = useState<number>(options[0])
+  const [selectedOption, setSelectedOption] = useState<number>(0)
   const [donate, setDonate] = useState<boolean>(false)
   const [point, setPoint] = useState<number>(10000)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const item = location.state
 
   const handleOptionChange = (value: number) => {
     setSelectedOption(value)
   }
   const handleToggle = () => {
     setDonate(prevDonate => !prevDonate)
+  }
+  const goToBack = () => {
+    navigate(-1)
   }
 
   const diffPoint = () => {
@@ -55,17 +62,17 @@ function ItemDetail() {
           </Grid>
           <Grid item xs={8} textAlign="left">
             <Typography variant="body1" marginBottom={2.5}>
-              물품 명 : 000
+              물품 명 : {item?.item_name}
             </Typography>
             <Typography variant="body1" marginBottom={2.5}>
-              목표 가격 : 00,000원
+              목표 가격 : {item?.item_target_price}원
             </Typography>
             <Typography variant="body1" marginBottom={2.5}>
-              남은 금액 : 00,000원
+              남은 금액 : {item?.item_target_price - selectedOption}원
             </Typography>
             <LinearProgress
               variant="determinate"
-              value={30}
+              value={selectedOption/ item?.item_target_price * 100}
               sx={{ width: '50%', height: 15, mb: 2.5 }}
             />
 
@@ -111,7 +118,7 @@ function ItemDetail() {
             >
               후원하기
             </Button>
-            <Button sx={{ bgcolor: 'red', color: 'black' }}>돌아가기</Button>
+            <Button sx={{ bgcolor: 'red', color: 'black' }} onClick={goToBack}>돌아가기</Button>
             <Button sx={{ bgcolor: 'blue', color: 'black' }}>수정</Button>
             <Button sx={{ bgcolor: 'red', color: 'black' }} disableRipple>
               삭제

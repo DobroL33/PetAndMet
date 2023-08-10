@@ -14,6 +14,7 @@ import pay from 'images/kakaopay.png'
 import CenterDataList from 'hooks/Center/CenterMutation';
 import axios from 'axios';
 import { domain } from 'hooks/customQueryClient';
+import { useNavigate } from 'react-router-dom';
 
 interface CenterItem {
   center_item_id: number;
@@ -26,6 +27,12 @@ interface CenterItem {
 function List() {
   const [center, setCenter] = useState('')
   const [uid, setUid] = useState('')
+  const navigate = useNavigate()
+
+  const goToItemDetail = (item : CenterItem) => {
+    navigate(`/donate/item/${uid}`, {state : item})
+  }
+
   const handleChange = (event: SelectChangeEvent) => {
     setCenter(event.target.value)
   }
@@ -106,6 +113,7 @@ function List() {
                   style={{ width: '100%', height: 200, objectFit: 'cover' }}
                   alt={pay}
                   src={pay}
+                  onClick={() =>{goToItemDetail(item)}}
                   />
                   ) : (
                     <Skeleton variant="rectangular" width="100%" height={200} />
