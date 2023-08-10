@@ -1,7 +1,7 @@
 package com.ssafy.petandmet.repository;
 
 import com.ssafy.petandmet.domain.Walk;
-import com.ssafy.petandmet.dto.walk.UserWalkTime;
+import com.ssafy.petandmet.dto.walk.WalkTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,6 +23,7 @@ public interface WalkRepository extends JpaRepository<Walk, String> {
             "where w.animal.uuid = :animalUuid and w.user.uuid = :userUuid and w.center.uuid = :centerUuid and w.date = :date and w.time = :time")
     boolean isExistWalkTime(String animalUuid, String userUuid, String centerUuid, LocalDate date, int time);
 
-    @Query("select new com.ssafy.petandmet.dto.walk.UserWalkTime(w.date, w.time, w.status) from Walk w where w.user.uuid = :userUuid")
-    List<UserWalkTime> getUserWalkTime(String userUuid);
+    @Query("select new com.ssafy.petandmet.dto.walk.WalkTime(w.date, w.time, w.animal.uuid, w.center.uuid, w.user.uuid, w.status) " +
+            "from Walk w where w.user.uuid = :userUuid")
+    List<WalkTime> getUserWalkTime(String userUuid);
 }

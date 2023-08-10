@@ -5,8 +5,8 @@ import com.ssafy.petandmet.domain.Center;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.domain.Walk;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
-import com.ssafy.petandmet.dto.walk.UserWalkTime;
 import com.ssafy.petandmet.dto.walk.WalkAbleTime;
+import com.ssafy.petandmet.dto.walk.WalkTime;
 import com.ssafy.petandmet.repository.AnimalRepository;
 import com.ssafy.petandmet.repository.CenterRepository;
 import com.ssafy.petandmet.repository.UserRepository;
@@ -79,7 +79,7 @@ public class WalkService {
         throw new IllegalStateException("입력 정보가 잘못되었습니다.");
     }
 
-    public List<UserWalkTime> getUserWalkTime(String userUuid) {
+    public List<WalkTime> getUserWalkTime(String userUuid) {
         return walkRepository.getUserWalkTime(userUuid);
     }
 }
