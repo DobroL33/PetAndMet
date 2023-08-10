@@ -6,8 +6,10 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import logo from 'images/logo.png'
+import { useNavigate } from 'react-router-dom';
 
 interface Animal {
+  animal_uuid : string | null
   animal_photo_url : string | null
   name: string | null
   age: string | null
@@ -42,14 +44,23 @@ function CardInfo({ animal }: CardInfoProps) {
   // const handleExpandClick = () => {
   //     setExpanded(!expanded);
   // };
+  const navigate = useNavigate()
 
+  const handleCardClick = () => {
+    if (animal.animal_uuid) {
+      console.log('Clicked animal UUID:', animal.animal_uuid);
+      navigate(`/animal/detail/${animal.animal_uuid}`);
+
+      // onCardClick(animal.animal_uuid)
+    }
+  }
   return (
-    <Card sx={{ maxWidth: 250, borderRadius: 5 }}>
+    <Card sx={{ maxWidth: 250, borderRadius: 5 }} onClick={handleCardClick}>
       {animal.animal_photo_url && typeof animal.animal_photo_url === 'string' ? (
         <CardMedia
           component="img"
           image={animal.animal_photo_url}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%' }}
           alt={logo}
         />
         ) : (

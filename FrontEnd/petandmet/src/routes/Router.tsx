@@ -68,7 +68,7 @@ const App = () => {
         <Route path="/donate/item" element={<ItemList />} />
         <Route path="/donate/item/:id" element={<ItemDetail />} />
         <Route path="/livelist/streaming/:id" element={<StreamingPage/>}/>
-        <Route path="/animal/detail:id" element={<AnimalDetail/>}/>
+        <Route path="/animal/detail/:animal_uuid" element={<AnimalDetail/>}/>
       </Routes>
     </BrowserRouter>
   )
