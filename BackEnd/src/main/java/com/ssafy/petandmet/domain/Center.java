@@ -1,6 +1,5 @@
 package com.ssafy.petandmet.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +43,10 @@ public class Center {
     @OneToMany(mappedBy = "center")
     @Builder.Default
     private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "center")
+    @Builder.Default
+    private List<Walk> walks = new ArrayList<>();
 
     @Column(name = "center_name")
     private String name;
