@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult } from 'react-query'
 import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
 import { domain } from 'hooks/customQueryClient'
-import axios from 'axios'
+import customAxios from 'utils/axiosUtil'
 interface Token {
   response: String
 }
@@ -13,8 +13,16 @@ export interface LoginCredentials {
 }
 
 const axiosData = async (credentials: LoginCredentials): Promise<Token> => {
-  const response = await axios.post<Token>(`${domain}/user`, credentials)
-  return response.data
+  try {
+    const response = await customAxios.post<Token>(
+      `${domain}/user`,
+      credentials
+    )
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 
 export function useLoginMutation(): UseMutationResult<
