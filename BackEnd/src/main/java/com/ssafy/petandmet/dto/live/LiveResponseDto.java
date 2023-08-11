@@ -10,6 +10,8 @@ public class LiveResponseDto {
     @JsonProperty("live_id")
     private Long liveId;
     private String thumbnail;
+    @JsonProperty("session_id")
+    private String sessionId;
     @JsonProperty("session_name")
     private String sessionName;
     @JsonProperty("animal_uuid")
@@ -26,6 +28,7 @@ public class LiveResponseDto {
         if (live.getCenter() != null) {
             this.centerUuid = live.getCenter().getUuid();
         }
+        this.sessionId = live.getSessionId();
         this.sessionName = live.getSessionName();
     }
 }

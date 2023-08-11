@@ -18,6 +18,8 @@ public class LiveDetailResponse {
     private int status;
     @JsonProperty("live_id")
     private Long liveId;
+    @JsonProperty("session_id")
+    private String sessionId;
     @JsonProperty("session_name")
     private String sessionName;
     private String thumbnail;
@@ -28,6 +30,7 @@ public class LiveDetailResponse {
         this.message = "라이브 상세 조회 성공";
         this.status = 200;
         this.liveId = live.getId();
+        this.sessionId = live.getSessionId();
         this.sessionName = live.getSessionName();
         this.thumbnail = live.getThumbnail();
         this.center = new CenterDto(live.getCenter());
