@@ -1,14 +1,21 @@
-import CssBaseline from '@mui/material/CssBaseline'
-import Container from '@mui/material/Container'
-import { Button } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import * as React from "react";
 
-import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
-import { useParams } from 'react-router-dom'
+import Card from "react-bootstrap/Card";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import { useParams } from "react-router-dom";
+
+import useAnimal from "../../hooks/Animal/useAnimal";
+import useCenter from "../../hooks/Center/useCenter";
+import CenterList from "./Streaming/CenterList";
+import DonationItemsList from "./Streaming/DonationItemsList";
+
 /* ### Streaming - 후원하기 파트
 
 1. 목록 클릭 ⇒ 보호소가 등록한 필요 물품 조회 ( 일단 클릭해서 들어오기 전에 Zustand에 보호소id를 state에 저장하고 들어오는 거 ) 
@@ -20,35 +27,86 @@ import { useParams } from 'react-router-dom'
 6. TotalPrice도 함께 form에 등록할 거임. */
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: 'center',
+  textAlign: "center",
   color: theme.palette.text.secondary,
-}))
+}));
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FFA629',
-  color: 'white',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  boxShadow: 'none',
-  '&:hover': {
-    backgroundColor: 'orange',
+  backgroundColor: "#FFA629",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  boxShadow: "none",
+  "&:hover": {
+    backgroundColor: "orange",
   },
-  margin: '5px',
-}))
+  margin: "5px",
+}));
+
+const AnimalInfoContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#bf7070",
+  padding: theme.spacing(3),
+  borderRadius: "5px",
+}));
 
 function StreamingPage() {
-  const { animal_uuid } = useParams()
+  const { animal_uuid } = useParams();
+
+  const fetchAnimalData = useAnimal((state) => state.fetchAnimalData);
+  const {
+    animalId: animalId,
+    name: animalName,
+    age: animalAge,
+    gender: animalGender,
+    breed: animalBreed,
+    // enterDate: enterDate,
+  } = useAnimal();
+
+  const fetchCenterData = useCenter((state) => state.fetchCenterData);
+  const {
+    centerId: centerId,
+    name: centerName,
+    address: centerAddress,
+    phone: centerPhone,
+    email: centerEmail,
+    // enterDate: enterDate,
+  } = useCenter();
+
+  useEffect(() => {
+    fetchAnimalData();
+  }, [fetchAnimalData]);
+
+  useEffect(() => {}, [
+    animalId,
+    animalName,
+    animalAge,
+    animalGender,
+    animalBreed,
+  ]);
+
+  useEffect(() => {
+    fetchCenterData();
+  }, [fetchCenterData]);
+
+  useEffect(() => {}, [
+    centerId,
+    centerName,
+    centerAddress,
+    centerPhone,
+    centerEmail,
+  ]);
+  const { animal_uuid } = useParams();
   const [Animals, setAnimals] = useState({
     error: null,
     response: null,
-  })
+  });
 
   useEffect(() => {
     const accessToken =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og'
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og";
 
     const test = axios.get<any>(
       `https://i9b302.p.ssafy.io/api/v1/animal?id=aa`,
@@ -57,21 +115,21 @@ function StreamingPage() {
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    )
-    console.log(test)
-  })
+    );
+    console.log(test);
+  });
 
   if (!Animals.response) {
     // Data is still loading
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (Animals.error) {
     // Error occurred during API fetch
-    return <div>Error: {Animals.error}</div>
+    return <div>Error: {Animals.error}</div>;
   }
 
-  const { name, age, specie, message } = Animals.response
+  const { name, age, specie, message } = Animals.response;
 
   return (
     <>
@@ -80,11 +138,11 @@ function StreamingPage() {
       <Container
         sx={{
           my: 5,
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: '#ffffff',
-          height: '45rem',
-          width: '98%',
+          display: "flex",
+          flexDirection: "column",
+          bgcolor: "#ffffff",
+          height: "45rem",
+          width: "98%",
           borderRadius: 5,
         }}
       >
@@ -95,21 +153,21 @@ function StreamingPage() {
             <Grid item xs={12} md={9}>
               <Box
                 sx={{
-                  backgroundColor: '#FFA629',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  backgroundColor: "#FFA629",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
                 <Box
                   sx={{
-                    backgroundColor: '#7b7777',
+                    backgroundColor: "#7b7777",
                     flex: 1,
-                    height: '100%',
-                    width: '90%',
+                    height: "100%",
+                    width: "90%",
                   }}
                 >
-                  <h1 font-size="lg">ㅇㅇ</h1>
+                  {/* 동물 데이터의 이름과 나이 출력 */}
                 </Box>
               </Box>
             </Grid>
@@ -117,47 +175,60 @@ function StreamingPage() {
             <Grid item xs={12} md={3}>
               <Box
                 sx={{
-                  backgroundColor: '#FFA629',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  backgroundColor: "#FFA629",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                   borderRadius: 5,
                 }}
               >
                 <Box
-                  sx={{ backgroundColor: '#f8d260', flex: 1, borderRadius: 5 }}
+                  sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
                 >
-                  후원할 공간입니다
+                  <AnimalInfoContainer>
+                    {/* <Card.Text>보호소 ID : {centerId}</Card.Text>
+                    <Card.Text>보호소 명 : {centerName}</Card.Text>
+                    <Card.Text>보호소 주소 : {centerAddress}</Card.Text>
+                    <Card.Text>보호소 번호 : {centerPhone}</Card.Text>
+                    <Card.Text>이메일 : {centerEmail}</Card.Text> */}
+                    <CenterList></CenterList>
+                    <h4>
+                      {" "}
+                      동물 API 에서 센터 uuid 가져옴. 그걸로 후원 물품 목록
+                    </h4>
+                  </AnimalInfoContainer>
+                  <DonationItemsList></DonationItemsList>
                 </Box>
               </Box>
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: '100%' }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: '#FFA629',
-                height: '100%',
-                display: 'flex',
+                backgroundColor: "#FFA629",
+                height: "100%",
+                display: "flex",
                 borderRadius: 5,
-                justifyContent: 'Left',
+                justifyContent: "Left",
               }}
             >
+              {/* 이미지는 보호소 - 동물 등록 - 동물 이미지 업로드 - 업로드된 이미지 DB - animalImg 추가해주기 && animalImg를 DB에 photoURL로 바인딩 */}
               <img
                 className="h-28 m-5 md-3"
                 src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                 alt=""
               />
-              <h4 className="m-5">
-                Name: {name}
-                <br />
-                Age: {age}
-                <br />
-                Specie: {specie}
-                <br />
-                Message: {message}
-              </h4>
+              <AnimalInfoContainer>
+                {/* <Card.Text>동물ID : {animalId}</Card.Text> */}
+                <Card.Text>이름 : {animalName}</Card.Text>
+                <Card.Text>나이 : {animalAge}</Card.Text>
+                <Card.Text>성별 : {animalGender}</Card.Text>
+                <Card.Text>종 : {animalBreed}</Card.Text>
+              </AnimalInfoContainer>
+
+              {/* <Card.Text>들어온 날짜 : {enterDate}</Card.Text> */}
             </Box>
 
             {/* Bottom Left */}
@@ -165,7 +236,7 @@ function StreamingPage() {
         </Grid>
       </Container>
     </>
-  )
+  );
 }
 
-export default StreamingPage
+export default StreamingPage;
