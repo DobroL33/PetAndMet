@@ -44,7 +44,7 @@ public class Animal {
     @Column(name = "animal_uuid")
     private String uuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "center_uuid")
     private Center center;
 
@@ -83,12 +83,16 @@ public class Animal {
     @Builder.Default
     private List<Donate> donate = new ArrayList<>();
 
-    @OneToOne(mappedBy = "animal")
+    @OneToOne(mappedBy = "animal", fetch = FetchType.LAZY)
     private Live live;
 
-    @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "animal")
     @Builder.Default
     private List<Interest> interests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "animal")
+    @Builder.Default
+    private List<Walk> walks = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setCenter(Center center) {

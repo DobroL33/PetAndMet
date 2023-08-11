@@ -466,7 +466,6 @@ public class UserService {
 //            Token refreshToken = refreshTokenRepository.findById(jwtToken).orElseThrow(() -> {
 //
 //            });
-
             Authentication authentication = tokenProvider.getAuthentication(jwtToken);
             Token token = tokenProvider.regenerateToken(authentication, refreshToken.get());
             refreshTokenRepository.delete(refreshToken.get());
@@ -486,5 +485,9 @@ public class UserService {
             return bearerToken.substring(BEARER_PREFIX.length());
         }
         return null;
+    }
+
+    public Optional<String> getCenterUuid(String userUuid) {
+        return userRepository.getCenterUuid(userUuid);
     }
 }

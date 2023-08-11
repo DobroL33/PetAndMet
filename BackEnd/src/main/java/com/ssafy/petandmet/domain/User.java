@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -34,7 +35,7 @@ public class User {
     @Column(name = "user_uuid")
     private String uuid;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Center center;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -52,6 +53,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Point> points = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Walk> walks = new ArrayList<>();
 
     @Column(name = "user_id")
     private String id;
@@ -82,7 +87,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private DonateGradeType donateGrade = DonateGradeType.BRONZE;
-
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

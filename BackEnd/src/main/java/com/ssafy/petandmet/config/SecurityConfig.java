@@ -60,7 +60,7 @@ public class SecurityConfig {
             "api/v1/board/qna", //QNA 게시글 전체 조회
             "api/v1/board/qna/detail", //QNA 게시글 상세 조회
             //산책
-            "api/v1//walk/time", //산책 신청 가능한 시간 조회
+            "api/v1/walk/time", //산책 신청 가능한 시간 조회
     };
 
     private static final String[] SWAGGER_LIST = {
