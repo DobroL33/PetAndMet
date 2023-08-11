@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { domain } from "../../hooks/customQueryClient";
-import useAnimal from "../../hooks/Animal/useAnimal";
+// import useAnimal from "../../hooks/Animal/useAnimal";
 
 interface Live {
   live_id: number | null;
@@ -65,6 +65,8 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
       .get(url) // 따옴표 제거
       .then((response) => {
         setAnimal(response.data.response); // 데이터 처리 부분 변경
+        console.log("animal 현재 상태는");
+        console.log(animal);
       })
       .catch((error) => {
         console.error(error);
@@ -124,3 +126,93 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
 export default CardLiveInfo;
 export {};
+
+// import create from "zustand";
+// import { domain } from "../../hooks/customQueryClient";
+// import { getAccessTokenFromCookie } from "../useAuth";
+// import axios from "axios";
+
+// // Animal 데이터의 형식을 정의한 인터페이스
+// interface AnimalData {
+//   animal_uuid: string;
+//   name: string;
+//   age: number;
+//   gender: string;
+//   breed: string;
+//   center_uuid: string;
+// }
+
+// // UseAnimalState 인터페이스 정의
+// // interface UseAnimalState extends AnimalData {
+// //   fetchAnimalData: (animal_uuid: string) => Promise<AnimalData>;
+// // }
+
+// // useAnimal 훅을 생성
+// const useAnimal = create<UseAnimalState>((set) => ({
+//   animal_uuid: "",
+//   name: "",
+//   age: 0,
+//   gender: "",
+//   breed: "",
+//   center_uuid: "",
+
+//   setAnimalData: (animalData: AnimalData) => {
+//     set(animalData);
+//   },
+
+//   fetchAnimalData: async () => {
+//     try {
+
+//       const animalData = await axios.get(`${domain}/center/item?uuid=${uid}`)
+
+//       set({
+//         animal_uuid: animal_uuid,
+//         name: animalData.name,
+//         age: animalData.age,
+//         gender: animalData.gender,
+//         breed: animalData.breed,
+//         center_uuid: animalData.center_uuid,
+//       });
+//       console.log("유지 애니멀은요");
+//       console.log(animalData);
+//       return animalData; // 수정된 부분
+//     } catch (error) {
+
+//       return Promise.reject(error); // 수정된 부분
+//     }
+//   },
+// }));
+
+// // API로부터 Animal 데이터 가져오는 함수
+// async function fetchAnimalDataFromApi(
+//   animal_uuid: string,
+//   accessToken: string
+// ): Promise<AnimalData> {
+//   const url = `${domain}/animal/detail?uuid=${animal_uuid}`;
+//   console.log(url);
+
+//   try {
+//     const response = await axios.get(url, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     });
+
+//     const responseData = response.data.response;
+//     const data: AnimalData = {
+//       animal_uuid: responseData.animal_uuid,
+//       name: responseData.name,
+//       age: responseData.age,
+//       gender: responseData.gender,
+//       breed: responseData.breed,
+//       center_uuid: responseData.center_uuid,
+//     };
+
+//     return data;
+//   } catch (error) {
+//     console.error("API 요청 에러:", error);
+//     throw error;
+//   }
+// }
+
+// export default useAnimal;
