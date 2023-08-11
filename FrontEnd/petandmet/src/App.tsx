@@ -1,9 +1,23 @@
 import './App.css'
 import Router from 'routes/Router'
+import { ToastContainer } from 'react-toastify'
 function App() {
   return (
-    <div className="App">
+    <div className="App h-screen">
       <Router></Router>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        limit={5}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import { useMutation, UseMutationResult } from 'react-query'
 import { useCookies } from 'react-cookie'
-import axios from 'axios'
-
+import { useAccessToken } from 'hooks/useAccessToken'
+import { domain } from 'hooks/customQueryClient'
+import customAxios from 'utils/axiosUtil'
 interface Token {
   response: String
 }
@@ -12,11 +13,16 @@ export interface LoginCredentials {
 }
 
 const axiosData = async (credentials: LoginCredentials): Promise<Token> => {
-  const response = await axios.post<Token>(
-    'https://i9b302.p.ssafy.io/api/v1/user',
-    credentials
-  )
-  return response.data
+  try {
+    const response = await customAxios.post<Token>(
+      `${domain}/user`,
+      credentials
+    )
+    return response.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 
 export function useLoginMutation(): UseMutationResult<
@@ -25,13 +31,16 @@ export function useLoginMutation(): UseMutationResult<
   LoginCredentials,
   unknown
 > {
-  const [cookie, setCookie] = useCookies(['access_token'])
+  const [_, setCookie] = useCookies(['access_token'])
+  const { setAccessToken } = useAccessToken()
   return useMutation<Token, unknown, LoginCredentials, unknown>(axiosData, {
     onSuccess(data, variables, context) {
-      setCookie('access_token', 'bearer ' + data.response, {
+      setCookie('access_token', 'Bearer ' + data.response, {
         secure: true,
         sameSite: 'strict',
+        path: '/',
       })
+      setAccessToken('Bearer ' + data.response)
     },
   })
 }
