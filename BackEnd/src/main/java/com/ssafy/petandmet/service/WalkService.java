@@ -15,6 +15,8 @@ import com.ssafy.petandmet.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -89,5 +91,9 @@ public class WalkService {
             throw new IllegalStateException("요청이 올바르지 않습니다.");
         }
         walkRepository.delete(walk.get());
+    }
+
+    public Page<WalkTime> getRequestedWalkTIme(String centerUuid, Pageable pageable) {
+        return walkRepository.getRequestedWalkTIme(centerUuid, pageable);
     }
 }

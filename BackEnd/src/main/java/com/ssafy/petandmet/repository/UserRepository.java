@@ -32,5 +32,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("select u.mileage from User u where u.uuid = :uuid")
     Long findMileage(String uuid);
+
+    @Query("select u.center.uuid from User u where u.uuid = :userUuid")
+    Optional<String> getCenterUuid(String userUuid);
 }
 

@@ -5,11 +5,16 @@ import com.ssafy.petandmet.dto.walk.Result;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
 import com.ssafy.petandmet.dto.walk.WalkAbleTime;
 import com.ssafy.petandmet.dto.walk.WalkTime;
+import com.ssafy.petandmet.service.UserService;
 import com.ssafy.petandmet.service.WalkService;
 import com.ssafy.petandmet.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +33,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/walk")
 @Slf4j
 public class WalkApiController {
+    private final UserService userService;
     private final WalkService walkService;
 
     /**
@@ -110,5 +116,25 @@ public class WalkApiController {
             result.put("message", e.getMessage());
             return new Result(false, null, result);
         }
+    }
+
+    @GetMapping("/center")
+    @PreAuthorize("hasRole('CENTER')")
+    public Result getRequestedWalkTIme(@PageableDefault(size = 10) Pageable pageable) {
+        Optional<String> userUuid = SecurityUtil.getCurrentUserUuid();
+        Map<String, Object> result = new HashMap<>();
+        if (userUuid.isEmpty()) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", "사용자 정보가 존재하지 않습니다.");
+            return new Result(false, null, result);
+        }
+        Optional<String> centerUuid = userService.getCenterUuid(userUuid.get());
+        log.debug(centerUuid.get());
+        Page<WalkTime> walkTimes = walkService.getRequestedWalkTIme(centerUuid.get(), pageable);
+        result.put("status", HttpStatus.SC_OK);
+        result.put("message", "신청 받은 산책 가져오기 성공");
+        result.put("walk_times", walkTimes.stream().toList());
+        result.put("total", walkTimes.getTotalElements());
+        return new Result(true, result, null);
     }
 }
