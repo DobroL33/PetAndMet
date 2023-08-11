@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserMileageResponse {
 
+    private String message;
+    private int status;
     private Long mileage;
-
-
 }
