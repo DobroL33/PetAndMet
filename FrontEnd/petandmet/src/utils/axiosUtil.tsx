@@ -9,7 +9,7 @@ export const customAxios = axios.create({
 export async function refreshToken(accessToken: string) {
   try {
     const response = await axios.request({
-      url: `${domain}/test/user/refresh`,
+      url: `${domain}/user/refresh`,
       method: 'post',
       headers: {
         Authorization: `${accessToken}`,
