@@ -1,14 +1,14 @@
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import logo from "images/logo.png";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { domain } from "../../hooks/customQueryClient";
+import useAnimal from "../../hooks/Animal/useAnimal";
 
 interface Live {
   live_id: number | null;
@@ -59,13 +59,12 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
   const [animal, setAnimal] = useState<any>();
 
   useEffect(() => {
+    const url = `${domain}/animal/detail?uuid=${live.animal_uuid}`;
+    console.log(url);
     axios
-      .get(
-        `https://i9b302.p.ssafy.io/api/v1/animal/detail?id=${live.animal_uuid}`
-      ) // 따옴표 제거
+      .get(url) // 따옴표 제거
       .then((response) => {
-        console.log("response는요", response);
-        setAnimal(response.data); // 데이터 처리 부분 변경
+        setAnimal(response.data.response); // 데이터 처리 부분 변경
       })
       .catch((error) => {
         console.error(error);
@@ -74,40 +73,24 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   let animalsToShow: any = [];
 
-  // const [expanded, setExpanded] = React.useState(false);
-
-  // const handleExpandClick = () => {
-  //     setExpanded(!expanded);
-  // };
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    if (live.animal_uuid) {
-      console.log("Clicked animal UUID:", live.animal_uuid);
-      navigate(`/livelist/streaming/${live.animal_uuid}`);
-
-      // onCardClick(animal.animal_uuid)
+    if (live.animal_uuid && animal) {
+      setAnimal({
+        animal_uuid: live.animal_uuid,
+        name: animal.name,
+        age: animal.age,
+        gender: animal.gender, // 여기에 적절한 값 채우기
+        breed: animal.breed, // 여기에 적절한 값 채우기
+        center_uuid: live.center_uuid, // 여기에 적절한 값 채우기
+      });
+      navigate(`/livelist/streaming/${live.live_id}`);
     }
   };
 
   return (
     <Card sx={{ maxWidth: 250, borderRadius: 5 }} onClick={handleCardClick}>
-      {/* {animal.animal_photo_url &&
-      typeof animal.animal_photo_url === "string" ? (
-        <CardMedia
-          component="img"
-          image={animal.animal_photo_url}
-          style={{ width: "100%" }}
-          alt={logo}
-        />
-      ) : (
-        <CardMedia
-          component="img"
-          image={logo}
-          style={{ width: "100%" }}
-          alt={logo}
-        />
-      )} */}
       <CardContent sx={{ padding: "0 !important", textAlign: "left" }}>
         <Typography variant="body2" color="text.secondary">
           <div style={{ marginTop: "10px" }}>

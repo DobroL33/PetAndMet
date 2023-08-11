@@ -26,6 +26,9 @@ const useAnimal = create<UseAnimalState>((set) => ({
   gender: "",
   breed: "",
   center_uuid: "",
+  setAnimalData: (animalData: AnimalData) => {
+    set(animalData);
+  },
   fetchAnimalData: async (animal_uuid: string) => {
     try {
       const accessToken = getAccessTokenFromCookie();
@@ -36,7 +39,6 @@ const useAnimal = create<UseAnimalState>((set) => ({
         return Promise.reject("액세스 토큰이 없음");
       }
 
-      const animal_uuid = "982813f2-823d-4286-bc39-ade068d45ddc";
       const animalData = await fetchAnimalDataFromApi(animal_uuid, accessToken);
 
       set({
@@ -47,7 +49,8 @@ const useAnimal = create<UseAnimalState>((set) => ({
         breed: animalData.breed,
         center_uuid: animalData.center_uuid,
       });
-
+      console.log("유지 애니멀은요");
+      console.log(animalData);
       return animalData; // 수정된 부분
     } catch (error) {
       console.error("애완동물 데이터 가져오기 오류:", error);
