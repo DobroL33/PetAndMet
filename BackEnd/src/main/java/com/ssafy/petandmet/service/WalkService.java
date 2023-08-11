@@ -2,6 +2,7 @@ package com.ssafy.petandmet.service;
 
 import com.ssafy.petandmet.domain.Animal;
 import com.ssafy.petandmet.domain.Center;
+import com.ssafy.petandmet.domain.StatusType;
 import com.ssafy.petandmet.domain.User;
 import com.ssafy.petandmet.domain.Walk;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
@@ -95,5 +96,11 @@ public class WalkService {
 
     public Page<WalkTime> getRequestedWalkTIme(String centerUuid, Pageable pageable) {
         return walkRepository.getRequestedWalkTIme(centerUuid, pageable);
+    }
+
+    @Transactional
+    public void changeWalkStatus(int workId, String statusResult) {
+        Optional<Walk> walk = walkRepository.findById(workId);
+        walk.get().setStatus(StatusType.valueOf(statusResult));
     }
 }

@@ -1,9 +1,11 @@
 package com.ssafy.petandmet.api;
 
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
+import com.ssafy.petandmet.domain.StatusType;
 import com.ssafy.petandmet.dto.walk.Result;
 import com.ssafy.petandmet.dto.walk.SignWalkRequest;
 import com.ssafy.petandmet.dto.walk.WalkAbleTime;
+import com.ssafy.petandmet.dto.walk.WalkStatusRequest;
 import com.ssafy.petandmet.dto.walk.WalkTime;
 import com.ssafy.petandmet.service.UserService;
 import com.ssafy.petandmet.service.WalkService;
@@ -135,6 +137,28 @@ public class WalkApiController {
         result.put("message", "신청 받은 산책 가져오기 성공");
         result.put("walk_times", walkTimes.stream().toList());
         result.put("total", walkTimes.getTotalElements());
+        return new Result(true, result, null);
+    }
+
+    @PostMapping("/status")
+//    @PreAuthorize("hasRole('CENTER')")
+    public Result changeWalkStatus(@RequestBody WalkStatusRequest request) {
+        log.debug(request.toString());
+        Optional<String> userUuid = SecurityUtil.getCurrentUserUuid();
+        Map<String, Object> result = new HashMap<>();
+        if (userUuid.isEmpty()) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", "사용자 정보가 존재하지 않습니다.");
+            return new Result(false, null, result);
+        }
+        if (!request.getStatusResult().equals(StatusType.APPROVAL.toString()) && !request.getStatusResult().equals(StatusType.REJECTION.toString())) {
+            result.put("status", HttpStatus.SC_BAD_REQUEST);
+            result.put("message", "요청이 잘못되었습니다.");
+            return new Result(false, null, result);
+        }
+        walkService.changeWalkStatus(request.getWorkId(), request.getStatusResult());
+        result.put("status", HttpStatus.SC_OK);
+        result.put("message", "산책 상태 변경 성공.");
         return new Result(true, result, null);
     }
 }
