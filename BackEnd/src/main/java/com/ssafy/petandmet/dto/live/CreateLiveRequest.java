@@ -11,6 +11,8 @@ public class CreateLiveRequest {
 
     @JsonProperty("center_uuid")
     private String centerUuid;
+    @JsonProperty("session_id")
+    private String sessionId;
     @JsonProperty("session_name")
     private String sessionName;
     @JsonProperty("center_item_id")
