@@ -65,6 +65,7 @@ public class LiveService {
         Live live = Live.builder()
                 .center(center)
                 .animal(animal)
+                .sessionId(request.getSessionId())
                 .sessionName(request.getSessionName())
                 .build();
         live.setCenterItem(centerItems);

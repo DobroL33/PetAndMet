@@ -26,6 +26,8 @@ public class Live {
     @Column(name = "live_id")
     private Long id;
 
+    private String sessionId;
+
     private String sessionName;
 
     @Column(name = "thumbnail_image_url")
