@@ -8,13 +8,10 @@ function Login() {
   const login = useLoginMutation()
   let navigate = useNavigate()
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const credentials: LoginCredentials = { id, password }
-    login.mutate(credentials)
-    console.log(login.data?.response)
-    if (login.isSuccess === true) {
-      navigate('/')
-    }
+    await login.mutateAsync(credentials)
+    navigate('/')
   }
   return (
     <section className="flex flex-col items-center h-screen">
