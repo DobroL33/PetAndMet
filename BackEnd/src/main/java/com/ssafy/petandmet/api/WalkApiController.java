@@ -73,7 +73,7 @@ public class WalkApiController {
         } catch (Exception e) {
             result.put("status", HttpStatus.SC_BAD_REQUEST);
             result.put("message", e.getMessage());
-            return new Result(true, result, null);
+            return new Result(false, null, result);
         }
     }
 
