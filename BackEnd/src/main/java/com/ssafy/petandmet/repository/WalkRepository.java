@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WalkRepository extends JpaRepository<Walk, String> {
+public interface WalkRepository extends JpaRepository<Walk, Integer> {
 
     @Query("select count(w) from Walk w " +
             "where w.user.uuid = :userUuid and w.animal.uuid = :animalUuid and w.status = com.ssafy.petandmet.domain.StatusType.PENDING")
