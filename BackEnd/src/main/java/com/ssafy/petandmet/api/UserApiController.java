@@ -43,7 +43,7 @@ public class UserApiController {
     public Result findMileage(@PathVariable String uuid) {
         Long findMileage = userService.findMileage(uuid);
 
-        UserMileageResponse response = new UserMileageResponse(findMileage);
+        UserMileageResponse response = new UserMileageResponse("사용자 마일리지 조회 성공", 200, findMileage);
         return new Result(true, response, "null");
     }
 
@@ -63,7 +63,9 @@ public class UserApiController {
                     .stream()
                     .map(o -> new MileageResponse(o))
                     .collect(Collectors.toList());
-            return new Result(true, response, "null");
+
+            UserMileageLogResponse userMileageLogResponse = new UserMileageLogResponse("마일리지 충전 내역 조회 성공", 200, response);
+            return new Result(true, userMileageLogResponse, "null");
         }
         return new Result(false, "null", "null");
     }
@@ -80,7 +82,7 @@ public class UserApiController {
         try {
             Long response = userService.findAnimalFriendliness(request);
 
-            return new Result(true, new AnimalFrindlinessResponse(response), "null");
+            return new Result(true, new AnimalFrindlinessResponse(200, response), "null");
 
         } catch ( Exception e) {
             return new Result(false, "null", e.getMessage());
@@ -101,10 +103,12 @@ public class UserApiController {
         try {
             userService.join(request);
         } catch (IllegalStateException e) {
+            UserResponse error = new UserResponse("해당 페이지 없음", 404);
             return new Result(false, "null", e.getMessage());
         }
 
-        return new Result(true, "", "null");
+        UserResponse response = new UserResponse("회원가입 성공", 200);
+        return new Result(true, response, "null");
     }
 
     /**
@@ -118,7 +122,8 @@ public class UserApiController {
     public Result login(@RequestBody LoginUserRequest request) {
         log.debug(request.toString());
         Token token = userService.login(request);
-        return new Result(true, token.getAccessToken(), "null");
+        UserLoginResponse response = new UserLoginResponse("로그인 성공", 200, token.getAccessToken());
+        return new Result(true, response, "null");
     }
 
     /**
@@ -133,7 +138,8 @@ public class UserApiController {
         try {
             Token token = userService.refresh(request);
 
-            return new Result(true, token.getAccessToken(), "null");
+            UserRefreshResponse response = new UserRefreshResponse("토큰 재발행 성공", 200, token.getAccessToken());
+            return new Result(true, response, "null");
 
         } catch (Exception e) {
             return new Result(false, "토큰 정보가 유효하지 않습니다.", e.getMessage());
@@ -153,7 +159,8 @@ public class UserApiController {
         log.debug(authorization);
         String accessToken = authorization.substring(7);
         userService.logout(accessToken);
-        return new Result(true, "로그아웃하였습니다.", "null");
+        UserResponse response = new UserResponse("로그아웃하였습니다.", 200);
+        return new Result(true, response, "null");
     }
 
     /**
@@ -169,9 +176,10 @@ public class UserApiController {
         log.debug(request.toString());
         boolean isExist = userService.isDuplicateId(request);
         if (!isExist) {
-            return new Result(true, "존재하는 아이디가 없습니다.", "null");
+            UserIdCheckResponse response = new UserIdCheckResponse("아이디 조회 성공", 200, 1);
+            return new Result(true, response, "null");
         }
-        return new Result(true, "존재하는 아이디가 있습니다.", "null");
+        return new Result(false, "존재하는 아이디가 있습니다.", "null");
     }
 
     /**
@@ -186,7 +194,8 @@ public class UserApiController {
         log.debug("이메일 인증 코드 전송 컨트롤러");
         log.debug(request.toString());
         userService.sendEmailAuthCode(request);
-        return new Result(true, "이메일 인증 코드 전송", "null");
+        UserResponse response = new UserResponse("이메일 전송 성공", 200);
+        return new Result(true, response, "null");
     }
 
     /**
@@ -203,9 +212,10 @@ public class UserApiController {
         boolean isValid = userService.checkEmailAuthCode(request);
         log.debug("isValid = " + isValid);
         if (isValid) {
-            return new Result(true, "이메일 인증 코드 확인", "null");
+            UserResponse response = new UserResponse("이메일 인증 성공", 200);
+            return new Result(true, response, "null");
         }
-        return new Result(false, "이메일 인증 코드 확인", "null");
+        return new Result(false, "null", "null");
     }
 
     /**
@@ -223,8 +233,9 @@ public class UserApiController {
 //        uuid.ifPresent(log::debug);
         if (uuid.isPresent()) {
             userInfoResponse = userService.getUserInfo(uuid.get());
+            return new Result(true, userInfoResponse, "null");
         }
-        return new Result(true, userInfoResponse, "null");
+        return new Result(false, "null", "null");
     }
 
 
@@ -242,10 +253,11 @@ public class UserApiController {
             boolean isWithdrawal = userService.withdrawal(uuid.get());
 
             if (isWithdrawal) {
-                return new Result(true, "회원 탈퇴", "null");
+                UserResponse response = new UserResponse("회원 탈퇴 성공", 200);
+                return new Result(true, response, "null");
             }
         }
-        return new Result(false, "회원 탈퇴", "null");
+        return new Result(false, "null", "null");
     }
 
     /**
@@ -259,7 +271,8 @@ public class UserApiController {
     public Result passwordReset(@RequestBody PasswordResetRequest request) {
         log.debug("임시 비밀번호 초기화 컨트롤러");
         userService.passwordReset(request);
-        return new Result(true, "비밀번호 초기화", "null");
+        UserResponse response = new UserResponse("임시 비밀번호 초기화 성공", 200);
+        return new Result(true, response, "null");
     }
 
     /**
@@ -274,7 +287,8 @@ public class UserApiController {
         log.debug("개인 정보 수정 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
         uuid.ifPresent(s -> userService.modifyInfo(s, request));
-        return new Result(true, "개인정보 수정", "null");
+        UserResponse response = new UserResponse("개인 정보 수정 성공", 200);
+        return new Result(true, response, "null");
     }
 
     @PostMapping("/find-id")
@@ -284,9 +298,10 @@ public class UserApiController {
         boolean isValid = userService.checkEmailAuthCode(request);
         log.debug("isValid = " + isValid);
         if (isValid) {
-            return new Result(true, "이메일 인증", "null");
+            UserResponse response =new UserResponse("아이디 찾기 성공", 200);
+            return new Result(true, response, "null");
         }
-        return new Result(false, "이메일 인증", "null");
+        return new Result(false, "null", "null");
     }
 
     /**
@@ -322,8 +337,12 @@ public class UserApiController {
     public Result getInterestAnimals(@PageableDefault(size = INTEREST_ANIMAL_COUNT) Pageable pageable) {
         String userUuid = SecurityUtil.getCurrentUserUuid().get();
         List<InterestAnimal> interestAnimals = userService.getInterestAnimals(pageable, userUuid);
-        log.debug("관심 가져오기");
-        return new Result(true, interestAnimals, "null");
+
+        if (!interestAnimals.isEmpty()) {
+            InterestAnimalResponse response = new InterestAnimalResponse("좋아요한 동물 조회 성공", 200, interestAnimals);
+            return new Result(true, response, "null");
+        }
+       return new Result(false, "null", "null");
     }
 
     /**
@@ -336,6 +355,7 @@ public class UserApiController {
     @PostMapping("/profile")
     @Operation(summary = "사용자 프로필 업로드", description = "사용자가 변경하고싶은 프로필 사진을 업로드합니다.")
     public Result uploadProfile(UserProfileUploadRequest request) throws FileUploadException {
+
         log.debug("사용자 프로필 사진 등록 컨트롤러");
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
         String currentTime = LocalDateTime.now().toString();
@@ -344,7 +364,8 @@ public class UserApiController {
         boolean isUpload = s3Service.uploadFile(request.getImage(), fileName);
         userService.setPhotoUrl(uuid.get(), fileName);
         if (isUpload) {
-            return new Result(true, "업로드 성공", "null");
+            UserResponse response = new UserResponse("업로드 성공", 200);
+            return new Result(true, response, "null");
         }
         return new Result(false, "업로드 실패", "null");
     }
