@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.domain.Persistable;
 
 
 import java.time.LocalDate;
@@ -31,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "center")
 @Builder
-public class User implements Persistable<String> {
+public class User {
 
     @Id
     @Column(name = "user_uuid")
@@ -40,7 +39,7 @@ public class User implements Persistable<String> {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Center center;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Interest> interests = new ArrayList<>();
 
@@ -105,11 +104,6 @@ public class User implements Persistable<String> {
     @Column(name = "last_login_date")
     @Builder.Default
     private LocalDate lastLoginDate = LocalDate.now();
-
-    @Override
-    public boolean isNew() {
-        return true;
-    }
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
