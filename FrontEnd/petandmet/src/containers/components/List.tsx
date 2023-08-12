@@ -8,9 +8,13 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Container } from '@mui/material';
+import {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { domain } from 'hooks/customQueryClient';
 
 interface CenterBoard {
-  idx: number;
+  id: number;
   title: string;
   content: string | null;
   type: string;
@@ -20,7 +24,7 @@ interface CenterBoard {
 }
 
 interface Column {
-  id: 'idx' | 'title' | 'user_uuid' | 'created_at';
+  id: 'id' | 'title' | 'user_uuid' | 'created_at';
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -28,7 +32,7 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'idx', label: '번호', minWidth: 170 },
+  { id: 'id', label: '번호', minWidth: 170 },
   { id: 'title', label: '제목', minWidth: 100 },
   {
     id: 'user_uuid',
@@ -54,6 +58,34 @@ function List(props:ListProps) {
   const {Boards} = props;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const navigate = useNavigate();
+  const [getId, setGetId] = useState(-1)
+  const [getType, setGetType] = useState('')
+
+  const getid = (id: number, type: string) => {
+    setGetId(id);
+    setGetType(type);
+  };
+
+  useEffect(() => {
+    const fetchAdoptDetail = async () => {
+      try {
+        const res = await axios.get(`${domain}/board/${getType}/detail?id=${getId}`);
+        const adoptdetail = res.data.response.board;
+        console.log(adoptdetail);
+        if (getType=='adopt' || getType=='donate') {
+          navigate(`/${getType}/review/detail/${getId}`, {state : adoptdetail})
+        }
+        else{
+          navigate(`/comm/${getType}/detail/${getId}`, {state : adoptdetail})
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAdoptDetail();
+  }, [getId, getType]);
+
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -88,7 +120,11 @@ function List(props:ListProps) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                     return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.idx}>
+                        <TableRow hover role="checkbox"
+                                  tabIndex={-1} 
+                                  key={row.id}
+                                  onClick ={() => getid(row.id, row.type)}
+                                  >
                         {columns.map((column) => {
                             const value = row[column.id];
                             return (

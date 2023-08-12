@@ -9,7 +9,7 @@ import { domain } from 'hooks/customQueryClient';
 import { useState, useEffect } from 'react'
 
 interface CenterBoard {
-  idx: number;
+  id: number;
   title: string;
   content: string | null;
   type: string;
