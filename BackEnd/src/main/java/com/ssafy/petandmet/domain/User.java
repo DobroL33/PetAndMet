@@ -19,6 +19,7 @@ import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +101,10 @@ public class User implements Persistable<String> {
     @Column(name = "user_photo_url")
     @Builder.Default
     private String photoUrl = "";
+
+    @Column(name = "last_login_date")
+    @Builder.Default
+    private LocalDate lastLoginDate = LocalDate.now();
 
     @Override
     public boolean isNew() {

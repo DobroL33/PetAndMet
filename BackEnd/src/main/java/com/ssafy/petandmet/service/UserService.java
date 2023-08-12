@@ -179,6 +179,14 @@ public class UserService {
             log.debug(token.toString());
             refreshTokenRepository.save(token);
 
+            Optional<User> user = userRepository.findUserByUserId(request.getId());
+            log.debug(LocalDate.now().toString());
+            if (user.get().getLastLoginDate().isBefore(LocalDate.now())) {
+                log.debug("출석");
+                user.get().setAttendance(user.get().getAttendance() + 1);
+                user.get().setLastLoginDate(LocalDate.now());
+            }
+
             return token;
         } catch (NullPointerException e) {
             throw new NullPointerException("사용자가 없습니다.");
