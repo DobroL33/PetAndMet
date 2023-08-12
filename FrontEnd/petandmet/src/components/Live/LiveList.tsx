@@ -29,7 +29,8 @@ function LiveList({ num = 10 }: LiveListProps) {
   if (num !== undefined) {
     livesToShow = liveToShow.slice(0, num); // liveToShow의 첫 num개의 요소만 사용
   }
-  console.log(liveToShow);
+  // console.log("여기는 LiveList, liveToShow 라는 배열은요");
+  // console.log(liveToShow);
 
   return (
     <>

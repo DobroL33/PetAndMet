@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { domain } from "../../hooks/customQueryClient";
-// import useAnimal from "../../hooks/Animal/useAnimal";
+import useAnimal from "../../hooks/Animal/useAnimal";
 
 interface Live {
   live_id: number | null;
@@ -60,13 +60,12 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   useEffect(() => {
     const url = `${domain}/animal/detail?uuid=${live.animal_uuid}`;
-    console.log(url);
     axios
       .get(url) // 따옴표 제거
       .then((response) => {
         setAnimal(response.data.response); // 데이터 처리 부분 변경
-        console.log("animal 현재 상태는");
-        console.log(animal);
+        // console.log("카드에서 animal.animal_uuid 현재 상태는요");
+        // console.log(animal); 해결
       })
       .catch((error) => {
         console.error(error);
@@ -76,6 +75,8 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
   let animalsToShow: any = [];
 
   const navigate = useNavigate();
+
+  const { animalData, setAnimalData } = useAnimal((animal) => animal);
 
   const handleCardClick = () => {
     if (live.animal_uuid && animal) {
@@ -87,6 +88,7 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
         breed: animal.breed, // 여기에 적절한 값 채우기
         center_uuid: live.center_uuid, // 여기에 적절한 값 채우기
       });
+      setAnimalData(animal);
       navigate(`/livelist/streaming/${live.live_id}`);
     }
   };

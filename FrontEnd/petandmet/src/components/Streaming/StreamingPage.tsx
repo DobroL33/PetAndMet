@@ -44,24 +44,10 @@ const CustomButton = styled(Button)(({ theme }) => ({
 function StreamingPage() {
   const animalData = useAnimal();
   console.log("animalData가 잘 불러와졌나요?");
-  console.log(animalData);
 
-  // useEffect(() => {
-  //   const accessToken =
-  //     "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MWUyNjA2MC01ZDNhLTQ5NWYtOGFlNS1jYTExNGYyMDk3M2YiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxMTI1MzM0fQ.zHi6_vIEqEx8Q80pgBphRvCxNNkLM79sMxuUrEvdl89vUJH-EcAJosXls-oabzBOKbGtO_IuYPX-0sWkUWz_Og";
-
-  //   // const test = axios.get<any>(
-  //   //   `https://i9b302.p.ssafy.io/api/v1/animal?id=aa`,
-  //   //   {
-  //   //     headers: {
-  //   //       Authorization: `Bearer ${accessToken}`,
-  //   //     },
-  //   //   }
-  //   // )
-  //   console.log(test);
-  // });
-
-  // const { name, age, specie, message } = animalData;
+  const animal = animalData.animalData;
+  console.log("마지막 테스트요? 이름은?");
+  console.log(animal.name);
 
   return (
     <>
@@ -139,15 +125,15 @@ function StreamingPage() {
                 src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                 alt=""
               />
-              {/* <h4 className="m-5"> */}
-              {/* Name: {name} */}
-              {/* <br />
-                Age: {age}
+              <h4 className="m-5">
+                Name: {animal.name}
                 <br />
-                Specie: {specie}
+                나이: {animal.age}
                 <br />
-                Message: {message}
-              </h4> */}
+                성별: {animal.gender}
+                <br />
+                강아지 종: {animal.breed}
+              </h4>
             </Box>
 
             {/* Bottom Left */}
