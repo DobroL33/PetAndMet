@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.domain.Persistable;
 
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "center")
 @Builder
-public class User {
+public class User implements Persistable<String> {
 
     @Id
     @Column(name = "user_uuid")
@@ -99,6 +100,11 @@ public class User {
     @Column(name = "user_photo_url")
     @Builder.Default
     private String photoUrl = "";
+
+    @Override
+    public boolean isNew() {
+        return true;
+    }
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {
