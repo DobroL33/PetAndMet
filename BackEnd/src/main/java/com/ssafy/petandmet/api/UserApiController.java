@@ -251,7 +251,8 @@ public class UserApiController {
             UserResponse response = new UserResponse("이메일 인증 성공", 200);
             return new Result(true, response, null);
         }
-        return new Result(false, null, null);
+        UserResponse response = new UserResponse("이메일 인증 실패", 400);
+        return new Result(false, null, response);
     }
 
     /**
