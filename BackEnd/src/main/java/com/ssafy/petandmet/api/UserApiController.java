@@ -73,7 +73,7 @@ public class UserApiController {
         Long findMileage = userService.findMileage(uuid);
 
         UserMileageResponse response = new UserMileageResponse("사용자 마일리지 조회 성공", 200, findMileage);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     /**
@@ -94,9 +94,10 @@ public class UserApiController {
                     .collect(Collectors.toList());
 
             UserMileageLogResponse userMileageLogResponse = new UserMileageLogResponse("마일리지 충전 내역 조회 성공", 200, response);
-            return new Result(true, userMileageLogResponse, "null");
+            return new Result(true, userMileageLogResponse, null);
         }
-        return new Result(false, "null", "null");
+        UserMileageLogResponse userMileageLogResponse = new UserMileageLogResponse("마일리지 충전 내역 조회 실패", 200, null);
+        return new Result(false, null, userMileageLogResponse);
     }
 
     /**
@@ -111,10 +112,10 @@ public class UserApiController {
         try {
             Long response = userService.findAnimalFriendliness(request);
 
-            return new Result(true, new AnimalFrindlinessResponse(200, response), "null");
+            return new Result(true, new AnimalFrindlinessResponse(200, response), null);
 
-        } catch ( Exception e) {
-            return new Result(false, "null", e.getMessage());
+        } catch (Exception e) {
+            return new Result(false, null, e.getMessage());
         }
     }
 
@@ -132,12 +133,12 @@ public class UserApiController {
         try {
             userService.join(request);
         } catch (IllegalStateException e) {
-            UserResponse error = new UserResponse("해당 페이지 없음", 404);
-            return new Result(false, "null", e.getMessage());
+            UserResponse error = new UserResponse(e.getMessage(), 409);
+            return new Result(false, null, error);
         }
 
         UserResponse response = new UserResponse("회원가입 성공", 200);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     /**
@@ -150,9 +151,14 @@ public class UserApiController {
     @Operation(summary = "사용자 로그인", description = "사용자가 로그인합니다.")
     public Result login(@RequestBody LoginUserRequest request) {
         log.debug(request.toString());
-        Token token = userService.login(request);
-        UserLoginResponse response = new UserLoginResponse("로그인 성공", 200, token.getAccessToken());
-        return new Result(true, response, "null");
+        try {
+            Token token = userService.login(request);
+            UserLoginResponse response = new UserLoginResponse("로그인 성공", 200, token.getAccessToken());
+            return new Result(true, response, null);
+        } catch (Exception e) {
+            UserLoginResponse response = new UserLoginResponse(e.getMessage(), 400, null);
+            return new Result(false, null, response);
+        }
     }
 
     /**
@@ -168,7 +174,7 @@ public class UserApiController {
             Token token = userService.refresh(request);
 
             UserRefreshResponse response = new UserRefreshResponse("토큰 재발행 성공", 200, token.getAccessToken());
-            return new Result(true, response, "null");
+            return new Result(true, response, null);
 
         } catch (Exception e) {
             return new Result(false, "토큰 정보가 유효하지 않습니다.", e.getMessage());
@@ -189,7 +195,7 @@ public class UserApiController {
         String accessToken = authorization.substring(7);
         userService.logout(accessToken);
         UserResponse response = new UserResponse("로그아웃하였습니다.", 200);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     /**
@@ -203,12 +209,13 @@ public class UserApiController {
     public Result isDuplicateId(@RequestBody IdCheckRequest request) {
         log.debug("아이디 중복확인 컨트롤러");
         log.debug(request.toString());
-        boolean isExist = userService.isDuplicateId(request);
+        boolean isExist = userService.isDuplicateId(request.getId());
         if (!isExist) {
-            UserIdCheckResponse response = new UserIdCheckResponse("아이디 조회 성공", 200, 1);
-            return new Result(true, response, "null");
+            UserIdCheckResponse response = new UserIdCheckResponse("사용 가능한 아이디입니다.", 200, 1);
+            return new Result(true, response, null);
         }
-        return new Result(false, "존재하는 아이디가 있습니다.", "null");
+        UserIdCheckResponse response = new UserIdCheckResponse("존재하는 아이디가 있습니다.", 409, 0);
+        return new Result(false, null, response);
     }
 
     /**
@@ -224,7 +231,7 @@ public class UserApiController {
         log.debug(request.toString());
         userService.sendEmailAuthCode(request);
         UserResponse response = new UserResponse("이메일 전송 성공", 200);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     /**
@@ -242,9 +249,9 @@ public class UserApiController {
         log.debug("isValid = " + isValid);
         if (isValid) {
             UserResponse response = new UserResponse("이메일 인증 성공", 200);
-            return new Result(true, response, "null");
+            return new Result(true, response, null);
         }
-        return new Result(false, "null", "null");
+        return new Result(false, null, null);
     }
 
     /**
@@ -262,9 +269,9 @@ public class UserApiController {
 //        uuid.ifPresent(log::debug);
         if (uuid.isPresent()) {
             userInfoResponse = userService.getUserInfo(uuid.get());
-            return new Result(true, userInfoResponse, "null");
+            return new Result(true, userInfoResponse, null);
         }
-        return new Result(false, "null", "null");
+        return new Result(false, null, null);
     }
 
 
@@ -283,10 +290,10 @@ public class UserApiController {
 
             if (isWithdrawal) {
                 UserResponse response = new UserResponse("회원 탈퇴 성공", 200);
-                return new Result(true, response, "null");
+                return new Result(true, response, null);
             }
         }
-        return new Result(false, "null", "null");
+        return new Result(false, null, null);
     }
 
     /**
@@ -301,7 +308,7 @@ public class UserApiController {
         log.debug("임시 비밀번호 초기화 컨트롤러");
         userService.passwordReset(request);
         UserResponse response = new UserResponse("임시 비밀번호 초기화 성공", 200);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     /**
@@ -317,7 +324,7 @@ public class UserApiController {
         Optional<String> uuid = SecurityUtil.getCurrentUserUuid();
         uuid.ifPresent(s -> userService.modifyInfo(s, request));
         UserResponse response = new UserResponse("개인 정보 수정 성공", 200);
-        return new Result(true, response, "null");
+        return new Result(true, response, null);
     }
 
     @PostMapping("/find-id")
@@ -327,10 +334,10 @@ public class UserApiController {
         boolean isValid = userService.checkEmailAuthCode(request);
         log.debug("isValid = " + isValid);
         if (isValid) {
-            UserResponse response =new UserResponse("아이디 찾기 성공", 200);
-            return new Result(true, response, "null");
+            UserResponse response = new UserResponse("아이디 찾기 성공", 200);
+            return new Result(true, response, null);
         }
-        return new Result(false, "null", "null");
+        return new Result(false, null, null);
     }
 
     /**
@@ -346,12 +353,12 @@ public class UserApiController {
         try {
             boolean isInterest = userService.interestAnimal(request);
             if (isInterest) {
-                return new Result(true, "좋아요", "null");
+                return new Result(true, "좋아요", null);
             } else {
-                return new Result(true, "좋아요 취소", "null");
+                return new Result(true, "좋아요 취소", null);
             }
         } catch (NullPointerException e) {
-            return new Result(false, e.getMessage(), "null");
+            return new Result(false, e.getMessage(), null);
         }
     }
 
@@ -369,9 +376,9 @@ public class UserApiController {
 
         if (!interestAnimals.isEmpty()) {
             InterestAnimalResponse response = new InterestAnimalResponse("좋아요한 동물 조회 성공", 200, interestAnimals);
-            return new Result(true, response, "null");
+            return new Result(true, response, null);
         }
-       return new Result(false, "null", "null");
+        return new Result(false, null, null);
     }
 
     /**
@@ -394,9 +401,9 @@ public class UserApiController {
         userService.setPhotoUrl(uuid.get(), fileName);
         if (isUpload) {
             UserResponse response = new UserResponse("업로드 성공", 200);
-            return new Result(true, response, "null");
+            return new Result(true, response, null);
         }
-        return new Result(false, "업로드 실패", "null");
+        return new Result(false, "업로드 실패", null);
     }
 
     /**
@@ -412,6 +419,6 @@ public class UserApiController {
         String photoUrl = userService.getPhotoUrl(uuid.get());
         String profileUrl = s3Service.getProfileUrl(photoUrl);
         log.debug(profileUrl);
-        return new Result(true, profileUrl, "null");
+        return new Result(true, profileUrl, null);
     }
 }
