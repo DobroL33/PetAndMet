@@ -3,8 +3,12 @@ import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
 import { domain } from 'hooks/customQueryClient'
 import customAxios from 'utils/axiosUtil'
+
 interface Token {
-  response: String
+  token: String
+}
+interface Response {
+  response: Token
 }
 
 export interface LoginCredentials {
@@ -12,9 +16,9 @@ export interface LoginCredentials {
   password: String
 }
 
-const axiosData = async (credentials: LoginCredentials): Promise<Token> => {
+const axiosData = async (credentials: LoginCredentials): Promise<Response> => {
   try {
-    const response = await customAxios.post<Token>(
+    const response = await customAxios.post<Response>(
       `${domain}/user`,
       credentials
     )
@@ -26,21 +30,21 @@ const axiosData = async (credentials: LoginCredentials): Promise<Token> => {
 }
 
 export function useLoginMutation(): UseMutationResult<
-  Token,
+  Response,
   unknown,
   LoginCredentials,
   unknown
 > {
   const [_, setCookie] = useCookies(['access_token'])
   const { setAccessToken } = useAccessToken()
-  return useMutation<Token, unknown, LoginCredentials, unknown>(axiosData, {
+  return useMutation<Response, unknown, LoginCredentials, unknown>(axiosData, {
     onSuccess(data, variables, context) {
-      setCookie('access_token', 'Bearer ' + data.response, {
+      setCookie('access_token', 'Bearer ' + data.response.token, {
         secure: true,
         sameSite: 'strict',
         path: '/',
       })
-      setAccessToken('Bearer ' + data.response)
+      setAccessToken('Bearer ' + data.response.token)
     },
   })
 }
