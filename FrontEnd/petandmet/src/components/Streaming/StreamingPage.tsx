@@ -10,6 +10,11 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { useParams } from "react-router-dom";
 import useAnimal from "hooks/Animal/useAnimal";
+import LiveDonation from "components/Streaming/LiveComponents/Live_Donation";
+
+interface DecodedToken {
+  user_uuid: string;
+}
 
 /* ### Streaming - 후원하기 파트
 
@@ -43,11 +48,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 function StreamingPage() {
   const animalData = useAnimal();
-  console.log("animalData가 잘 불러와졌나요?");
-
   const animal = animalData.animalData;
-  console.log("마지막 테스트요? 이름은?");
-  console.log(animal.name);
 
   return (
     <>
@@ -103,7 +104,7 @@ function StreamingPage() {
                 <Box
                   sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
                 >
-                  후원할 공간입니다
+                  <LiveDonation></LiveDonation>
                 </Box>
               </Box>
             </Grid>

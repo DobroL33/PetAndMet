@@ -7,8 +7,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { domain } from "../../hooks/customQueryClient";
-import useAnimal from "../../hooks/Animal/useAnimal";
+import { domain } from "hooks/customQueryClient";
+import useAnimal from "hooks/Animal/useAnimal";
 
 interface Live {
   live_id: number | null;
