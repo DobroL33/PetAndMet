@@ -1,10 +1,9 @@
 import { useMutation } from 'react-query'
 import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
-import { domain } from 'hooks/customQueryClient'
 import customAxios from 'utils/axiosUtil'
 
-interface CreateSession {
+export interface CreateSession {
   center_uuid: string
   session_name: string
   session_id: string
@@ -12,13 +11,14 @@ interface CreateSession {
   animal_uuid: string
 }
 
-export function createOVSession() {
+export function createOvSession() {
   const [cookies, setCookie] = useCookies(['access_token'])
   const { accessToken, setAccessToken } = useAccessToken()
 
   const axiosData = async (credential: CreateSession) => {
     try {
       let token = accessToken
+      console.log('토큰', token)
       if (token === '') {
         setAccessToken(cookies.access_token)
         token = cookies.access_token
@@ -28,7 +28,8 @@ export function createOVSession() {
           Authorization: `${token}`,
         },
       }
-      const response = await customAxios.post('/user', credential, config)
+      console.log(credential, config, token)
+      const response = await customAxios.post('/live', credential, config)
       if (response.config.headers.Authorization !== token) {
         setCookie('access_token', response.config.headers.Authorization, {
           secure: true,
