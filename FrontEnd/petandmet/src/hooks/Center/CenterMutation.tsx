@@ -22,7 +22,7 @@ export const useCenterStore = create<CenterStoreState>((set) => ({
       const response = await axios.get(`${domain}/center?page=0`);
       const centerData = response.data.response.boards;
       set({ centersData: centerData }); // 수정: centersData만 업데이트
-      console.log(centerData);
+      // console.log(centerData);
     } catch (error) {
       console.log(error);
     }

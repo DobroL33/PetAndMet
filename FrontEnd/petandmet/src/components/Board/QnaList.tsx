@@ -32,7 +32,7 @@ centers.getCentersData()
   });
 }, []);
 
-console.log(centers)
+// console.log(centers)
 
 const goToCreateForm = () => {
 navigate('/qnaform')
