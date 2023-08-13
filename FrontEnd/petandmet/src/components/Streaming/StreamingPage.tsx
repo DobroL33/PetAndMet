@@ -8,23 +8,8 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import { useParams } from "react-router-dom";
 import useAnimal from "hooks/Animal/useAnimal";
 import LiveDonation from "components/Streaming/LiveComponents/Live_Donation";
-
-interface DecodedToken {
-  user_uuid: string;
-}
-
-/* ### Streaming - 후원하기 파트
-
-1. 목록 클릭 ⇒ 보호소가 등록한 필요 물품 조회 ( 일단 클릭해서 들어오기 전에 Zustand에 보호소id를 state에 저장하고 들어오는 거 ) 
-1. 물품 리스트를 클릭 :  onClick() ⇒ 
-2. 리스트 안에서 보여질 내용을 불러올 API {domain}/apli/v1/center/item/?uuid={center_uuid}
-3. 그 중 클릭하면 그 API에서 받아올 내용중 “item_name” , 즉 품목명을 바탕으로 구분하기 + “item_name” 정보를 form에 저장
-4. 그리고 숫자 카운트 ex) 1000, 5000, 10000 단위를 클릭 하면 Total Price에 각 값만큼 증가 혹은 감소를 해주는 컴포넌트 삽입
-5. 여기에서는 굳이 Zustand 안 써도 됨. 여기서만 쓸 state니까
-6. TotalPrice도 함께 form에 등록할 거임. */
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -47,8 +32,8 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 function StreamingPage() {
-  const animalData = useAnimal();
-  const animal = animalData.animalData;
+  const { animalData } = useAnimal();
+  const animal = animalData;
 
   return (
     <>

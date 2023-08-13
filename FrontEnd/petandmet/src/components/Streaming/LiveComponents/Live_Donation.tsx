@@ -86,7 +86,6 @@ function Live_Donation() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(centerItem);
   }, [center_uuid]);
 
   return (

@@ -31,10 +31,6 @@ interface CardLiveInfoProps {
   live: Live;
 }
 
-// 라이브로 표시하는건 여기까지
-// 나머지는 도네이션에서 가져왔을 때 처럼 쓰면 되는거 아닐까
-// 도네이션때 처럼 state 가져오고, 그걸 사용?
-
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
 }
@@ -61,11 +57,16 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
   useEffect(() => {
     const url = `${domain}/animal/detail?uuid=${live.animal_uuid}`;
     axios
-      .get(url) // 따옴표 제거
+      .get(url)
       .then((response) => {
-        setAnimal(response.data.response); // 데이터 처리 부분 변경
-        // console.log("카드에서 animal.animal_uuid 현재 상태는요");
-        // console.log(animal); 해결
+        // 응답에서 받은 데이터를 저장
+        const animalData = response.data.response;
+
+        // animal_uuid 값을 추가
+        setAnimal({
+          ...animalData,
+          animal_uuid: live.animal_uuid,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -76,19 +77,18 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   const navigate = useNavigate();
 
-  const { animalData, setAnimalData } = useAnimal((animal) => animal);
+  const { setAnimalData } = useAnimal();
 
   const handleCardClick = () => {
     if (live.animal_uuid && animal) {
-      setAnimal({
+      setAnimalData({
         animal_uuid: live.animal_uuid,
         name: animal.name,
         age: animal.age,
-        gender: animal.gender, // 여기에 적절한 값 채우기
-        breed: animal.breed, // 여기에 적절한 값 채우기
-        center_uuid: live.center_uuid, // 여기에 적절한 값 채우기
+        gender: animal.gender,
+        breed: animal.breed,
+        center_uuid: live.center_uuid,
       });
-      setAnimalData(animal);
       navigate(`/livelist/streaming/${live.live_id}`);
     }
   };
@@ -128,93 +128,3 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
 export default CardLiveInfo;
 export {};
-
-// import create from "zustand";
-// import { domain } from "../../hooks/customQueryClient";
-// import { getAccessTokenFromCookie } from "../useAuth";
-// import axios from "axios";
-
-// // Animal 데이터의 형식을 정의한 인터페이스
-// interface AnimalData {
-//   animal_uuid: string;
-//   name: string;
-//   age: number;
-//   gender: string;
-//   breed: string;
-//   center_uuid: string;
-// }
-
-// // UseAnimalState 인터페이스 정의
-// // interface UseAnimalState extends AnimalData {
-// //   fetchAnimalData: (animal_uuid: string) => Promise<AnimalData>;
-// // }
-
-// // useAnimal 훅을 생성
-// const useAnimal = create<UseAnimalState>((set) => ({
-//   animal_uuid: "",
-//   name: "",
-//   age: 0,
-//   gender: "",
-//   breed: "",
-//   center_uuid: "",
-
-//   setAnimalData: (animalData: AnimalData) => {
-//     set(animalData);
-//   },
-
-//   fetchAnimalData: async () => {
-//     try {
-
-//       const animalData = await axios.get(`${domain}/center/item?uuid=${uid}`)
-
-//       set({
-//         animal_uuid: animal_uuid,
-//         name: animalData.name,
-//         age: animalData.age,
-//         gender: animalData.gender,
-//         breed: animalData.breed,
-//         center_uuid: animalData.center_uuid,
-//       });
-//       console.log("유지 애니멀은요");
-//       console.log(animalData);
-//       return animalData; // 수정된 부분
-//     } catch (error) {
-
-//       return Promise.reject(error); // 수정된 부분
-//     }
-//   },
-// }));
-
-// // API로부터 Animal 데이터 가져오는 함수
-// async function fetchAnimalDataFromApi(
-//   animal_uuid: string,
-//   accessToken: string
-// ): Promise<AnimalData> {
-//   const url = `${domain}/animal/detail?uuid=${animal_uuid}`;
-//   console.log(url);
-
-//   try {
-//     const response = await axios.get(url, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-
-//     const responseData = response.data.response;
-//     const data: AnimalData = {
-//       animal_uuid: responseData.animal_uuid,
-//       name: responseData.name,
-//       age: responseData.age,
-//       gender: responseData.gender,
-//       breed: responseData.breed,
-//       center_uuid: responseData.center_uuid,
-//     };
-
-//     return data;
-//   } catch (error) {
-//     console.error("API 요청 에러:", error);
-//     throw error;
-//   }
-// }
-
-// export default useAnimal;
