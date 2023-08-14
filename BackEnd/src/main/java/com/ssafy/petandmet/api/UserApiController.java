@@ -153,10 +153,14 @@ public class UserApiController {
         log.debug(request.toString());
         try {
             Token token = userService.login(request);
-            UserLoginResponse response = new UserLoginResponse("로그인 성공", 200, token.getAccessToken());
+            UserLoginResponse response = new UserLoginResponse("로그인 성공", 200, token.getAccessToken(), null);
+            String centerUuid = userService.getCenterUuid(request);
+            if (centerUuid != null) {
+                response.setCenterUuid(centerUuid);
+            }
             return new Result(true, response, null);
         } catch (Exception e) {
-            UserLoginResponse response = new UserLoginResponse(e.getMessage(), 400, null);
+            UserLoginResponse response = new UserLoginResponse(e.getMessage(), 400, null, null);
             return new Result(false, null, response);
         }
     }

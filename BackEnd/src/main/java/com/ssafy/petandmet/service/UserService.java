@@ -194,6 +194,15 @@ public class UserService {
         }
     }
 
+    public String getCenterUuid(LoginUserRequest request) {
+        String userId = request.getId();
+        Optional<User> user = userRepository.findUserByUserId(userId);
+        if (user.isPresent() && user.get().getCenter() != null) {
+            return user.get().getCenter().getUuid();
+        }
+        return null;
+    }
+
     /**
      * 사용자 로그아웃
      *
