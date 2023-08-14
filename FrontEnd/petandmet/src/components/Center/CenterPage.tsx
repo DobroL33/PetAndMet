@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { domain } from 'hooks/customQueryClient';
 import CenterAnimalList from 'components/Center/CenterAnimalList';
+import CenterItemList from './CenterItemList';
 
 interface AnimalsData {
   name: string;
@@ -20,13 +21,22 @@ interface Center{
   address : string | null,
   email : string | null,
   phone : string | null,
+}
 
+interface ItemsData{
+  item_name: string ,
+  item_url : string ,
+  item_target_price : number,
+  center_item_id : number,
+  center_uuid : string
 }
 
 function CenterPage() {
   const location = useLocation();
+  const [center, setCenter] = useState<Center | null>(null); 
   const [animals, setAnimalData] = useState<AnimalsData[]>([]);
-  const [center, setCenter] = useState<Center | null>(null); // 타입을 Center | null로 변경
+  const [items, setItems] = useState<ItemsData[]|null>(null);
+
   console.log(location.state)
   useEffect(() => {
     async function fetchAnimalData() {
@@ -35,22 +45,27 @@ function CenterPage() {
         const centerData = cetnerRes.data.response.board
         setCenter(centerData)
 
+        const ItemRes = await axios.get(`${domain}/center/item?uuid=${location.state}`)
+        const ItemData = ItemRes.data.response.centerItems
+        setItems(ItemData)
+
         const response = await axios.get(`${domain}/animal/search`,
-        {
-          params: { centerUuid: location.state} // 요청에 center_uuid 파라미터 추가
-        }
+          {
+            params: { centerUuid: location.state} 
+          }
         );
-        const AnimalsData: AnimalsData[] = response.data.response.animals; // 응답 데이터에서 배열을 선택
-        setAnimalData(AnimalsData);
+        const AnimalsData: AnimalsData[] = response.data.response.animals;
+        setAnimalData(AnimalsData)
       } catch (error) {
-        console.error('Error fetching animal data:', error);
+        console.error('Error fetching animal data:', error)
       }
     }
     fetchAnimalData();
   }, []);
 
-  console.log(animals);
-  console.log(center);
+  // console.log(animals);
+  // console.log(center);
+  // console.log(items);
   return (
     <>
       <Container
@@ -159,11 +174,12 @@ function CenterPage() {
             sx={{
               mt: 1,
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
               gap: '8px', // 카드 간 간격 설정
               height: '90%',
             }}
-          ></Box>
+          >
+            {items ? <CenterItemList items={items} /> : null}
+          </Box>
         </Grid>
       </Container>
     </>
