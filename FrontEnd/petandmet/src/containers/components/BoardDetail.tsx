@@ -3,13 +3,13 @@ import { Container, Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import logo from 'images/new_logo.jpg'
-
-// title, content, image는 데이터 받으면 다시 수정 할 예정
+import { useLocation} from 'react-router-dom'
 
 function BoardDetail() {
-  const [title, setTitle] = useState('변경이 안되는지 확인하는 제목')
-  const [content, setContent] = useState('변경이 안되는지 확인하는 내용')
-  const [image, setImage] = useState(logo)
+ 
+  const location = useLocation();
+  const board = location.state
+  console.log(board)
   return (
     <>
       <Container>
@@ -24,18 +24,18 @@ function BoardDetail() {
           <TextField
             id="outlined-basic"
             variant="outlined"
-            value={title}
+            value={board.title}
             InputProps={{
               readOnly: true,
             }}
           />
 
-          <img src={logo}></img>
+          <img src={board.photoUrl} alt={logo}></img>
 
           <TextField
             id="outlined-multiline-static"
             multiline
-            defaultValue={content}
+            defaultValue={board.content}
             rows={15}
             InputProps={{
               readOnly: true,

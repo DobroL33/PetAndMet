@@ -1,11 +1,13 @@
-import {useState} from 'react';
-import { Button, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-function InputForm(){
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+interface InputFormProps {
+    setTitle: (title : string) => void;
+    setContent: (content : string) => void;
+}
+
+function InputForm({setTitle, setContent}:InputFormProps){
     
     return(
         <>
@@ -22,9 +24,9 @@ function InputForm(){
                 id="outlined-basic" 
                 label="제목" 
                 variant="outlined" 
-                onChange={(e) =>{
+                onChange={(e) => {
                     setTitle(e.target.value)
-                    console.log(title)
+                    // console.log(setTitle)
                 }}
                 />
 
@@ -35,7 +37,7 @@ function InputForm(){
                 rows={15}
                 onChange={(e) =>{
                     setContent(e.target.value)
-                    console.log(content)
+                    // console.log(setContent)
                 }}
                 />
             <input type="file" accept='image/png, image/jpeg, image/jpg' />
