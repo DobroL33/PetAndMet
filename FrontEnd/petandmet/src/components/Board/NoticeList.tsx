@@ -1,76 +1,113 @@
-import Typography from '@mui/material/Typography'
+import {Button, Typography, FormControl,
+  InputLabel, MenuItem } from '@mui/material'
 import List from 'containers/components/List'
-import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useCenterStore} from 'hooks/Center/CenterMutation'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import axios from 'axios';
+import { domain } from 'hooks/customQueryClient';
+import { useState, useEffect } from 'react'
 
-interface Data {
-  num: string
-  title: string | JSX.Element
-  writter: string
-  view: number
-  date: string
+interface CenterBoard {
+id: number;
+title: string;
+content: string | null;
+type: string;
+board_photo_url: string | null;
+created_at: string | null;
+user_uuid : string,
 }
-
-function createData(
-  num: string,
-  title: string | JSX.Element,
-  writter: string,
-  view: number
-): Data {
-  const currentDate: Date = new Date()
-  const date: string = currentDate.toISOString()
-  return { num, title, writter, view, date }
-}
-
-const rows = [
-  //데이터 받아서 링크 연결하여 세부페이지 이동 예정
-  createData('1', '<Link to="/">공지사항1</Link>', 'Pet & Met', 100),
-  createData('2', '공지사항2', 'Pet & Met', 101),
-  createData('3', '공지사항3', 'Pet & Met', 102),
-  createData('4', '공지사항4', 'Pet & Met', 103),
-  createData('5', '공지사항5', 'Pet & Met', 104),
-  createData('6', '공지사항6', 'Pet & Met', 105),
-  createData('7', '공지사항7', 'Pet & Met', 106),
-  createData('8', '공지사항8', 'Pet & Met', 100),
-  createData('9', '공지사항9', 'Pet & Met', 107),
-  createData('10', '공지사항10', 'Pet & Met', 108),
-  createData('11', '공지사항11', 'Pet & Met', 11),
-  createData('12', '공지사항12', 'Pet & Met', 120),
-  createData('13', '공지사항13', 'Pet & Met', 130),
-  createData('14', '공지사항14', 'Pet & Met', 140),
-  createData('15', '공지사항15', 'Pet & Met', 150),
-]
 
 function NoticeList() {
-  let navigate = useNavigate()
+let navigate = useNavigate()
 
-  const goToCreateForm = () => {
-    navigate('/noticeform')
-  }
-  
-  return (
-    <>
-      <div style={{ padding: 20 }}>
-        <Typography
-          variant="h4"
-          style={{ color: '#FFA629', fontWeight: 'bold' }}
+const centers = useCenterStore();
+const [isLoading, setIsLoading] = useState(false);
+
+useEffect(() => {
+setIsLoading(true);
+centers.getCentersData()
+  .finally(() => {
+    setIsLoading(false);
+  });
+}, []);
+
+// console.log(centers)
+
+const goToCreateForm = () => {
+navigate('/noticeform')
+}
+//선택된 보호소 정보 가져오는 상태, 함수
+const [center, setCenter] = useState('')
+const handleChange = (event: SelectChangeEvent) => {
+setCenter(event.target.value)
+}
+//선택된 보호소 uuid 담는 state
+const [uid, setUid] = useState('')
+
+//선택된 보호소 입양후기 가져오는 상태, 함수
+const [Boards, setBoards] = useState<CenterBoard[]>([]);
+
+const CenterNoticeList =async () => {
+try{
+  const res = await axios.get(`${domain}/board/notice?page=0&center_uuid=${uid}&type=notice`)
+  console.log(res.data.response.boards.content)
+  const centerNotice = res.data.response.boards.content
+  return centerNotice
+} catch(error){
+  console.log(error)
+  return [];
+}
+}
+
+useEffect(() => {
+const fetchBoardList =async () => {
+  const centersNotice = await CenterNoticeList()
+  setBoards(centersNotice)
+}
+fetchBoardList()
+},[uid])
+
+
+return (
+<>
+<div style={{ padding: 20 }}>
+  <Typography
+    variant="h4"
+    style={{ color: '#FFA629', fontWeight: 'bold' }}
+  >
+    공지 사항
+  </Typography>
+
+  <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+    <FormControl sx={{ width: '25%' }}>
+      <InputLabel id="demo-simple-select-label">보호소</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={center}
+        label="보호소"
+        onChange={handleChange}
         >
-          공지사항
-        </Typography>
-        <List rows={rows}></List>
-      </div>
-
-      <div style={{textAlign : 'end', width : '90%'}}>
-        <Button sx={{bgcolor : '#FFBC5F',
-                    color : 'white', 
-                    '&:hover': {bgcolor: 'orange'},
-                    marginTop: '1rem', 
-                  }}
-                onClick={goToCreateForm}
-          >작성</Button>
-       </div>
-    </>
-  )
+        {centers.centersData.map((cent:any) => (
+          <MenuItem value={cent.uuid} onClick={() => setUid(cent.uuid)}>{cent.name}</MenuItem>
+          ))}
+      </Select>
+    </FormControl>
+  </div>
+  <List Boards={Boards}></List>
+</div>
+<div style={{textAlign : 'end', width : '90%'}}>
+<Button sx={{bgcolor : '#FFBC5F', color : 'white', 
+            '&:hover': {
+              bgcolor: 'orange', // Change the hover color to orange
+              },
+            }}
+            onClick={goToCreateForm}
+  >작성</Button>
+ </div>
+</>
+)
 }
 
 export default NoticeList

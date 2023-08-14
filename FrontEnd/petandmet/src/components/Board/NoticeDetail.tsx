@@ -1,7 +1,13 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import BoardDetail from 'containers/components/BoardDetail'
-
+import { useNavigate } from 'react-router-dom'
 function NoticeDetail() {
+  let navigate = useNavigate()
+
+  const goToBack =() => {
+    navigate(-1)
+  }
+
   return (
     <>
       <Container>
@@ -32,6 +38,7 @@ function NoticeDetail() {
               '&:hover': { backgroundColor: '#FA8072' },
               color: 'black',
             }}
+            onClick={goToBack}
           >
             돌아가기
           </Button>

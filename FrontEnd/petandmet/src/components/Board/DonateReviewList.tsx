@@ -1,40 +1,71 @@
-import Typography from '@mui/material/Typography'
+import {Button, Typography, FormControl,
+  InputLabel, MenuItem } from '@mui/material'
 import List from 'containers/components/List'
-import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useCenterStore} from 'hooks/Center/CenterMutation'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import axios from 'axios';
+import { domain } from 'hooks/customQueryClient';
+import { useState, useEffect } from 'react'
 
-interface Data {
-  num: string
-  title: string | JSX.Element
-  writter: string
-  view: number
-  date: string
+interface CenterBoard {
+  id: number;
+  title: string;
+  content: string | null;
+  type: string;
+  board_photo_url: string | null;
+  created_at: string | null;
+  user_uuid : string,
 }
-
-function createData(
-  num: string,
-  title: string | JSX.Element,
-  writter: string,
-  view: number
-): Data {
-  const currentDate: Date = new Date()
-  const date: string = currentDate.toISOString()
-  return { num, title, writter, view, date }
-}
-
-const rows = [
-  //데이터 받아서 링크 연결하여 세부페이지 이동 예정
-  createData('1', '<Link to="/">공지사항1</Link>', 'Pet & Met', 100),
-  createData('1', '<Link to="/">공지사항1</Link>', 'Pet & Met', 100),
-  createData('1', '<Link to="/">공지사항1</Link>', 'Pet & Met', 100),
-]
 
 function DonateList() {
   let navigate = useNavigate()
 
+  const centers = useCenterStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    centers.getCentersData()
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+
   const goToCreateForm = () => {
     navigate('/donatereviewform')
   }
+  //선택된 보호소 정보 가져오는 상태, 함수
+  const [center, setCenter] = useState('')
+  const handleChange = (event: SelectChangeEvent) => {
+    setCenter(event.target.value)
+  }
+  //선택된 보호소 uuid 담는 state
+  const [uid, setUid] = useState('')
+
+  //선택된 보호소 입양후기 가져오는 상태, 함수
+  const [Boards, setBoards] = useState<CenterBoard[]>([]);
+
+  const CenterAdoptList =async () => {
+    try{
+      const res = await axios.get(`${domain}/board/support?page=0&center_uuid=${uid}&type=support`)
+      console.log(res.data.response.boards.content)
+      const centerAdopt = res.data.response.boards.content
+      return centerAdopt
+    } catch(error){
+      console.log(error)
+      return [];
+    }
+  }
+  
+  useEffect(() => {
+    const fetchBoardList =async () => {
+      const centersAdopt = await CenterAdoptList()
+      setBoards(centersAdopt)
+    }
+    fetchBoardList()
+  },[uid])
 
   return (
     <>
@@ -45,7 +76,24 @@ function DonateList() {
         >
           후원 후기
         </Typography>
-        <List rows={rows}></List>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <FormControl sx={{ width: '25%' }}>
+            <InputLabel id="demo-simple-select-label">보호소</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={center}
+              label="보호소"
+              onChange={handleChange}
+              >
+              {centers.centersData.map((cent:any) => (
+                <MenuItem value={cent.uuid} onClick={() => setUid(cent.uuid)}>{cent.name}</MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </div>
+        <List Boards={Boards}></List>
       </div>
 
       <div style={{textAlign : 'end', width : '90%'}}>
