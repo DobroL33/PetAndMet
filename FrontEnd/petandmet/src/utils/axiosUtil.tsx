@@ -23,7 +23,7 @@ export async function refreshToken(accessToken: string) {
 }
 
 customAxios.interceptors.request.use(async config => {
-  console.log(config)
+  console.log('axios 헤더', config)
   return config
 })
 
@@ -45,15 +45,18 @@ customAxios.interceptors.response.use(
           //   if (error.config.headers.Authorization) {
           //     console.log('요청보냄', error.config.headers.Authorization)
           //   }
+          console.log(error)
           const newToken = await refreshToken(
             error.config.headers.Authorization
           )
-          //   console.log('오리진', originRequest.headers.Authorization)
-          //   console.log('API', customAxios.defaults.headers.common.Authorization)
-          customAxios.defaults.headers.common.Authorization = `Bearer ${newToken}`
-          originRequest.headers.Authorization = `Bearer ${newToken}`
-          //   console.log('바뀐 token', newToken)
-          return customAxios(originRequest)
+          if (newToken !== '토큰 정보가 유효하지 않습니다.') {
+            //   console.log('오리진', originRequest.headers.Authorization)
+            //   console.log('API', customAxios.defaults.headers.common.Authorization)
+            customAxios.defaults.headers.common.Authorization = `Bearer ${newToken}`
+            originRequest.headers.Authorization = `Bearer ${newToken}`
+            console.log('바뀐 token', newToken)
+            return customAxios(originRequest)
+          }
           //Refresg토큰이 죽어서 로그인 창으로 보내야 하는 경우
         } else if (error.response.data.detail === 'Refresh') {
           console.log('Refrech 죽음')

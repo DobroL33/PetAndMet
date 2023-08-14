@@ -30,6 +30,7 @@ import ItemDetail from 'containers/components/ItemDetail'
 import StreamingPage from 'components/Streaming/StreamingPage'
 import AnimalDetail from 'containers/components/AnimalDetail'
 import Live from 'components/Live/OpenVidu'
+import Live2 from 'components/Live/OpenViduJoin'
 const App = () => {
   return (
     <BrowserRouter>
@@ -70,7 +71,9 @@ const App = () => {
         <Route path="/donate/item/:id" element={<ItemDetail />} />
         <Route path="/livelist/streaming/:id" element={<StreamingPage />} />
         <Route path="/animal/detail/:animal_uuid" element={<AnimalDetail />} />
-        <Route path="/live" element={<Live />} />
+        <Route path="/live/:id" element={<Live />} />
+        <Route path="/openlive" element={<Live />} />
+        <Route path="/live2/:id" element={<Live2 />} />
       </Routes>
     </BrowserRouter>
   )
