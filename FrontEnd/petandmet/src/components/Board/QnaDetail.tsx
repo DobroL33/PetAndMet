@@ -125,7 +125,7 @@ function QnaDetail() {
                 '&:hover': { backgroundColor: '#FA8072' },
                 color: 'black',
               }}
-              onClick={goToBack}
+              onClick={deleteboard}
               >
               삭제
             </Button>
