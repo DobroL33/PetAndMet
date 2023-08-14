@@ -3,12 +3,18 @@ import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
 import { domain } from 'hooks/customQueryClient'
 import customAxios from 'utils/axiosUtil'
+import jwtDecode from 'jwt-decode'
 
 interface Token {
   token: String
+  center_uuid: string
 }
 interface Response {
   response: Token
+}
+
+interface JwtDecode {
+  uuid: string
 }
 
 export interface LoginCredentials {
@@ -35,16 +41,21 @@ export function useLoginMutation(): UseMutationResult<
   LoginCredentials,
   unknown
 > {
-  const [_, setCookie] = useCookies(['access_token'])
-  const { setAccessToken } = useAccessToken()
+  const [cookie, setCookie] = useCookies(['access_token'])
+  const { setAccessToken, setCenterUuid, setUserUuid } = useAccessToken()
   return useMutation<Response, unknown, LoginCredentials, unknown>(axiosData, {
     onSuccess(data, variables, context) {
+      const accessToken = `${data.response.token}`
+      const jwtDecodedToken = jwtDecode<JwtDecode>(`"${accessToken}"`)
+      const userUuid = jwtDecodedToken.uuid
       setCookie('access_token', 'Bearer ' + data.response.token, {
         secure: true,
         sameSite: 'strict',
         path: '/',
       })
       setAccessToken('Bearer ' + data.response.token)
+      setCenterUuid(data.response.center_uuid)
+      setUserUuid(userUuid)
     },
   })
 }

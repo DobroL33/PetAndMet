@@ -54,7 +54,7 @@ customAxios.interceptors.response.use(
             //   console.log('API', customAxios.defaults.headers.common.Authorization)
             customAxios.defaults.headers.common.Authorization = `Bearer ${newToken}`
             originRequest.headers.Authorization = `Bearer ${newToken}`
-            //   console.log('바뀐 token', newToken)
+            console.log('바뀐 token', newToken)
             return customAxios(originRequest)
           }
           //Refresg토큰이 죽어서 로그인 창으로 보내야 하는 경우
