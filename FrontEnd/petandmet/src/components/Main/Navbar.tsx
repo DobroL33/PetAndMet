@@ -13,7 +13,10 @@ import logo from "images/new_logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { useCookies, Cookies } from "react-cookie";
 import { styled } from "@mui/material/styles";
-
+import axios from "axios";
+import { domain } from "hooks/customQueryClient";
+import { useState, useEffect } from 'react'
+import { useAccessToken } from "hooks/useAccessToken";
 const pages = [
   "입양",
   "참여 소통",
@@ -36,7 +39,10 @@ const NavButton = styled(Button)(({ theme }) => ({
 function Navbar() {
   let navigate = useNavigate();
   const [cookie, setCookie, removeCookie] = useCookies(["access_token"]);
-
+  const { accessToken, centerUuid, userUuid } = useAccessToken()
+  console.log(accessToken)
+  console.log(centerUuid)
+  console.log(userUuid)
   const logOut = () => {
     removeCookie("access_token");
     navigate("/login");
@@ -96,9 +102,35 @@ function Navbar() {
     handleCloseNavMenu();
   };
   const goToMyPage = () => {
-    navigate("/mypage");
+    if (centerUuid === null) {
+      navigate("/mypage");
+    } else {
+      navigate("/admin", {state: centerUuid});
+    }
     handleCloseNavMenu();
   };
+
+  const [role_type, setRoleType] = useState('')
+  useEffect(() => {
+    type()
+  },[])
+  const type =async () => {
+    try{
+      const response = await axios.get(`${domain}/user`,
+      {
+        headers: {
+          Authorization: cookie.access_token
+        }
+      }
+      ).then((res) =>{
+        console.log(res.data.response)
+        setRoleType(res.data.response.role_type)
+      })
+    }catch(error){
+      console.log(cookie.access_token)
+      console.log(error)
+    }
+  }
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
