@@ -71,13 +71,13 @@ function List(props:ListProps) {
     const fetchAdoptDetail = async () => {
       try {
         const res = await axios.get(`${domain}/board/${getType}/detail?id=${getId}`);
-        const adoptdetail = res.data.response.board;
-        console.log(adoptdetail);
+        const detail = res.data.response.board;
+        console.log(detail);
         if (getType=='adopt' || getType=='donate') {
-          navigate(`/${getType}/review/detail/${getId}`, {state : adoptdetail})
+          navigate(`/${getType}/review/detail/${getId}`, {state : detail})
         }
         else{
-          navigate(`/comm/${getType}/detail/${getId}`, {state : adoptdetail})
+          navigate(`/comm/${getType}/detail/${getId}`, {state : detail})
         }
       } catch (error) {
         console.log(error);

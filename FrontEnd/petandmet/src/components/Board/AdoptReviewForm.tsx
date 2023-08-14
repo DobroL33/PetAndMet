@@ -3,17 +3,17 @@ import {Button, Typography, FormControl,
 import Box from '@mui/material/Box'
 import InputForm from 'containers/components/Form'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { domain } from 'hooks/customQueryClient'
 import { idCountStore } from 'hooks/Board/BoardIdCountMutation'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useCenterStore} from 'hooks/Center/CenterMutation'
+import { useAccessToken } from "hooks/useAccessToken";
 
 function AdoptForm() {
-  const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZmY1MDJhMS0zNzYyLTRjOTctODRhZi1kZDQ1MjFjMzgzNDMiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxOTExNzczfQ.Kk21RTh3Z_yuLR7lZD_IFystHkAVXc0tVKztjOn4tKT940AvalAw8XH7o82YnHNxUEuOk7cbsGHc3JHpzMXvyQ"
-
-
+  const { accessToken, centerUuid, userUuid } = useAccessToken()
+  
   let navigate = useNavigate()
   const goToBack =() => {
     navigate(-1)
@@ -22,6 +22,31 @@ function AdoptForm() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const {id, increaseId} = idCountStore()
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [loadImg, setLoadImg] = useState("")
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      console.log(event.target.files)
+      const imgUrl = URL.createObjectURL(event.target.files[0])
+      setLoadImg(imgUrl)
+      console.log(imgUrl)
+    }
+  };
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const selectedImage = event.target.files[0];
+  //     const reader = new FileReader();
+
+  //     reader.onload = () => {
+  //       setLoadImg(reader.result as string);
+  //       console.log(reader.result)
+  //       console.log(loadImg)
+  //     };
+  //     reader.readAsDataURL(selectedImage);
+  //   }
+  // };
+  // console.log(loadImg)
   const [board, setBoard] = useState({
     id: id.toString(),
     title : "",
@@ -29,11 +54,11 @@ function AdoptForm() {
     type : 'adopt',
     created_at : "",
     updated_at : "",
-    user_uuid : 'eff502a1-3762-4c97-84af-dd4521c38343',
+    user_uuid : userUuid,
     center_uuid : null,
     board_photo_url : "",
   })
-
+  
   const ReviewPost =async () => {
     try{
       const updatedBoard = {
@@ -41,12 +66,15 @@ function AdoptForm() {
         title: title,
         content: content,
         center_uuid : uid,
+        board_photo_url : loadImg
       }
+
       console.log(updatedBoard)
+
       await axios.post(`${domain}/board/adopt`, updatedBoard,
       {
         headers: {
-          Authorization: `Bearer ${token}` ,
+          Authorization: `${accessToken}` ,
         },
       }
       )
@@ -56,7 +84,6 @@ function AdoptForm() {
         navigate(-1)
       })
       .catch((error) =>{
-        console.log(token)
         console.log(error)
       })
     } catch(error){
@@ -111,8 +138,8 @@ function AdoptForm() {
           </FormControl>
         </div>
 
-        <InputForm setTitle={setTitle} setContent={setContent}></InputForm>
-
+        <InputForm setTitle={setTitle} setContent={setContent} handleImageChange={handleImageChange} />
+                <img src={loadImg} alt='등록된 사진이 없습니다.'></img>
         <Box sx={{ textAlign: 'right', width: '88%' }}>
           <Button
             sx={{

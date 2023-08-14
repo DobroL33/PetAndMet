@@ -40,9 +40,9 @@ function Navbar() {
   let navigate = useNavigate();
   const [cookie, setCookie, removeCookie] = useCookies(["access_token"]);
   const { accessToken, centerUuid, userUuid } = useAccessToken()
-  console.log(accessToken)
-  console.log(centerUuid)
-  console.log(userUuid)
+  // console.log(accessToken)
+  // console.log(centerUuid)
+  // console.log(userUuid)
   const logOut = () => {
     removeCookie("access_token");
     navigate("/login");

@@ -6,10 +6,12 @@ interface InputFormProps {
     setTitle: (title : string) => void;
     setContent: (content : string) => void;
     handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // handleImageChange 함수 타입 추가
-
+    title: string
+    content : string,
+    image : string,
 }
 
-function InputForm({ setTitle, setContent, handleImageChange }: InputFormProps) {
+function UpdateInputForm({ setTitle, setContent, handleImageChange, title, content, image }: InputFormProps) {
     
     return(
         <>
@@ -30,6 +32,7 @@ function InputForm({ setTitle, setContent, handleImageChange }: InputFormProps) 
                     setTitle(e.target.value)
                     // console.log(setTitle)
                 }}
+                defaultValue={title}
                 />
 
             <TextField
@@ -41,7 +44,9 @@ function InputForm({ setTitle, setContent, handleImageChange }: InputFormProps) 
                     setContent(e.target.value)
                     // console.log(setContent)
                 }}
+                defaultValue={content}
                 />
+            <img src= {image} alt="사진이 없습니다." />
             <input type="file" accept='image/png, image/jpeg, image/jpg'
                     onChange={handleImageChange}
             />
@@ -52,5 +57,5 @@ function InputForm({ setTitle, setContent, handleImageChange }: InputFormProps) 
     )
 }
 
-export default InputForm;
+export default UpdateInputForm;
 export{};

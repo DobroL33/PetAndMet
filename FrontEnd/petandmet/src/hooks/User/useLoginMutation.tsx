@@ -14,7 +14,7 @@ interface Response {
 }
 
 interface JwtDecode {
-  uuid: string
+  sub: string
 }
 
 export interface LoginCredentials {
@@ -48,7 +48,7 @@ export function useLoginMutation(): UseMutationResult<
     onSuccess(data, variables, context) {
       const accessToken = `${data.response.token}`
       const jwtDecodedToken = jwtDecode<JwtDecode>(`"${accessToken}"`)
-      const userUuid = jwtDecodedToken.uuid
+      const userUuid = jwtDecodedToken.sub
       setCookie('access_token', 'Bearer ' + data.response.token, {
         secure: true,
         sameSite: 'strict',
