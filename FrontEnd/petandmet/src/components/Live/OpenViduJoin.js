@@ -15,9 +15,7 @@ const App = () => {
   )
   const [session, setSession] = useState(undefined)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
-  const [publisher, setPublisher] = useState(undefined)
   const [subscribers, setSubscribers] = useState([])
-  const [isSubscriber, setIsSubscriber] = useState(true)
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
   const [liveId, setLiveId] = useState({
     live_id: 1234,
@@ -54,38 +52,6 @@ const App = () => {
     try {
       const token = await getToken() // getToken 함수 구현 필요
       await mySession.connect(token, { clientData: myUserName })
-
-      // if (!isSubscriber) {
-      //   const publisher = await OV.initPublisherAsync(undefined, {
-      //     audioSource: undefined,
-      //     videoSource: undefined,
-      //     publishAudio: true,
-      //     publishVideo: true,
-      //     resolution: '640x480',
-      //     frameRate: 30,
-      //     insertMode: 'APPEND',
-      //     mirror: false,
-      //   })
-
-      //   await mySession.publish(publisher)
-
-      //   const devices = await OV.getDevices()
-      //   const videoDevices = devices.filter(
-      //     device => device.kind === 'videoinput'
-      //   )
-      //   const currentVideoDeviceId = publisher.stream
-      //     .getMediaStream()
-      //     .getVideoTracks()[0]
-      //     .getSettings().deviceId
-      //   const currentVideoDevice = videoDevices.find(
-      //     device => device.deviceId === currentVideoDeviceId
-      //   )
-
-      //   setMainStreamManager(publisher)
-      //   setPublisher(publisher)
-      //   setCurrentVideoDevice(currentVideoDevice)
-      //   // console.log('세션 아이디', mySessionId)
-      // }
     } catch (error) {
       console.log('세션 연결 오류:', error.code, error.message)
     }
@@ -140,10 +106,6 @@ const App = () => {
 
   const getToken = async () => {
     let sessionIdTemp = mySessionId
-    console.log(sessionIdTemp)
-    // if (mySessionId === DEFAULT_SESSION) {
-    //   sessionIdTemp = await createSession()
-    // }
     return await createToken(sessionIdTemp)
   }
 

@@ -4,6 +4,10 @@ import axios from 'axios'
 import UserVideoComponent from './UserVideoComponent'
 import { useOpenSessionInfo } from 'hooks/Live/useSessionInfo'
 import { createOvSession } from 'hooks/Live/useOvOpen'
+import { useAccessToken } from 'hooks/useAccessToken'
+import { removeOvSession } from 'hooks/Live/useOvOut'
+import { useNavigate, useParams } from 'react-router-dom'
+import { usePrompt } from 'routes/Block'
 
 const OPENVIDU_SERVER_URL = 'https://i9b302.p.ssafy.io/ov/openvidu'
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
@@ -20,15 +24,19 @@ const App = () => {
   const [subscribers, setSubscribers] = useState([])
   const [isSubscriber, setIsSubscriber] = useState(false)
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
+  const [liveId, setLiveId] = useState()
   const { sessionId, setSessionId } = useOpenSessionInfo()
+  const { centerUuid } = useAccessToken()
+  const navigate = useNavigate()
   const [createSessionInfo, setCreateSessionInfo] = useState({
-    center_uuid: '',
+    center_uuid: centerUuid,
     session_name: '',
     session_id: '',
-    center_item_id: {},
+    center_item_id: [],
     animal_uuid: '',
   })
   const openLive = createOvSession()
+  const outLive = removeOvSession()
 
   const deleteSubscriber = streamManager => {
     const updatedSubscribers = subscribers.filter(sub => sub !== streamManager)
@@ -50,6 +58,7 @@ const App = () => {
 
     // streamDestroyed 이벤트 리스너 등록
     mySession.on('streamDestroyed', event => {
+      console.log('세션 사라짐')
       deleteSubscriber(event.stream.streamManager)
     })
 
@@ -97,9 +106,10 @@ const App = () => {
     }
   }
 
-  const leaveSession = () => {
+  const leaveSession = async () => {
     if (session) {
       session.disconnect()
+      outLive.mutate(liveId)
     }
 
     setSession(undefined)
@@ -207,30 +217,55 @@ const App = () => {
   }
   useEffect(() => {
     if (createSessionInfo.session_id !== '') {
-      openLive.mutate(createSessionInfo)
+      openLive.mutate(createSessionInfo, {
+        onSuccess: data => {
+          setLiveId(data.response.live_id)
+          navigate(`/live/${data.response.live_id}`)
+        },
+      })
     }
   }, [createSessionInfo.session_id])
+  // usePrompt('현재 페이지를 벗어나시겠습니까?', true, () => {
+  //   leaveSession()
+  // })
+  const useUnload = fn => {
+    const cb = React.useRef(fn)
+
+    React.useEffect(() => {
+      const onUnload = cb.current
+      window.addEventListener('beforeunload', onUnload)
+      return () => {
+        window.removeEventListener('beforeunload', onUnload)
+      }
+    }, [])
+  }
+  const { id } = useParams()
+  useUnload(e => {
+    outLive.mutate(id, {
+      onSuccess: data => {
+        console.log(data)
+        navigate('/live')
+        console.log('hey')
+      },
+    })
+    e.preventDefault()
+  })
   return (
     <div>
       {session === undefined ? (
         <div>
           <div>
             <h1> Join a video session </h1>
+            <p>{createSessionInfo.center_uuid}</p>
             <input
               type="text"
-              value={createSession.center_uuid}
-              onChange={e => handleChange('center_uuid', e.target.value)}
-              className="border-2"
-            />
-            <input
-              type="text"
-              value={createSession.session_name}
+              value={createSessionInfo.session_name}
               onChange={e => handleChange('session_name', e.target.value)}
               className="border-2"
             />
             <input
               type="text"
-              value={createSession.animal_uuid}
+              value={createSessionInfo.animal_uuid}
               onChange={e => handleChange('animal_uuid', e.target.value)}
               className="border-2"
             />
