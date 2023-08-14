@@ -6,7 +6,7 @@ interface idCountStore{
 }
 
 export const idCountStore = create<idCountStore>(set => ({
-    id: 100,
+    id: 200,
     increaseId: () => set(state => ({id: state.id + 1})),
 }))
 

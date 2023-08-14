@@ -9,11 +9,11 @@ import { domain } from 'hooks/customQueryClient'
 import { idCountStore } from 'hooks/Board/BoardIdCountMutation'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useCenterStore} from 'hooks/Center/CenterMutation'
+import { useAccessToken } from "hooks/useAccessToken";
 
 function QnaForm() {
-  const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZmY1MDJhMS0zNzYyLTRjOTctODRhZi1kZDQ1MjFjMzgzNDMiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjkxOTExNzczfQ.Kk21RTh3Z_yuLR7lZD_IFystHkAVXc0tVKztjOn4tKT940AvalAw8XH7o82YnHNxUEuOk7cbsGHc3JHpzMXvyQ"
+  const { accessToken, centerUuid, userUuid } = useAccessToken()
 
-  
   let navigate = useNavigate()
   const goToBack =() => {
     navigate(-1)
@@ -22,6 +22,16 @@ function QnaForm() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const {id, increaseId} = idCountStore()
+
+  const [loadImg, setLoadImg] = useState("")
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      console.log(event.target.files)
+      const imgUrl = URL.createObjectURL(event.target.files[0])
+      setLoadImg(imgUrl)
+    }
+  };
+
   const [board, setBoard] = useState({
     id: id.toString(),
     title : "",
@@ -29,7 +39,7 @@ function QnaForm() {
     type : 'qna',
     created_at : "",
     updated_at : "",
-    user_uuid : 'eff502a1-3762-4c97-84af-dd4521c38343',
+    user_uuid : userUuid,
     center_uuid : null,
     board_photo_url : "",
   })
@@ -41,12 +51,14 @@ function QnaForm() {
         title: title,
         content: content,
         center_uuid : uid,
+        board_photo_url : loadImg
       }
       console.log(updatedBoard)
+
       await axios.post(`${domain}/board/qna`, updatedBoard,
       {
         headers: {
-          Authorization: `Bearer ${token}` ,
+          Authorization: `${accessToken}` ,
         },
       }
       )
@@ -110,7 +122,7 @@ function QnaForm() {
           </FormControl>
         </div>
 
-        <InputForm setTitle={setTitle} setContent={setContent}></InputForm>
+        <InputForm setTitle={setTitle} setContent={setContent} handleImageChange={handleImageChange} />
 
         <Box sx={{ textAlign: 'right', width: '88%' }}>
           <Button

@@ -5,9 +5,11 @@ import TextField from '@mui/material/TextField';
 interface InputFormProps {
     setTitle: (title : string) => void;
     setContent: (content : string) => void;
+    handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // handleImageChange 함수 타입 추가
+
 }
 
-function InputForm({setTitle, setContent}:InputFormProps){
+function InputForm({ setTitle, setContent, handleImageChange }: InputFormProps) {
     
     return(
         <>
@@ -40,7 +42,9 @@ function InputForm({setTitle, setContent}:InputFormProps){
                     // console.log(setContent)
                 }}
                 />
-            <input type="file" accept='image/png, image/jpeg, image/jpg' />
+            <input type="file" accept='image/png, image/jpeg, image/jpg'
+                    onChange={handleImageChange}
+            />
         </Box>
 
         </Container>

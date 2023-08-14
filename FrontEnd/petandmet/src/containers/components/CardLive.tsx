@@ -60,7 +60,7 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   useEffect(() => {
     const url = `${domain}/animal/detail?uuid=${live.animal_uuid}`;
-    console.log(url);
+    // console.log(url);
     axios
       .get(url) // 따옴표 제거
       .then((response) => {
