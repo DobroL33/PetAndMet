@@ -4,6 +4,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useAccessToken } from 'hooks/useAccessToken'
 import axios from 'axios'
 import { domain } from 'hooks/customQueryClient'
+import { useState, useEffect } from 'react'
 
 function AdoptDetail() {
   let navigate = useNavigate()
@@ -37,9 +38,19 @@ function AdoptDetail() {
     }
 
   }
-
+  
   const goToBack =() => {
     navigate(-1)
+  }
+
+  const [edit, setEdit] = useState(false)
+
+  const handleEdit = () =>{
+    setEdit(!edit)
+  }
+  const goToUpdate= () =>{
+    handleEdit
+    navigate(`/adopt/review/detail/update/${params.id}`, {state: board})
   }
 
   return (
@@ -65,6 +76,7 @@ function AdoptDetail() {
                 color: 'black',
                 marginRight: '5px',
               }}
+              onClick={goToUpdate}
               >
               수정
             </Button>

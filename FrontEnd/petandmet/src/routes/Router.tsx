@@ -30,6 +30,10 @@ import ItemDetail from 'containers/components/ItemDetail'
 import StreamingPage from 'components/Streaming/StreamingPage'
 import AnimalDetail from 'containers/components/AnimalDetail'
 import Live from 'components/Live/OpenVidu'
+import AdoptUpdate from 'components/Board/AdoptReviewUpdate'
+import DonateUpdate from 'components/Board/DonateReviewUpdate'
+import NoticeUpdate from 'components/Board/NoticeUpdate'
+import QnaUpdate from 'components/Board/QnaUpdate'
 const App = () => {
   return (
     <BrowserRouter>
@@ -71,6 +75,10 @@ const App = () => {
         <Route path="/livelist/streaming/:id" element={<StreamingPage />} />
         <Route path="/animal/detail/:animal_uuid" element={<AnimalDetail />} />
         <Route path="/live" element={<Live />} />
+        <Route path='/adopt/review/detail/update/:id' element={<AdoptUpdate/>}/>
+        <Route path='/donate/review/detail/update/:id' element={<DonateUpdate/>}/>
+        <Route path='/comm/notice/detail/update/:id' element={<NoticeUpdate/>}/>
+        <Route path='/comm/qna/detail/update/:id' element={<QnaUpdate/>}/>
       </Routes>
     </BrowserRouter>
   )

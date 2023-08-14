@@ -55,6 +55,16 @@ function QnaDetail() {
     navigate(-1)
   }
 
+  const [edit, setEdit] = useState(false)
+
+  const handleEdit = () =>{
+    setEdit(!edit)
+  }
+  const goToUpdate= () =>{
+    handleEdit
+    navigate(`/comm/qna/detail/update/${params.id}`, {state: board})
+  }
+
   return (
     <>
       <Container>
@@ -105,6 +115,7 @@ function QnaDetail() {
                 color: 'black',
                 marginRight: '5px',
               }}
+              onClick={goToUpdate}
               >
               수정
             </Button>

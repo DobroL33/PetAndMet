@@ -4,6 +4,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useAccessToken } from 'hooks/useAccessToken'
 import axios from 'axios'
 import { domain } from 'hooks/customQueryClient'
+import { useState, useEffect } from 'react'
 
 function NoticeDetail() {
   let navigate = useNavigate()
@@ -42,6 +43,16 @@ function NoticeDetail() {
     navigate(-1)
   }
 
+  const [edit, setEdit] = useState(false)
+
+  const handleEdit = () =>{
+    setEdit(!edit)
+  }
+  const goToUpdate= () =>{
+    handleEdit
+    navigate(`/comm/notice/detail/update/${params.id}`, {state: board})
+  }
+  
   return (
     <>
       <Container>
@@ -65,6 +76,7 @@ function NoticeDetail() {
                 color: 'black',
                 marginRight: '5px',
               }}
+              onClick={goToUpdate}
               >
               수정
             </Button>
