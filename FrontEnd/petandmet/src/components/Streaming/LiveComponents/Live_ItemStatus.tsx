@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import ProgressBar from "react-bootstrap/ProgressBar";
 import axios from "axios";
 import { domain } from "hooks/customQueryClient";
 import useAnimal from "hooks/Animal/useAnimal";
-import Familiarity from "./Live_Familiarity";
 import { useUserAccess } from "hooks/useUserAccess";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-
 import { useNavigate } from "react-router-dom";
-
 // material css
 import { useTheme } from "@mui/material/styles";
-
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";

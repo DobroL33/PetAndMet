@@ -1,24 +1,7 @@
-import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { domain } from "hooks/customQueryClient";
 import useAnimal from "hooks/Animal/useAnimal";
-import {
-  Grid,
-  Box,
-  Typography,
-  Skeleton,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Menu from "@mui/material/Menu";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
@@ -67,9 +50,6 @@ function Live_Donation() {
     options: centerItem, // 이 부분 변경
     getOptionLabel: (option: CenterItem) => option.item_name,
   };
-  // const flatProps = {
-  //   options: ItemLists.map((option) => option.item_name),
-  // };
   const [value, setValue] = React.useState<CenterItem | null>(null);
 
   // API 요청
