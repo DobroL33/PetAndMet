@@ -3,11 +3,6 @@ import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios'
 import UserVideoComponent from './UserVideoComponent'
 import { useOpenSessionInfo } from 'hooks/Live/useSessionInfo'
-import { createOvSession } from 'hooks/Live/useOvOpen'
-import { useAccessToken } from 'hooks/useAccessToken'
-import { removeOvSession } from 'hooks/Live/useOvOut'
-import { useNavigate, useParams } from 'react-router-dom'
-import { usePrompt } from 'routes/Block'
 
 const OPENVIDU_SERVER_URL = 'https://i9b302.p.ssafy.io/ov/openvidu'
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
@@ -24,19 +19,7 @@ const App = () => {
   const [subscribers, setSubscribers] = useState([])
   const [isSubscriber, setIsSubscriber] = useState(false)
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
-  const [liveId, setLiveId] = useState()
   const { sessionId, setSessionId } = useOpenSessionInfo()
-  const { centerUuid } = useAccessToken()
-  const navigate = useNavigate()
-  const [createSessionInfo, setCreateSessionInfo] = useState({
-    center_uuid: centerUuid,
-    session_name: '',
-    session_id: '',
-    center_item_id: [],
-    animal_uuid: '',
-  })
-  const openLive = createOvSession()
-  const outLive = removeOvSession()
 
   const deleteSubscriber = streamManager => {
     const updatedSubscribers = subscribers.filter(sub => sub !== streamManager)
@@ -58,7 +41,6 @@ const App = () => {
 
     // streamDestroyed 이벤트 리스너 등록
     mySession.on('streamDestroyed', event => {
-      console.log('세션 사라짐')
       deleteSubscriber(event.stream.streamManager)
     })
 
@@ -99,17 +81,15 @@ const App = () => {
         setMainStreamManager(publisher)
         setPublisher(publisher)
         setCurrentVideoDevice(currentVideoDevice)
-        // console.log('세션 아이디', mySessionId)
       }
     } catch (error) {
       console.log('세션 연결 오류:', error.code, error.message)
     }
   }
 
-  const leaveSession = async () => {
+  const leaveSession = () => {
     if (session) {
       session.disconnect()
-      outLive.mutate(liveId)
     }
 
     setSession(undefined)
@@ -155,11 +135,11 @@ const App = () => {
   }
 
   const getToken = async () => {
-    let sessionIdTemp = mySessionId
+    let sessionId = mySessionId
     if (mySessionId === DEFAULT_SESSION) {
-      sessionIdTemp = await createSession()
+      sessionId = await createSession()
     }
-    return await createToken(sessionIdTemp)
+    return await createToken(sessionId)
   }
 
   const createSession = async () => {
@@ -176,20 +156,18 @@ const App = () => {
           },
         }
       )
-      // console.log(response.data.id)
+      console.log(response.data.id)
       setMySessionId(response.data.id)
       setSessionId(response.data.id)
-      handleChange('session_id', response.data.id)
-      // openLive.mutate(createSessionInfo)
       return response.data.id
     } catch (error) {
       console.error('Error creating session:', error)
       return ''
     }
   }
-  // useEffect(() => {
-  //   console.log('Session ID updated in A component')
-  // }, [setSessionId])
+  useEffect(() => {
+    console.log('Session ID updated in A component')
+  }, [setSessionId])
   const createToken = async sessionId => {
     try {
       const response = await axios.post(
@@ -209,68 +187,57 @@ const App = () => {
       return ''
     }
   }
-  const handleChange = (fieldName, value) => {
-    setCreateSessionInfo(prevState => ({
-      ...prevState,
-      [fieldName]: value,
-    }))
-  }
-  useEffect(() => {
-    if (createSessionInfo.session_id !== '') {
-      openLive.mutate(createSessionInfo, {
-        onSuccess: data => {
-          setLiveId(data.response.live_id)
-          navigate(`/live/${data.response.live_id}`)
-        },
-      })
-    }
-  }, [createSessionInfo.session_id])
-  // usePrompt('현재 페이지를 벗어나시겠습니까?', true, () => {
-  //   leaveSession()
-  // })
-  const useUnload = fn => {
-    const cb = React.useRef(fn)
 
-    React.useEffect(() => {
-      const onUnload = cb.current
-      window.addEventListener('beforeunload', onUnload)
-      return () => {
-        window.removeEventListener('beforeunload', onUnload)
-      }
-    }, [])
+  const handleChangeUserName = value => {
+    setMyUserName(value)
   }
-  const { id } = useParams()
-  useUnload(e => {
-    outLive.mutate(id, {
-      onSuccess: data => {
-        console.log(data)
-        navigate('/live')
-        console.log('hey')
-      },
-    })
-    e.preventDefault()
-  })
+
+  const handleChangeSessionId = value => {
+    setMySessionId(value)
+  }
+
+  const handleCheckboxChange = value => {
+    setIsSubscriber(value)
+  }
   return (
-    <div>
+    <div className="container">
       {session === undefined ? (
-        <div>
-          <div>
+        <div id="join">
+          <div id="join-dialog" className="jumbotron vertical-center">
             <h1> Join a video session </h1>
-            <p>{createSessionInfo.center_uuid}</p>
-            <input
-              type="text"
-              value={createSessionInfo.session_name}
-              onChange={e => handleChange('session_name', e.target.value)}
-              className="border-2"
-            />
-            <input
-              type="text"
-              value={createSessionInfo.animal_uuid}
-              onChange={e => handleChange('animal_uuid', e.target.value)}
-              className="border-2"
-            />
             <p>
+              <label>Participant: </label>
+              <input
+                className="form-control"
+                type="text"
+                id="userName"
+                value={myUserName}
+                onChange={e => handleChangeUserName(e.target.value)}
+                required
+              />
+            </p>
+            <p>
+              <label> Session: </label>
+              <input
+                className="form-control"
+                type="text"
+                id="sessionId"
+                value={mySessionId}
+                onChange={e => handleChangeSessionId(e.target.value)}
+                required
+              />
+            </p>
+            <p>
+              <input
+                type="checkbox"
+                id="myCheckbox"
+                onChange={e => handleCheckboxChange(e.target.value)}
+              />{' '}
+              구독자 여부
+            </p>
+            <p className="text-center">
               <button
+                className="btn btn-lg btn-success"
                 name="commit"
                 type="submit"
                 value="JOIN"

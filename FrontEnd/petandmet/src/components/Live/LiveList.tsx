@@ -9,14 +9,12 @@ interface LiveListProps {
 
 function LiveList({ num = 10 }: LiveListProps) {
   const [liveToShow, setLivesToShow] = useState<any[]>([]);
-  // const { liveList, fetchLiveList } = useLiveList();
-  // const { fetchAnimalData } = useAnimal();
+
   useEffect(() => {
     axios
       .get("https://i9b302.p.ssafy.io/api/v1/live?page=0&size=8")
       .then((response) => {
         const Lives = response.data.response.lives;
-
         setLivesToShow(Lives);
       })
       .catch((error) => {
@@ -29,7 +27,6 @@ function LiveList({ num = 10 }: LiveListProps) {
   if (num !== undefined) {
     livesToShow = liveToShow.slice(0, num); // liveToShow의 첫 num개의 요소만 사용
   }
-  console.log(liveToShow);
 
   return (
     <>

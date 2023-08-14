@@ -1,7 +1,6 @@
 import create from "zustand";
 import axios from "axios";
 import { domain } from "../../hooks/customQueryClient";
-import { getAccessTokenFromCookie } from "../useAuth";
 import { useCallback } from "react";
 
 interface LiveData {

@@ -1,6 +1,6 @@
-import { QueryClient } from 'react-query'
+import { QueryClient } from "react-query";
 
-const domain = 'https://i9b302.p.ssafy.io/api/v1'
+const domain = "https://i9b302.p.ssafy.io/api/v1";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -8,5 +8,5 @@ const queryClient = new QueryClient({
     },
     mutations: {},
   },
-})
-export { domain, queryClient }
+});
+export { domain, queryClient };
