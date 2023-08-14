@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import useAnimal from "hooks/Animal/useAnimal";
 import LiveDonation from "components/Streaming/LiveComponents/Live_Donation";
+import Familiarity from "./LiveComponents/Live_Familiarity";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -70,9 +71,7 @@ function StreamingPage() {
                     height: "100%",
                     width: "90%",
                   }}
-                >
-                  <h1 font-size="lg">ㅇㅇ</h1>
-                </Box>
+                ></Box>
               </Box>
             </Grid>
             {/* Top Right */}
@@ -106,20 +105,30 @@ function StreamingPage() {
                 justifyContent: "Left",
               }}
             >
-              <img
-                className="h-28 m-5 md-3"
-                src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
-                alt=""
-              />
-              <h4 className="m-5">
-                Name: {animal.name}
-                <br />
-                나이: {animal.age}
-                <br />
-                성별: {animal.gender}
-                <br />
-                강아지 종: {animal.breed}
-              </h4>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {" "}
+                <img
+                  className="h-28 m-5 md-3"
+                  src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
+                  alt=""
+                />
+                <h4 className="m-5">
+                  Name: {animal.name}
+                  <br />
+                  나이: {animal.age}
+                  <br />
+                  성별: {animal.gender}
+                  <br />
+                  강아지 종: {animal.breed}
+                </h4>
+                <Familiarity></Familiarity>
+              </Box>
             </Box>
 
             {/* Bottom Left */}

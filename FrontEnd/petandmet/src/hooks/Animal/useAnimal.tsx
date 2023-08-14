@@ -41,8 +41,6 @@ const useAnimal = create<UseAnimalState>((set) => ({
     };
     // 상태 설정
     set({ animalData });
-    console.log("useAnimal 에서의 animalData는 이렇습니다.");
-    console.log(animalData);
   },
 }));
 

@@ -106,7 +106,7 @@ function Live_Donation() {
       />
       <Live_ItemStatus
         itemTargetPrice={selectedItem?.item_target_price ?? 0}
-        centerItemId={selectedItem?.center_item_id ?? 0} // 이 부분 추가
+        centerItemId={selectedItem?.center_item_id ?? 0} // 이 부분이 선택된 아이템의 center_item_id를 전달합니다.
       />
     </Stack>
   );
