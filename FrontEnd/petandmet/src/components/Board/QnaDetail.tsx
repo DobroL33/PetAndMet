@@ -25,7 +25,7 @@ function QnaDetail() {
   
   const deleteboard = async () => {
     try{
-      await axios.delete(`${domain}/board/adopt/${numericId}`,
+      await axios.delete(`${domain}/board/qna/${numericId}`,
       {
         headers: {
           Authorization: accessToken ? `${accessToken}` : undefined,

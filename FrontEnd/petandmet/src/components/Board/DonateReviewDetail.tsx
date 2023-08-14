@@ -23,7 +23,7 @@ function DonateDetail() {
   
   const deleteboard = async () => {
     try{
-      await axios.delete(`${domain}/board/adopt/${numericId}`,
+      await axios.delete(`${domain}/board/donate/${numericId}`,
       {
         headers: {
           Authorization: accessToken ? `${accessToken}` : undefined,

@@ -23,7 +23,7 @@ function NoticeDetail() {
   
   const deleteboard = async () => {
     try{
-      await axios.delete(`${domain}/board/adopt/${numericId}`,
+      await axios.delete(`${domain}/board/notice/${numericId}`,
       {
         headers: {
           Authorization: accessToken ? `${accessToken}` : undefined,
@@ -52,7 +52,7 @@ function NoticeDetail() {
     handleEdit
     navigate(`/comm/notice/detail/update/${params.id}`, {state: board})
   }
-  
+
   return (
     <>
       <Container>
