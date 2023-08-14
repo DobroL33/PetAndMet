@@ -3,7 +3,7 @@ import {Button, Typography, FormControl,
 import Box from '@mui/material/Box'
 import InputForm from 'containers/components/Form'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { domain } from 'hooks/customQueryClient'
 import { idCountStore } from 'hooks/Board/BoardIdCountMutation'
@@ -22,15 +22,31 @@ function AdoptForm() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const {id, increaseId} = idCountStore()
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+
   const [loadImg, setLoadImg] = useState("")
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       console.log(event.target.files)
       const imgUrl = URL.createObjectURL(event.target.files[0])
       setLoadImg(imgUrl)
+      console.log(imgUrl)
     }
   };
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const selectedImage = event.target.files[0];
+  //     const reader = new FileReader();
 
+  //     reader.onload = () => {
+  //       setLoadImg(reader.result as string);
+  //       console.log(reader.result)
+  //       console.log(loadImg)
+  //     };
+  //     reader.readAsDataURL(selectedImage);
+  //   }
+  // };
+  // console.log(loadImg)
   const [board, setBoard] = useState({
     id: id.toString(),
     title : "",
@@ -52,6 +68,7 @@ function AdoptForm() {
         center_uuid : uid,
         board_photo_url : loadImg
       }
+
       console.log(updatedBoard)
 
       await axios.post(`${domain}/board/adopt`, updatedBoard,
@@ -122,7 +139,7 @@ function AdoptForm() {
         </div>
 
         <InputForm setTitle={setTitle} setContent={setContent} handleImageChange={handleImageChange} />
-
+                <img src={loadImg} alt='등록된 사진이 없습니다.'></img>
         <Box sx={{ textAlign: 'right', width: '88%' }}>
           <Button
             sx={{

@@ -1,8 +1,14 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import BoardDetail from 'containers/components/BoardDetail'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useAccessToken } from 'hooks/useAccessToken'
+
 function NoticeDetail() {
   let navigate = useNavigate()
+
+  const location = useLocation();
+  const board = location.state
+  const { centerUuid, userUuid } = useAccessToken()
 
   const goToBack =() => {
     navigate(-1)
@@ -19,20 +25,33 @@ function NoticeDetail() {
             공지 사항 게시글
           </Typography>
         </div>
-        <BoardDetail></BoardDetail>
+        <BoardDetail board={board}></BoardDetail>
 
         <Box sx={{ textAlign: 'right', width: '88%' }}>
-          <Button
-            sx={{
-              backgroundColor: '#1E90FF',
-              '&:hover': { backgroundColor: '#4FC3F7' },
-              color: 'black',
-              marginRight: '5px',
-            }}
-          >
-            수정
-          </Button>
-          <Button
+        {userUuid === board.userUuid ?
+          <div>
+            <Button
+              sx={{
+                backgroundColor: '#1E90FF',
+                '&:hover': { backgroundColor: '#4FC3F7' },
+                color: 'black',
+                marginRight: '5px',
+              }}
+              >
+              수정
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: '#FF0044',
+                '&:hover': { backgroundColor: '#FA8072' },
+                color: 'black',
+              }}
+              onClick={goToBack}
+              >
+              삭제
+            </Button>
+          </div>
+          :<Button
             sx={{
               backgroundColor: '#FF0044',
               '&:hover': { backgroundColor: '#FA8072' },
@@ -42,6 +61,7 @@ function NoticeDetail() {
           >
             돌아가기
           </Button>
+          }
         </Box>
       </Container>
     </>
