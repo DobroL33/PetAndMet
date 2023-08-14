@@ -27,27 +27,33 @@ function CenterAnimalList({ animals }: CenterAnimalListProps) {
 
   let animalsToShow: any = [];
 
-//   if (num !== undefined) {
-//     animalsToShow = Array.from({ length: num });
-//   }
+  if (animals && animals.length > 0) {
+      return (
+        <>
+          <Box
+            sx={{
+              mt: 1,
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)", // 이 부분을 추가하여 카드를 자동으로 정렬합니다.
+              gap: "8px", // 카드 간 간격 설정
+              height: "95%",
+            }}
+          >
+            {animals.map((animal: any, idx: number) => (
+              <CardInfo key={idx} animal={animal} />
+            ))}
+          </Box>
+        </>
+      );
+  }
+  else{
+    return(
+        <>
+        <h1>등록된 보호 동물이 없습니다.</h1>
+        </>
+    )
+  }
 
-  return (
-    <>
-      <Box
-        sx={{
-          mt: 1,
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)", // 이 부분을 추가하여 카드를 자동으로 정렬합니다.
-          gap: "8px", // 카드 간 간격 설정
-          height: "95%",
-        }}
-      >
-        {animals.map((animal: any, idx: number) => (
-          <CardInfo key={idx} animal={animal} />
-        ))}
-      </Box>
-    </>
-  );
 }
 export default CenterAnimalList;
 export {};

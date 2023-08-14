@@ -15,16 +15,29 @@ interface AnimalsData {
   center_uuid : string,
 }
 
+interface Center{
+  name: string | null,
+  address : string | null,
+  email : string | null,
+  phone : string | null,
+
+}
+
 function CenterPage() {
   const location = useLocation();
   const [animals, setAnimalData] = useState<AnimalsData[]>([]);
-
+  const [center, setCenter] = useState<Center | null>(null); // 타입을 Center | null로 변경
+  console.log(location.state)
   useEffect(() => {
     async function fetchAnimalData() {
       try {
+        const cetnerRes = await axios.get(`${domain}/center/detail?id=${location.state}`)
+        const centerData = cetnerRes.data.response.board
+        setCenter(centerData)
+
         const response = await axios.get(`${domain}/animal/search`,
         {
-          params: { center_uuid: location.state.center_uuid } // 요청에 center_uuid 파라미터 추가
+          params: { centerUuid: location.state} // 요청에 center_uuid 파라미터 추가
         }
         );
         const AnimalsData: AnimalsData[] = response.data.response.animals; // 응답 데이터에서 배열을 선택
@@ -37,9 +50,9 @@ function CenterPage() {
   }, []);
 
   console.log(animals);
+  console.log(center);
   return (
     <>
-      {/* 수정 버튼은 사용자가 보호소 일때만 보이도록 수정 예정 */}
       <Container
         sx={{
           mt: 10,
@@ -62,17 +75,17 @@ function CenterPage() {
           }}
         >
           <Grid xs={6} sx={{ fontSize: '2rem' }}>
-            <p> OOO 보호소</p>
+            <p>{center ? center.name : 'Center Name'}</p> {/* center가 null이 아닐 때만 name을 출력 */}
           </Grid>
           <Grid xs={4}>
             <span>장소 : </span>
-            <span> OO시 OO구</span>
+            <span>{center? center.address : 'Center Address'}</span>
             <br />
             <span>Tel : </span>
-            <span>000 - 000 - 0000</span>
+            <span>{center? center.phone : 'Center Phone'}</span>
             <br />
             <span>E-mail : </span>
-            <span> ooooo@ooooo.com</span>
+            <span>{center? center.email : 'Center E-mail'}</span>
           </Grid>
           <Grid xs={2} sx={{ textAlign: 'end' }}>
             <Button>수정</Button>
