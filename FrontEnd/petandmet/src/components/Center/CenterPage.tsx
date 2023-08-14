@@ -1,10 +1,73 @@
 import { Box, Container, Grid, Button } from '@mui/material'
-import AnimalList from 'components/Animal/AnimalList'
+import { useLocation } from 'react-router-dom'
+import axios from 'axios'
+import { useEffect, useState } from 'react';
+import { domain } from 'hooks/customQueryClient';
+import CenterAnimalList from 'components/Center/CenterAnimalList';
+import CenterItemList from './CenterItemList';
+
+interface AnimalsData {
+  name: string;
+  age: number;
+  specie: string;
+  breed: string;
+  animal_uuid: string;
+  animal_photo_url: string;
+  center_uuid : string,
+}
+
+interface Center{
+  name: string | null,
+  address : string | null,
+  email : string | null,
+  phone : string | null,
+}
+
+interface ItemsData{
+  item_name: string ,
+  item_url : string ,
+  item_target_price : number,
+  center_item_id : number,
+  center_uuid : string
+}
 
 function CenterPage() {
+  const location = useLocation();
+  const [center, setCenter] = useState<Center | null>(null); 
+  const [animals, setAnimalData] = useState<AnimalsData[]>([]);
+  const [items, setItems] = useState<ItemsData[]|null>(null);
+
+  console.log(location.state)
+  useEffect(() => {
+    async function fetchAnimalData() {
+      try {
+        const cetnerRes = await axios.get(`${domain}/center/detail?id=${location.state}`)
+        const centerData = cetnerRes.data.response.board
+        setCenter(centerData)
+
+        const ItemRes = await axios.get(`${domain}/center/item?uuid=${location.state}`)
+        const ItemData = ItemRes.data.response.centerItems
+        setItems(ItemData)
+
+        const response = await axios.get(`${domain}/animal/search`,
+          {
+            params: { centerUuid: location.state} 
+          }
+        );
+        const AnimalsData: AnimalsData[] = response.data.response.animals;
+        setAnimalData(AnimalsData)
+      } catch (error) {
+        console.error('Error fetching animal data:', error)
+      }
+    }
+    fetchAnimalData();
+  }, []);
+
+  // console.log(animals);
+  // console.log(center);
+  // console.log(items);
   return (
     <>
-      {/* 수정 버튼은 사용자가 보호소 일때만 보이도록 수정 예정 */}
       <Container
         sx={{
           mt: 10,
@@ -27,17 +90,17 @@ function CenterPage() {
           }}
         >
           <Grid xs={6} sx={{ fontSize: '2rem' }}>
-            <p> OOO 보호소</p>
+            <p>{center ? center.name : 'Center Name'}</p> {/* center가 null이 아닐 때만 name을 출력 */}
           </Grid>
           <Grid xs={4}>
             <span>장소 : </span>
-            <span> OO시 OO구</span>
+            <span>{center? center.address : 'Center Address'}</span>
             <br />
             <span>Tel : </span>
-            <span>000 - 000 - 0000</span>
+            <span>{center? center.phone : 'Center Phone'}</span>
             <br />
             <span>E-mail : </span>
-            <span> ooooo@ooooo.com</span>
+            <span>{center? center.email : 'Center E-mail'}</span>
           </Grid>
           <Grid xs={2} sx={{ textAlign: 'end' }}>
             <Button>수정</Button>
@@ -56,27 +119,28 @@ function CenterPage() {
                 textAlign: 'justify',
                 fontSize: '1.5rem',
                 whiteSpace: 'nowrap',
-                display: 'inline-block',
+                // display: 'inline-block',
               }}
             >
               보호동물
             </Grid>
+
             <Grid xs={10} sx={{ textAlign: 'end' }}>
               <Button>더보기</Button>
               <Button>수정</Button>
             </Grid>
+
             <Box
               sx={{
                 mt: 1,
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: '8px', // 카드 간 간격 설정
                 height: '90%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
-              <AnimalList></AnimalList>
+              <CenterAnimalList animals={animals}></CenterAnimalList>
             </Box>
           </Grid>
         </Grid>
@@ -110,11 +174,12 @@ function CenterPage() {
             sx={{
               mt: 1,
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
               gap: '8px', // 카드 간 간격 설정
               height: '90%',
             }}
-          ></Box>
+          >
+            {items ? <CenterItemList items={items} /> : null}
+          </Box>
         </Grid>
       </Container>
     </>
