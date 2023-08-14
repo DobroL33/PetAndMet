@@ -15,7 +15,6 @@ import com.ssafy.petandmet.dto.user.CheckEmailAuthRequest;
 import com.ssafy.petandmet.dto.user.CreateUserRequest;
 import com.ssafy.petandmet.dto.user.EmailAuthentication;
 import com.ssafy.petandmet.dto.user.FindIdRequest;
-import com.ssafy.petandmet.dto.user.IdCheckRequest;
 import com.ssafy.petandmet.dto.user.InterestAnimalRequest;
 import com.ssafy.petandmet.dto.user.LoginUserRequest;
 import com.ssafy.petandmet.dto.user.ModifyInfoRequest;
@@ -41,10 +40,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,9 +148,9 @@ public class UserService {
      * @throws IllegalStateException 이미 존재하는 회원
      */
     private void isDuplicateUser(String userId) {
-        Optional<User> findUser = userRepository.findByUserId(userId);
+        boolean isExist = isDuplicateId(userId);
 
-        if (findUser.isPresent()) {
+        if (isExist) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
@@ -161,7 +162,7 @@ public class UserService {
      * @return access jwt 토큰
      */
     @Transactional
-    public Token login(LoginUserRequest request) {
+    public Token login(LoginUserRequest request) throws UsernameNotFoundException {
         try {
             // id, pw 기반으로 UsernamePasswordAuthenticationToken 객체 생성
             UsernamePasswordAuthenticationToken authenticationToken = request.toAuthentication();
@@ -179,10 +180,27 @@ public class UserService {
             log.debug(token.toString());
             refreshTokenRepository.save(token);
 
+            Optional<User> user = userRepository.findUserByUserId(request.getId());
+            log.debug(LocalDate.now().toString());
+            if (user.get().getLastLoginDate().isBefore(LocalDate.now())) {
+                log.debug("출석");
+                user.get().setAttendance(user.get().getAttendance() + 1);
+                user.get().setLastLoginDate(LocalDate.now());
+            }
+
             return token;
         } catch (NullPointerException e) {
             throw new NullPointerException("사용자가 없습니다.");
         }
+    }
+
+    public String getCenterUuid(LoginUserRequest request) {
+        String userId = request.getId();
+        Optional<User> user = userRepository.findUserByUserId(userId);
+        if (user.isPresent() && user.get().getCenter() != null) {
+            return user.get().getCenter().getUuid();
+        }
+        return null;
     }
 
     /**
@@ -211,9 +229,11 @@ public class UserService {
      * @return 아이디 중복 여부
      */
     @Transactional
-    public boolean isDuplicateId(IdCheckRequest request) {
-        Optional<User> user = userRepository.findByUserId(request.getId());
-        return user.isPresent();
+    public boolean isDuplicateId(String userId) {
+        log.debug(userId);
+        Optional<Boolean> user = userRepository.isExistUserId(userId);
+
+        return user.orElse(false);
     }
 
     /**
@@ -312,7 +332,7 @@ public class UserService {
 
     public UserInfoResponse getUserInfo(String uuid) {
         Optional<User> user = userRepository.findByUserUuid(uuid);
-        return user.map(value -> UserInfoResponse.builder().message("개인정보 가져오기 성공").status("200").userId(value.getId()).roleType(value.getRoleType()).name(value.getName()).email(value.getEmail()).phone(value.getPhone()).build()).orElse(null);
+        return user.map(value -> UserInfoResponse.builder().message("개인정보 가져오기 성공").status(200).userId(value.getId()).roleType(value.getRoleType()).name(value.getName()).email(value.getEmail()).phone(value.getPhone()).build()).orElse(null);
     }
 
     /**

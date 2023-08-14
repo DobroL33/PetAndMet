@@ -22,11 +22,11 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         log.debug("회원 인증 처리");
-        Optional<com.ssafy.petandmet.domain.User> user = userRepository.findByUserId(userId);
+        Optional<com.ssafy.petandmet.domain.User> user = userRepository.findUserByUserId(userId);
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("유효하지 않은 회원입니다.");
         }
-        log.debug("user = " + user.get());
+//        log.debug("user = " + user.get());
 
         RoleType roleType = user.get().getRoleType();
         Set<String> roleSet = new HashSet<>();

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserInfoResponse {
     private String message;
-    private String status;
+    private int status;
     @JsonProperty("user_id")
     private String userId;
     private String name;

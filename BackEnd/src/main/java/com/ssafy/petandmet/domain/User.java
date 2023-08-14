@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Center center;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Interest> interests = new ArrayList<>();
 
@@ -99,6 +100,10 @@ public class User {
     @Column(name = "user_photo_url")
     @Builder.Default
     private String photoUrl = "";
+
+    @Column(name = "last_login_date")
+    @Builder.Default
+    private LocalDate lastLoginDate = LocalDate.now();
 
     //==연관관계 메서드==//
     public void addCenter(Center center) {

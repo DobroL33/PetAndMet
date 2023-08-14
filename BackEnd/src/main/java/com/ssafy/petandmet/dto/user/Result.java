@@ -9,6 +9,6 @@ public class Result<T>{
 
     private boolean success;
     private T response;
-    private String error;
+    private T error;
 
 }
