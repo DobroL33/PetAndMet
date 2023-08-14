@@ -7,8 +7,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { domain } from "../../hooks/customQueryClient";
-import useAnimal from "../../hooks/Animal/useAnimal";
+import { domain } from "hooks/customQueryClient";
+import useAnimal from "hooks/Animal/useAnimal";
 
 interface Live {
   live_id: number | null;
@@ -30,10 +30,6 @@ interface Animal {
 interface CardLiveInfoProps {
   live: Live;
 }
-
-// 라이브로 표시하는건 여기까지
-// 나머지는 도네이션에서 가져왔을 때 처럼 쓰면 되는거 아닐까
-// 도네이션때 처럼 state 가져오고, 그걸 사용?
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -60,11 +56,17 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   useEffect(() => {
     const url = `${domain}/animal/detail?uuid=${live.animal_uuid}`;
-    console.log(url);
     axios
-      .get(url) // 따옴표 제거
+      .get(url)
       .then((response) => {
-        setAnimal(response.data.response); // 데이터 처리 부분 변경
+        // 응답에서 받은 데이터를 저장
+        const animalData = response.data.response;
+
+        // animal_uuid 값을 추가
+        setAnimal({
+          ...animalData,
+          animal_uuid: live.animal_uuid,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -75,15 +77,17 @@ function CardLiveInfo({ live }: CardLiveInfoProps) {
 
   const navigate = useNavigate();
 
+  const { setAnimalData } = useAnimal();
+
   const handleCardClick = () => {
     if (live.animal_uuid && animal) {
-      setAnimal({
+      setAnimalData({
         animal_uuid: live.animal_uuid,
         name: animal.name,
         age: animal.age,
-        gender: animal.gender, // 여기에 적절한 값 채우기
-        breed: animal.breed, // 여기에 적절한 값 채우기
-        center_uuid: live.center_uuid, // 여기에 적절한 값 채우기
+        gender: animal.gender,
+        breed: animal.breed,
+        center_uuid: live.center_uuid,
       });
       navigate(`/livelist/streaming/${live.live_id}`);
     }

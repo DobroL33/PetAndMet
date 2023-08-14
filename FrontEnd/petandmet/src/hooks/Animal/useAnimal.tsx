@@ -1,9 +1,6 @@
 import create from "zustand";
-import { domain } from "../../hooks/customQueryClient";
-import { getAccessTokenFromCookie } from "../useAuth";
 import axios from "axios";
 
-// Animal 데이터의 형식을 정의한 인터페이스
 interface AnimalData {
   animal_uuid: string;
   name: string;
@@ -11,84 +8,40 @@ interface AnimalData {
   gender: string;
   breed: string;
   center_uuid: string;
+  // 여기에 다른 필드를 추가할 수 있습니다.
 }
 
 // UseAnimalState 인터페이스 정의
-interface UseAnimalState extends AnimalData {
-  fetchAnimalData: (animal_uuid: string) => Promise<AnimalData>;
+interface UseAnimalState {
+  animalData: AnimalData;
+  setAnimalData: (data: any) => void; // 데이터를 받아서 AnimalData 형식으로 변환하고 상태를 설정하는 함수
 }
 
 // useAnimal 훅을 생성
 const useAnimal = create<UseAnimalState>((set) => ({
-  animal_uuid: "",
-  name: "",
-  age: 0,
-  gender: "",
-  breed: "",
-  center_uuid: "",
-  setAnimalData: (animalData: AnimalData) => {
-    set(animalData);
+  animalData: {
+    animal_uuid: "",
+    name: "",
+    age: 0,
+    gender: "",
+    breed: "",
+    center_uuid: "",
+    // 여기에 다른 초기값을 추가할 수 있습니다.
   },
-  fetchAnimalData: async (animal_uuid: string) => {
-    try {
-      const accessToken = getAccessTokenFromCookie();
-      if (!accessToken) {
-        console.error(
-          "액세스 토큰이 로컬 스토리지에 존재하지 않습니다. 로그인을 해주세요."
-        );
-        return Promise.reject("액세스 토큰이 없음");
-      }
-
-      const animalData = await fetchAnimalDataFromApi(animal_uuid, accessToken);
-
-      set({
-        animal_uuid: animal_uuid,
-        name: animalData.name,
-        age: animalData.age,
-        gender: animalData.gender,
-        breed: animalData.breed,
-        center_uuid: animalData.center_uuid,
-      });
-      console.log("유지 애니멀은요");
-      console.log(animalData);
-      return animalData; // 수정된 부분
-    } catch (error) {
-      console.error("애완동물 데이터 가져오기 오류:", error);
-      return Promise.reject(error); // 수정된 부분
-    }
+  setAnimalData: (data) => {
+    // 주어진 배열 데이터를 AnimalData 형식으로 변환
+    const animalData: AnimalData = {
+      animal_uuid: data.animal_uuid,
+      name: data.name,
+      age: data.age,
+      gender: data.gender,
+      breed: data.breed,
+      center_uuid: data.center_uuid,
+      // 여기에 다른 필드 변환을 추가할 수 있습니다.
+    };
+    // 상태 설정
+    set({ animalData });
   },
 }));
-
-// API로부터 Animal 데이터 가져오는 함수
-async function fetchAnimalDataFromApi(
-  animal_uuid: string,
-  accessToken: string
-): Promise<AnimalData> {
-  const url = `${domain}/animal/detail?uuid=${animal_uuid}`;
-  console.log(url);
-
-  try {
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const responseData = response.data.response;
-    const data: AnimalData = {
-      animal_uuid: responseData.animal_uuid,
-      name: responseData.name,
-      age: responseData.age,
-      gender: responseData.gender,
-      breed: responseData.breed,
-      center_uuid: responseData.center_uuid,
-    };
-
-    return data;
-  } catch (error) {
-    console.error("API 요청 에러:", error);
-    throw error;
-  }
-}
 
 export default useAnimal;
