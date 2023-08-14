@@ -11,13 +11,22 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 const options = [5000, 10000, 15000, 20000, 50000]
 
+interface CenterItem {
+  center_item_id: number
+  center_uuid: string
+  item_name: string
+  item_target_price: number
+  item_url: string | null
+}
+
 function ItemDetail() {
   const [selectedOption, setSelectedOption] = useState<number>(0)
   const [donate, setDonate] = useState<boolean>(false)
   const [point, setPoint] = useState<number>(10000)
-  const navigate = useNavigate();
-  const location = useLocation();
-  const item = location.state
+  const navigate = useNavigate()
+  const location = useLocation()
+  const item = location.state as CenterItem
+  console.log('item', item)
 
   const handleOptionChange = (value: number) => {
     setSelectedOption(value)
@@ -72,7 +81,7 @@ function ItemDetail() {
             </Typography>
             <LinearProgress
               variant="determinate"
-              value={selectedOption/ item?.item_target_price * 100}
+              value={(selectedOption / item?.item_target_price) * 100}
               sx={{ width: '50%', height: 15, mb: 2.5 }}
             />
 
@@ -118,7 +127,9 @@ function ItemDetail() {
             >
               후원하기
             </Button>
-            <Button sx={{ bgcolor: 'red', color: 'black' }} onClick={goToBack}>돌아가기</Button>
+            <Button sx={{ bgcolor: 'red', color: 'black' }} onClick={goToBack}>
+              돌아가기
+            </Button>
             <Button sx={{ bgcolor: 'blue', color: 'black' }}>수정</Button>
             <Button sx={{ bgcolor: 'red', color: 'black' }} disableRipple>
               삭제
