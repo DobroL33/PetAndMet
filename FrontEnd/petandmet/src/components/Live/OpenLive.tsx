@@ -6,7 +6,7 @@ function OpenLive() {
     center_uuid: '',
     session_name: '',
     session_id: '',
-    center_item_id: {},
+    center_item_id: [],
     animal_uuid: '',
   })
   const [session, setSession] = useState<string>('')
