@@ -3,16 +3,44 @@ import { Box, Button, Container, Typography,
 import BoardDetail from 'containers/components/BoardDetail'
 import { useState } from 'react'
 import CommentList from 'containers/components/CommentList'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useAccessToken } from 'hooks/useAccessToken'
+import axios from 'axios'
+import { domain } from 'hooks/customQueryClient'
 
 function QnaDetail() {
   const [comment, setComment] = useState<string>('')
   const [commentList, setCommentList] = useState<string[]>([])
   const location = useLocation();
   const board = location.state
-  const { centerUuid, userUuid } = useAccessToken()
+  const { accessToken, centerUuid, userUuid } = useAccessToken()
+  const params = useParams(); // id 매개변수가 string 형식 또는 undefined일 수 있음
+  
+  if (params.id === undefined) {
+    // id가 undefined일 경우 처리
+    return <div>Loading...</div>;
+  }
 
+  const numericId = parseInt(params.id);
+  
+  const deleteboard = async () => {
+    try{
+      await axios.delete(`${domain}/board/adopt/${numericId}`,
+      {
+        headers: {
+          Authorization: accessToken ? `${accessToken}` : undefined,
+        }
+      }
+      ).then(() =>{
+        navigate(-1)
+        console.log('삭제 완료', numericId)
+      })
+    }catch(error){
+      console.log(error)
+    }
+
+  }
+  
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.target.value)
   }
