@@ -1,31 +1,32 @@
-import { Box } from "@mui/material";
-import CardInfoLive from "containers/components/CardLive";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Box } from '@mui/material'
+import CardInfoLive from 'containers/components/CardLive'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 interface LiveListProps {
-  num?: number;
+  num?: number
 }
 
-function LiveList({ num = 10 }: LiveListProps) {
-  const [liveToShow, setLivesToShow] = useState<any[]>([]);
+function LiveList({ num = 16 }: LiveListProps) {
+  const [liveToShow, setLivesToShow] = useState<any[]>([])
 
   useEffect(() => {
     axios
-      .get("https://i9b302.p.ssafy.io/api/v1/live?page=0&size=8")
-      .then((response) => {
-        const Lives = response.data.response.lives;
-        setLivesToShow(Lives);
+      .get('https://i9b302.p.ssafy.io/api/v1/live?page=0&size=16')
+      .then(response => {
+        console.log(response.data)
+        const Lives = response.data.response.lives
+        setLivesToShow(Lives)
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [num]);
+      .catch(error => {
+        console.error(error)
+      })
+  }, [num])
 
-  let livesToShow: any = [];
+  let livesToShow: any = []
 
   if (num !== undefined) {
-    livesToShow = liveToShow.slice(0, num); // liveToShow의 첫 num개의 요소만 사용
+    livesToShow = liveToShow.slice(0, num) // liveToShow의 첫 num개의 요소만 사용
   }
 
   return (
@@ -33,10 +34,10 @@ function LiveList({ num = 10 }: LiveListProps) {
       <Box
         sx={{
           mt: 1,
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)", // 이 부분을 추가하여 카드를 자동으로 정렬합니다.
-          gap: "8px", // 카드 간 간격 설정
-          height: "95%",
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)', // 이 부분을 추가하여 카드를 자동으로 정렬합니다.
+          gap: '8px', // 카드 간 간격 설정
+          height: '95%',
         }}
       >
         {livesToShow.map((live: any, idx: number) => (
@@ -44,8 +45,8 @@ function LiveList({ num = 10 }: LiveListProps) {
         ))}
       </Box>
     </>
-  );
+  )
 }
 
-export default LiveList;
-export {};
+export default LiveList
+export {}
