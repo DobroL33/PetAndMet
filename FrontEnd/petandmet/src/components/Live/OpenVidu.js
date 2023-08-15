@@ -13,7 +13,7 @@ const OPENVIDU_SERVER_URL = 'https://i9b302.p.ssafy.io/ov/openvidu'
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
 const DEFAULT_SESSION = 'Session'
 
-const App = () => {
+const CreateOpenVidu = () => {
   const [mySessionId, setMySessionId] = useState(DEFAULT_SESSION)
   const [myUserName, setMyUserName] = useState(
     'Participant' + Math.floor(Math.random() * 100)
@@ -330,4 +330,4 @@ const App = () => {
   )
 }
 
-export default App
+export default CreateOpenVidu
