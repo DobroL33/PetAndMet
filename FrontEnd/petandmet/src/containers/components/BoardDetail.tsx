@@ -1,23 +1,24 @@
-import { useState } from 'react'
-import { Container, Button } from '@mui/material'
+import { Container } from '@mui/material'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import logo from 'images/new_logo.jpg'
-import { useLocation } from 'react-router-dom'
 
-interface CenterBoard {
+interface Detail {
   id: number
-  title: string
-  content: string | null
-  type: string
-  board_photo_url: string | undefined
-  created_at: string | null
   user_uuid: string
+  center_uuid: string
+  user_name: string
+  center_name: string
+  title: string
+  content: string
+  created_at: string
+  update_at: string
 }
-function BoardDetail() {
-  const location = useLocation()
-  const board = location.state as CenterBoard
-  console.log(board)
+interface BoardProp {
+  detail: Detail
+}
+
+function BoardDetail(board: BoardProp) {
+  const data = board.detail
   return (
     <>
       <Container>
@@ -32,18 +33,20 @@ function BoardDetail() {
           <TextField
             id="outlined-basic"
             variant="outlined"
-            value={board.title}
+            // value={data?.response.board.title || ''}
+            value={data.title}
             InputProps={{
               readOnly: true,
             }}
           />
 
-          <img src={board.board_photo_url} alt={logo}></img>
+          {/* <img src={board.board_photo_url} alt={logo}></img> */}
 
           <TextField
             id="outlined-multiline-static"
             multiline
-            defaultValue={board.content}
+            // defaultValue={data?.response.board.content || ''}
+            defaultValue={data.content}
             rows={15}
             InputProps={{
               readOnly: true,
@@ -56,4 +59,3 @@ function BoardDetail() {
 }
 
 export default BoardDetail
-export {}
