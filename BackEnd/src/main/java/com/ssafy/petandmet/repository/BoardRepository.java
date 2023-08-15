@@ -18,8 +18,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByTitle(String title);
 
     @Query("SELECT new com.ssafy.petandmet.dto.board.FindAllBoardResponse " +
-            "(b.id,b.user.uuid,b.center.uuid, b.title,b.content,b.type,b.createdAt,b.updatedAt) from Board b " +
-            "where b.type = :type and b.center.uuid= :uuid ORDER BY b.id")
+            "(b.id,b.user.uuid,b.center.uuid, b.title,b.content,b.type,b.createdAt,b.updatedAt,b.center.name,b.user.name) from Board b " +
+            "where b.type = :type and (:uuid is null or b.center.uuid= :uuid) ORDER BY b.id")
     Page<FindAllBoardResponse> findBoardByType(String uuid, String type, Pageable pageable);
 
 

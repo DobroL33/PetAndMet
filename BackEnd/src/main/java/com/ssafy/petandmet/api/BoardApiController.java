@@ -63,14 +63,16 @@ public class BoardApiController {
     //입양 후기 전체 조회(입양 후기)
     @GetMapping("/adopt")
     @Operation(summary = "입양후기 전체조회", description = "입양후기 게시글을 전체조회(페이징)합니다.")
-    public Result findAdoptAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam(value = "center_uuid") String uuid, @RequestParam(value = "type") String type) {
+    public Result findAdoptAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam Map<String, String> map) {
         Map<String, Object> response = new HashMap<>();
         try {
+            String type = "adopt";
+            String uuid = map.get("center_uuid");
             Page<FindAllBoardResponse> findBoard = boardService.findAllBoard(uuid, type, pageable);
             response.put("status", 200);
             response.put("message", "입양후기 게시판 정보 전체조회 성공");
             response.put("total", findBoard.getTotalElements());
-            response.put("boards",findBoard);
+            response.put("boards",findBoard.getContent());
             return new Result(true, response, "null");
         } catch (Exception e){
             response.put("status", 500);
@@ -160,9 +162,11 @@ public class BoardApiController {
     //후원 후기 전체 조회(입양 후기)
     @GetMapping("/support")
     @Operation(summary = "후원후기 전체조회", description = "후원후기 게시글을 전체조회(페이징)합니다.")
-    public Result findSupportAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam(value = "center_uuid") String uuid, @RequestParam(value = "type") String type) {
+    public Result findSupportAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam Map<String, String> map) {
         Map<String, Object> response = new HashMap<>();
         try{
+            String type = "support";
+            String uuid = map.get("center_uuid");
             Page<FindAllBoardResponse> findBoard = boardService.findAllBoard(uuid, type, pageable);
             response.put("status", 200);
             response.put("message", "후원후기 게시판 정보 전체조회 성공");
@@ -255,9 +259,11 @@ public class BoardApiController {
     //공지사항 전체 조회(입양 후기)
     @GetMapping("/notice")
     @Operation(summary = "공지사항 전체조회", description = "공지사항 게시글을 전체조회(페이징)합니다.")
-    public Result findNoticeAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam(value = "center_uuid") String uuid, @RequestParam(value = "type") String type) {
+    public Result findNoticeAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam Map<String, String> map) {
         Map<String, Object> response = new HashMap<>();
         try{
+            String type = "notice";
+            String uuid = map.get("center_uuid");
             Page<FindAllBoardResponse> findBoard = boardService.findAllBoard(uuid, type, pageable);
             response.put("status", 200);
             response.put("message", "공지사항 게시판 정보 전체조회 성공");
@@ -349,9 +355,11 @@ public class BoardApiController {
     //QNA 전체 조회(입양 후기)
     @GetMapping("/qna")
     @Operation(summary = "QNA 전체조회", description = "QNA 게시글을 전체조회(페이징)합니다.")
-    public Result findQnaAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam(value = "center_uuid") String uuid, @RequestParam(value = "type") String type) {
+    public Result findQnaAll(@PageableDefault(size = 10) Pageable pageable, @RequestParam Map<String, String> map) {
         Map<String, Object> response = new HashMap<>();
         try{
+            String type = "qna";
+            String uuid = map.get("center_uuid");
             Page<FindAllBoardResponse> findBoard = boardService.findAllBoard(uuid, type, pageable);
             response.put("status", 200);
             response.put("message", "QNA 게시판 정보 전체조회 성공");

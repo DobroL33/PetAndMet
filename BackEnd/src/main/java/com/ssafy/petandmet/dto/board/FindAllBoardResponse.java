@@ -23,8 +23,12 @@ public class FindAllBoardResponse {
     private LocalDateTime createdAt;
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
+    @JsonProperty("center_name")
+    private String centerName;
+    @JsonProperty("user_name")
+    private String userName;
 
-    public FindAllBoardResponse(Long id, String userUuid, String centerUuid, String title, String content, String type, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public FindAllBoardResponse(Long id, String userUuid, String centerUuid, String title, String content, String type, LocalDateTime createdAt, LocalDateTime updatedAt, String centerName, String userName) {
         this.id = id;
         this.userUuid = userUuid;
         this.centerUuid = centerUuid;
@@ -33,5 +37,7 @@ public class FindAllBoardResponse {
         this.type = type;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.centerName = centerName;
+        this.userName = userName;
     }
 }
