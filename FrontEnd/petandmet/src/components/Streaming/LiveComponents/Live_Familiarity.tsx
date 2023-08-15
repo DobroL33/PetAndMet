@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
-import { useUserAccess } from "hooks/useUserAccess";
+import { useAccessToken } from "hooks/useAccessToken";
 import useAnimal from "hooks/Animal/useAnimal";
 import { domain } from "hooks/customQueryClient";
 import { Box, Typography } from "@mui/material";
@@ -10,11 +10,10 @@ import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
 
 function Familiarity() {
-  const { user_token } = useUserAccess();
   const { animal_uuid } = useAnimal().animalData;
   const [progress, setProgress] = useState(0);
   const theme = useTheme(); // 테마 가져오기
-  const user_uuid = useUserAccess().user_uuid;
+  const { userUuid, accessToken } = useAccessToken();
   const navigate = useNavigate(); // useNavigate 사용하기
   const handleWalkButtonClick = () => {
     navigate("/walk");
@@ -22,24 +21,21 @@ function Familiarity() {
 
   useEffect(() => {
     const payload = {
-      user_uuid: user_uuid,
+      user_uuid: userUuid,
       animal_uuid: animal_uuid,
     };
 
     axios
       .post(`${domain}/user/animal-friendliness`, payload, {
-        headers: { Authorization: `Bearer ${user_token}` },
+        headers: { Authorization: `${accessToken}` },
       })
       .then((response) => {
-        console.log(response.data.response.percent);
-        // 서버 응답에서 percent 값을 가져와 progress에 설정
-        // 여기서 'percent'는 실제 응답 내의 키에 따라 수정해야 할 수 있음
-        setProgress(response.data.response.percent);
+        setProgress(response.data.response.percent); // 응답받은 값을 Progress 상태로 변환
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [user_uuid, animal_uuid, user_token]); // 의존성 배열
+  }, [userUuid, animal_uuid, accessToken, progress]); // 의존성 배열
 
   return (
     <>

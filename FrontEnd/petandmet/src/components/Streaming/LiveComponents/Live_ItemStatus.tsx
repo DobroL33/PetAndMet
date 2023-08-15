@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { domain } from "hooks/customQueryClient";
 import useAnimal from "hooks/Animal/useAnimal";
-import { useUserAccess } from "hooks/useUserAccess";
+import { useAccessToken } from "hooks/useAccessToken";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -30,8 +30,7 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
   const [currentPrice, setCurrentPrice] = useState(0); // current_price 상태 변수 설정
   const [userMileage, setUserMileage] = useState(0);
   const prevMileage = useRef(userMileage);
-  const user_uuid = useUserAccess().user_uuid;
-  const user_token = useUserAccess().user_token;
+  const { accessToken, userUuid } = useAccessToken();
   const theme = useTheme(); // 테마 가져오기
 
   const [donation, setDonation] = useState(0); // donation 상태 변수 설정
@@ -70,7 +69,7 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
       axios
         .get(url, {
           headers: {
-            Authorization: `Bearer ${user_token}`,
+            Authorization: `${accessToken}`,
           },
         })
         .then((response) => {
@@ -96,11 +95,11 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
   useEffect(() => {
     prevMileage.current = userMileage; // 처음 실행 시 prevMileage에 현재 마일리지 저장
 
-    const url = `${domain}/user/mileage/${user_uuid}`;
+    const url = `${domain}/user/mileage/${userUuid}`;
     axios
       .get(url, {
         headers: {
-          Authorization: `Bearer ${user_token}`, // Header 형태 확인
+          Authorization: `${accessToken}`, // Header 형태 확인
         },
       })
       .then((response) => {
@@ -112,12 +111,12 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
       .catch((error) => {
         console.error(error);
       });
-  }, [user_uuid, center_uuid, item_id, user_token]);
+  }, [userUuid, center_uuid, item_id, accessToken, userMileage]);
 
   // 후원하기 메서드
   const donate = () => {
     const payload = {
-      user_uuid: user_uuid,
+      user_uuid: userUuid,
       center_item_id: item_id,
       center_uuid: center_uuid,
       donate_price: donation, // 현재 donation 상태값
@@ -126,7 +125,7 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
 
     axios
       .post(`${domain}/donate/center`, payload, {
-        headers: { Authorization: `Bearer ${user_token}` },
+        headers: { Authorization: `${accessToken}` },
       })
       .then((response) => {
         console.log(response);
@@ -139,13 +138,13 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
   // 마일리지 감소 메서드
   const reduceMileage = () => {
     const payload = {
-      uuid: user_uuid, // user_uuid
+      uuid: userUuid, // user_uuid
       mileage: donation, // 현재 donation 상태값
     };
 
     axios
       .post(`${domain}/mileage/reduce`, payload, {
-        headers: { Authorization: `Bearer ${user_token}` },
+        headers: { Authorization: `${accessToken}` },
       })
       .then((response) => {
         console.log(response);
@@ -156,9 +155,6 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
         // 에러 처리
       });
   };
-
-  console.log(userMileage);
-
   // 진행률 계산
   const progress =
     !isNaN(currentPrice) && !isNaN(itemTargetPrice) && itemTargetPrice !== 0
