@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useLoginMutation, LoginCredentials } from 'hooks/User/useLoginMutation'
 import { useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { toast } from 'react-toastify'
 function Login() {
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
