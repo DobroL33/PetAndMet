@@ -46,9 +46,8 @@ customAxios.interceptors.response.use(
           //     console.log('요청보냄', error.config.headers.Authorization)
           //   }
           console.log(error)
-          const newToken = await refreshToken(
-            error.config.headers.Authorization
-          )
+          const oldToken = error.config.headers.Authorization
+          const newToken = await refreshToken(oldToken)
           if (newToken !== '토큰 정보가 유효하지 않습니다.') {
             //   console.log('오리진', originRequest.headers.Authorization)
             //   console.log('API', customAxios.defaults.headers.common.Authorization)
