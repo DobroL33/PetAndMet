@@ -1,41 +1,41 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { Container } from '@mui/material';
-import {useState, useEffect} from 'react'
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { domain } from 'hooks/customQueryClient';
+import * as React from 'react'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TablePagination from '@mui/material/TablePagination'
+import TableRow from '@mui/material/TableRow'
+import { Container } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface CenterBoard {
-  id: number;
-  title: string;
-  content: string | null;
-  type: string;
-  board_photo_url: string | null;
-  created_at: string | null;
-  user_uuid : string,
+  id: number
+  user_uuid: string
+  center_uuid: string
+  user_name: string
+  center_name: string
+  title: string
+  content: string
+  created_at: string
+  update_at: string
 }
 
 interface Column {
-  id: 'id' | 'title' | 'user_uuid' | 'created_at';
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-  format?: (value: number) => string;
+  id: 'id' | 'title' | 'user_name' | 'created_at' | 'update_at'
+  label: string
+  minWidth?: number
+  align?: 'right'
+  format?: (value: number) => string
 }
 
 const columns: readonly Column[] = [
   { id: 'id', label: '번호', minWidth: 170 },
   { id: 'title', label: '제목', minWidth: 100 },
   {
-    id: 'user_uuid',
+    id: 'user_name',
     label: '작성자',
     minWidth: 170,
     align: 'right',
@@ -48,113 +48,140 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toFixed(2),
   },
-];
+]
 
-interface ListProps{
-  Boards: CenterBoard[];
+const formatDate = (dateString: string | number) => {
+  const date = new Date(dateString)
+  const currentDate = new Date()
+
+  const offsetHours = 9
+  const adjustedDate = new Date(date.getTime() + offsetHours * 60 * 60 * 1000)
+
+  if (
+    adjustedDate.getFullYear() === currentDate.getFullYear() &&
+    adjustedDate.getMonth() === currentDate.getMonth() &&
+    adjustedDate.getDate() === currentDate.getDate()
+  ) {
+    return adjustedDate.toLocaleTimeString()
+  } else {
+    return `${adjustedDate.getFullYear()}.${(adjustedDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${adjustedDate.getDate().toString().padStart(2, '0')}`
+  }
 }
 
-function List(props:ListProps) {
-  const {Boards} = props;
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const navigate = useNavigate();
-  const [getId, setGetId] = useState(-1)
-  const [getType, setGetType] = useState('')
+const formatTime = (dateString: string | number) => {
+  const date = new Date(dateString)
+  const offsetHours = 9
+  const adjustedDate = new Date(date.getTime() + offsetHours * 60 * 60 * 1000)
+  return adjustedDate.toLocaleTimeString()
+}
 
-  const getid = (id: number, type: string) => {
-    setGetId(id);
-    setGetType(type);
-  };
+interface BoardList {
+  type: string
+  boards: CenterBoard[]
+  total: number
+}
+interface Test {
+  list: BoardList
+  size: number
+  page: number
+  setPage: (page: number) => void
+  setSize: (size: number) => void
+}
 
-  useEffect(() => {
-    const fetchAdoptDetail = async () => {
-      try {
-        const res = await axios.get(`${domain}/board/${getType}/detail?id=${getId}`);
-        const detail = res.data.response.board;
-        console.log(detail);
-        if (getType=='adopt' || getType=='donate') {
-          navigate(`/${getType}/review/detail/${getId}`, {state : detail})
-        }
-        else{
-          navigate(`/comm/${getType}/detail/${getId}`, {state : detail})
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAdoptDetail();
-  }, [getId, getType]);
+function List({ list, setPage, setSize, size, page }: Test) {
+  const boards = list.boards
+  const type = list.type
+  // const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const navigate = useNavigate()
 
+  const navigateDetail = (id: number, detail: CenterBoard) => {
+    navigate(`/board/${type}/detail/${id}`, { state: detail })
+  }
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = Number(event.target.value)
+    setRowsPerPage(value)
+    setPage(0)
+    setSize(value)
+  }
 
   return (
     <>
-    <Container>
-        <Paper sx={{ width: '100%'}}>
-        <TableContainer sx={{ maxHeight: "100%"}}>
+      <Container>
+        <Paper sx={{ width: '100%' }}>
+          <TableContainer sx={{ maxHeight: '100%' }}>
             <Table stickyHeader aria-label="sticky table">
-            <TableHead>
+              <TableHead>
                 <TableRow>
-                {columns.map((column) => (
-                    <TableCell 
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                  {columns.map(column => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
                     >
-                    {column.label}
+                      {column.label}
                     </TableCell>
-                ))}
+                  ))}
                 </TableRow>
-            </TableHead>
-            <TableBody>
-                {Boards
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                    return (
-                        <TableRow hover role="checkbox"
-                                  tabIndex={-1} 
-                                  key={row.id}
-                                  onClick ={() => getid(row.id, row.type)}
-                                  >
-                        {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                                <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
+              </TableHead>
+              <TableBody>
+                {boards.map((row, index) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.id}
+                      onClick={() => navigateDetail(row.id, row)}
+                    >
+                      {columns.map(column => {
+                        const value = row[column.id]
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {/* {column.format && typeof value === 'number'
                                 ? column.format(value)
-                                : value}
-                            </TableCell>
-                        );
-                        })}
+                                : value} */}
+                            {column.id === 'id'
+                              ? index + 1
+                              : column.id === 'created_at'
+                              ? formatDate(value)
+                              : column.id === 'update_at'
+                              ? formatTime(value)
+                              : column.format && typeof value === 'number'
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        )
+                      })}
                     </TableRow>
-                    );
+                  )
                 })}
-            </TableBody>
+              </TableBody>
             </Table>
-        </TableContainer>
-        <TablePagination
+          </TableContainer>
+          <TablePagination
             rowsPerPageOptions={[10, 20, 50]}
             component="div"
-            count={Boards.length}
+            count={list.total}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+          />
         </Paper>
-    </Container>
+      </Container>
     </>
-  );
+  )
 }
 
 export default List
-export{};
+export {}

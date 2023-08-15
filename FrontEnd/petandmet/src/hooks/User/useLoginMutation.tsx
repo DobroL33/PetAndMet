@@ -28,7 +28,6 @@ const axiosData = async (credentials: LoginCredentials): Promise<Response> => {
       `${domain}/user`,
       credentials
     )
-    console.log(response.data)
     return response.data
   } catch (error) {
     console.log(error)

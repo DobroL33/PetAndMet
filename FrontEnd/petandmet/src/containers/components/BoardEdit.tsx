@@ -4,8 +4,6 @@ import TextField from '@mui/material/TextField'
 
 interface Detail {
   id: number
-  user_uuid: string
-  center_uuid: string
   user_name: string
   center_name: string
   title: string
@@ -14,11 +12,12 @@ interface Detail {
   update_at: string
 }
 interface BoardProp {
-  detail: Detail
+  data: Detail
+  setTitle: (title: string) => void
+  setContent: (content: string) => void
 }
 
-function BoardDetail(board: BoardProp) {
-  const data = board.detail
+function BoardEdit({ data, setTitle, setContent }: BoardProp) {
   return (
     <>
       <Container>
@@ -33,11 +32,9 @@ function BoardDetail(board: BoardProp) {
           <TextField
             id="outlined-basic"
             variant="outlined"
-            // value={data?.response.board.title || ''}
-            value={data.title}
-            InputProps={{
-              readOnly: true,
-            }}
+            defaultValue={data.title}
+            placeholder={data.title}
+            onChange={e => setTitle(e.target.value)}
           />
 
           {/* <img src={board.board_photo_url} alt={logo}></img> */}
@@ -45,12 +42,10 @@ function BoardDetail(board: BoardProp) {
           <TextField
             id="outlined-multiline-static"
             multiline
-            // defaultValue={data?.response.board.content || ''}
             defaultValue={data.content}
+            placeholder={data.title}
             rows={15}
-            InputProps={{
-              readOnly: true,
-            }}
+            onChange={e => setContent(e.target.value)}
           />
         </Box>
       </Container>
@@ -58,4 +53,4 @@ function BoardDetail(board: BoardProp) {
   )
 }
 
-export default BoardDetail
+export default BoardEdit
