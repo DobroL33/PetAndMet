@@ -11,11 +11,9 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "images/new_logo.jpg";
 import { useNavigate } from "react-router-dom";
-import { useCookies, Cookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import { styled } from "@mui/material/styles";
-import axios from "axios";
-import { domain } from "hooks/customQueryClient";
-import { useState, useEffect } from 'react'
+
 import { useAccessToken } from "hooks/useAccessToken";
 const pages = [
   "입양",
@@ -40,9 +38,7 @@ function Navbar() {
   let navigate = useNavigate();
   const [cookie, setCookie, removeCookie] = useCookies(["access_token"]);
   const { accessToken, centerUuid, userUuid } = useAccessToken()
-  // console.log(accessToken)
-  // console.log(centerUuid)
-  // console.log(userUuid)
+
   const logOut = () => {
     removeCookie("access_token");
     navigate("/login");
@@ -109,28 +105,6 @@ function Navbar() {
     }
     handleCloseNavMenu();
   };
-
-  const [role_type, setRoleType] = useState('')
-  useEffect(() => {
-    type()
-  },[])
-  const type =async () => {
-    try{
-      const response = await axios.get(`${domain}/user`,
-      {
-        headers: {
-          Authorization: cookie.access_token
-        }
-      }
-      ).then((res) =>{
-        console.log(res.data.response)
-        setRoleType(res.data.response.role_type)
-      })
-    }catch(error){
-      console.log(cookie.access_token)
-      console.log(error)
-    }
-  }
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -231,14 +205,14 @@ function Navbar() {
               <MenuItem onClick={handleOpenCharge}>
                 <Typography textAlign="center">{pages[2]}</Typography>
               </MenuItem>
-              <MenuItem onClick={cookie.access_token ? logOut : goToLogin}>
+              <MenuItem onClick={accessToken ? logOut : goToLogin}>
                 <Typography textAlign="center">
-                  {cookie.access_token ? pages[5] : pages[3]}
+                  {accessToken ? pages[5] : pages[3]}
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={cookie.access_token ? goToMyPage : goToSignUP}>
+              <MenuItem onClick={accessToken ? goToMyPage : goToSignUP}>
                 <Typography textAlign="center">
-                  {cookie.access_token ? pages[6] : pages[4]}
+                  {accessToken ? pages[6] : pages[4]}
                 </Typography>
               </MenuItem>
             </Menu>
@@ -251,11 +225,11 @@ function Navbar() {
             <NavButton onClick={handleOpenUserMenu}>{pages[0]}</NavButton>
             <NavButton onClick={handleOpenNotify}>{pages[1]}</NavButton>
             <NavButton onClick={handleOpenCharge}>{pages[2]}</NavButton>
-            <NavButton onClick={cookie.access_token ? logOut : goToLogin}>
-              {cookie.access_token ? pages[5] : pages[3]}
+            <NavButton onClick={accessToken ? logOut : goToLogin}>
+              {accessToken ? pages[5] : pages[3]}
             </NavButton>
-            <NavButton onClick={cookie.access_token ? goToMyPage : goToSignUP}>
-              {cookie.access_token ? pages[6] : pages[4]}
+            <NavButton onClick={accessToken ? goToMyPage : goToSignUP}>
+              {accessToken ? pages[6] : pages[4]}
             </NavButton>
           </Box>
 
