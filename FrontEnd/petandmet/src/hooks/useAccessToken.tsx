@@ -2,12 +2,12 @@ import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
 interface AccessTokenState {
-  accessToken: string | unknown
-  centerUuid: string | unknown
-  userUuid: string | unknown
-  setAccessToken: (accessToken: string | unknown) => void
-  setCenterUuid: (centerUuid: string | unknown) => void
-  setUserUuid: (userUuid: string | unknown) => void
+  accessToken: string | null | unknown
+  centerUuid: string | null
+  userUuid: string | null
+  setAccessToken: (accessToken: string | null | unknown) => void
+  setCenterUuid: (centerUuid: string | null) => void
+  setUserUuid: (userUuid: string | null) => void
 }
 
 export const useAccessToken = create<AccessTokenState>()(
