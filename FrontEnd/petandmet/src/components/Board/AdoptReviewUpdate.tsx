@@ -7,11 +7,25 @@ import { domain } from 'hooks/customQueryClient'
 import { useAccessToken } from "hooks/useAccessToken";
 import UpdateInputForm from 'containers/components/UpdateForm'
 
+interface BoardType {
+  message: string;
+  status: string;
+  id: number | null;
+  userUuid: string;
+  centerUuid: string;
+  content: string;
+  createdAt: string;
+  photoUrl: string;
+  title: string;
+  type: string;
+  updatedAt: string | null;
+}
+
 function AdoptUpdate() {
 const { accessToken, centerUuid, userUuid } = useAccessToken()
 const location = useLocation();
-const updateboard = location.state
-// console.log(updateboard)
+const updateboard: BoardType = location.state as BoardType;
+console.log(updateboard)
 
 let navigate = useNavigate()
 const goToBack =() => {

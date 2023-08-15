@@ -8,11 +8,25 @@ import { useAccessToken } from 'hooks/useAccessToken'
 import axios from 'axios'
 import { domain } from 'hooks/customQueryClient'
 
+interface BoardType {
+  message: string;
+  status: string;
+  id: number | null;
+  userUuid: string;
+  centerUuid: string;
+  content: string;
+  createdAt: string;
+  photoUrl: string;
+  title: string;
+  type: string;
+  updatedAt: string | null;
+}
+
 function QnaDetail() {
   const [comment, setComment] = useState<string>('')
   const [commentList, setCommentList] = useState<string[]>([])
   const location = useLocation();
-  const board = location.state
+  const board: BoardType = location.state as BoardType;
   const { accessToken, centerUuid, userUuid } = useAccessToken()
   const params = useParams(); // id 매개변수가 string 형식 또는 undefined일 수 있음
   
