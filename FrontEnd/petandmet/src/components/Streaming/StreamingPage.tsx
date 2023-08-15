@@ -1,38 +1,43 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import useAnimal from "hooks/Animal/useAnimal";
-import LiveDonation from "components/Streaming/LiveComponents/Live_Donation";
-import Familiarity from "./LiveComponents/Live_Familiarity";
+import CssBaseline from '@mui/material/CssBaseline'
+import Container from '@mui/material/Container'
+import { Button } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
+import useAnimal from 'hooks/Animal/useAnimal'
+import LiveDonation from 'components/Streaming/LiveComponents/Live_Donation'
+import Familiarity from './LiveComponents/Live_Familiarity'
+import JoinOpenVidu from 'components/Live/OpenViduJoin'
+import { useLocation } from 'react-router'
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  textAlign: "center",
+  textAlign: 'center',
   color: theme.palette.text.secondary,
-}));
+}))
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#FFA629",
-  color: "white",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  boxShadow: "none",
-  "&:hover": {
-    backgroundColor: "orange",
+  backgroundColor: '#FFA629',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  boxShadow: 'none',
+  '&:hover': {
+    backgroundColor: 'orange',
   },
-  margin: "5px",
-}));
+  margin: '5px',
+}))
 
 function StreamingPage() {
-  const { animalData } = useAnimal();
-  const animal = animalData;
-
+  const location = useLocation()
+  const { animalData } = useAnimal()
+  const animal = animalData
+  const liveId =
+    location.pathname.split('/')[location.pathname.split('/').length - 1]
+  const name = '사용자 이름'
   return (
     <>
       <CssBaseline />
@@ -40,11 +45,11 @@ function StreamingPage() {
       <Container
         sx={{
           my: 5,
-          display: "flex",
-          flexDirection: "column",
-          bgcolor: "#ffffff",
-          height: "45rem",
-          width: "98%",
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: '#ffffff',
+          height: '45rem',
+          width: '98%',
           borderRadius: 5,
         }}
       >
@@ -55,35 +60,36 @@ function StreamingPage() {
             <Grid item xs={12} md={9}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
-                <Box
+                <JoinOpenVidu Id={liveId} Name={name}></JoinOpenVidu>
+                {/* <Box
                   sx={{
-                    backgroundColor: "#7b7777",
+                    backgroundColor: '#7b7777',
                     flex: 1,
-                    height: "100%",
-                    width: "90%",
+                    height: '100%',
+                    width: '90%',
                   }}
-                ></Box>
+                ></Box> */}
               </Box>
             </Grid>
             {/* Top Right */}
             <Grid item xs={12} md={3}>
               <Box
                 sx={{
-                  backgroundColor: "#FFA629",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  backgroundColor: '#FFA629',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
                   borderRadius: 5,
                 }}
               >
                 <Box
-                  sx={{ backgroundColor: "#f8d260", flex: 1, borderRadius: 5 }}
+                  sx={{ backgroundColor: '#f8d260', flex: 1, borderRadius: 5 }}
                 >
                   <LiveDonation></LiveDonation>
                 </Box>
@@ -91,25 +97,25 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: '100%' }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: "#FFA629",
-                height: "100%",
-                display: "flex",
+                backgroundColor: '#FFA629',
+                height: '100%',
+                display: 'flex',
                 borderRadius: 5,
-                justifyContent: "Left",
+                justifyContent: 'Left',
               }}
             >
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                {" "}
+                {' '}
                 <img
                   className="h-28 m-5 md-3"
                   src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
@@ -133,7 +139,7 @@ function StreamingPage() {
         </Grid>
       </Container>
     </>
-  );
+  )
 }
 
-export default StreamingPage;
+export default StreamingPage

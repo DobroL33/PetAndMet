@@ -31,7 +31,7 @@ function JoinLive() {
     session_name: '',
   })
 
-  const { data, refetch } = joinOvSession(liveId)
+  const { data, refetch } = joinOvSession('')
   const handleLiveId = (id: string) => {
     setLiveId(prevState => ({
       ...prevState,
