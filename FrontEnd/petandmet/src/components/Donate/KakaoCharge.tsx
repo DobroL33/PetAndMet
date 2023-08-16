@@ -5,10 +5,11 @@ import { domain } from "hooks/customQueryClient";
 
 const KakaoCharge: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
+
   const [selectedMoney, setSelectedMoney] = useState<string>("");
 
   const [isScriptLoaded, setScriptLoaded] = useState(false);
-  const { accessToken } = useAccessToken();
+  const { accessToken, userUuid } = useAccessToken();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -43,8 +44,8 @@ const KakaoCharge: React.FC = () => {
             .post(
               `${domain}/mileage/charge`,
               {
-                uuid: userName,
-                amount: selectedMoney,
+                uuid: userUuid,
+                mileage: selectedMoney,
               },
               {
                 headers: {
