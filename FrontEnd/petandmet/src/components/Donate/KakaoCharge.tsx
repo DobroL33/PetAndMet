@@ -41,7 +41,7 @@ const KakaoCharge: React.FC = () => {
         if (rsp.success) {
           axios
             .post(
-              `"${domain}/mileage/charge"`,
+              `${domain}/mileage/charge`,
               {
                 uuid: userName,
                 amount: selectedMoney,
