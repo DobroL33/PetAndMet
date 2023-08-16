@@ -1,13 +1,9 @@
 import { Box } from "@mui/material";
 import CardInfo from "containers/components/Card";
-import axios from "axios";
-import { error } from "console";
-import React, { useEffect, useState } from "react";
 
 //보호 동물 데이터를 받는다면 animals 활성화
 interface CenterAnimalListProps {
   animals: AnimalsData[]
-  // animals: Animal[];
 }
 
 interface AnimalsData {
@@ -23,9 +19,6 @@ interface AnimalsData {
 
 // num 값에는 보호동물 수가 들어갈 예정
 function CenterAnimalList({ animals }: CenterAnimalListProps) {
-  const [animalToShow, setAnimalsToShow] = useState<any[]>([]);
-
-  let animalsToShow: any = [];
 
   if (animals && animals.length > 0) {
       return (

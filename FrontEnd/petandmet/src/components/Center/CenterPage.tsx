@@ -38,7 +38,6 @@ function CenterPage() {
   const [animals, setAnimalData] = useState<AnimalsData[]>([]);
   const [items, setItems] = useState<ItemsData[]|null>(null);
 
-  // console.log(location.state)
   useEffect(() => {
     async function fetchAnimalData() {
       try {
@@ -66,6 +65,9 @@ function CenterPage() {
 
   const EnrollItem = () => {
     navigate('item/enroll')
+  }
+  const EnrollAnimal = () => {
+    navigate('/animal/enroll')
   }
   const UpdateCenter = () => {
     navigate('center/update', {state : center})
@@ -130,8 +132,7 @@ function CenterPage() {
             </Grid>
 
             <Grid xs={10} sx={{ textAlign: 'end' }}>
-              <Button>더보기</Button>
-              <Button>수정</Button>
+              <Button onClick={EnrollAnimal}>등록</Button>
             </Grid>
 
             <Box
@@ -171,7 +172,6 @@ function CenterPage() {
             물품
           </Grid>
           <Grid xs={10} sx={{ textAlign: 'end' }}>
-            <Button>더보기</Button>
             <Button onClick={EnrollItem}>등록</Button>
           </Grid>
           <Box
