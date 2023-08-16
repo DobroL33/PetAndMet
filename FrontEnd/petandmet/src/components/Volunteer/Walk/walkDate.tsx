@@ -6,31 +6,66 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useCenterData } from "hooks/Center/useCenterData";
 import { Button } from "react-bootstrap";
-import useWalkForm from "hooks/Volunteer/useWalkFormState";
-import { useAnimalList } from "hooks/Animal/useAnimalList";
+import useAnimal from "hooks/Animal/useAnimal";
+import useWalkForm from "hooks/Volunteer/useWalkForm";
+import { useAccessToken } from "hooks/useAccessToken";
+
+interface CenterData {
+  uuid: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+}
+
+interface WalkForm {
+  date: string;
+  time: number;
+  center_uuid: string;
+  animal_uuid: string;
+  status: string;
+  user_uuid: string;
+}
 
 function WalkDate() {
+  const { userUuid } = useAccessToken();
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
   const { centerData } = useCenterData();
+  const AnimalData = useAnimal();
 
   const name = centerData?.name;
   const email = centerData?.email;
   const phone = centerData?.phone;
   const address = centerData?.address;
 
-  const animalList = useAnimalList();
-  console.log("워크 데이트 animalList");
-  console.log(animalList);
-
   let selectedDate = value?.format("YYYY-MM-DD");
   let selectedHour = value?.hour();
+  const center_uuid = centerData?.uuid;
+  const animal_uuid = AnimalData.animalData.animal_uuid;
 
   // PM 시간 대 (12:00 PM 이후)를 조정
   // if (value?.format("A") === "PM" && selectedHour) {
   //   selectedHour += 12;
   // }
   const selectedTime = String(selectedHour).padStart(2, "0"); // 시간을 두 자릿수 형식으로 변경 (예: 05, 13 등)
-  useWalkForm();
+
+  const { sendWalkForm } = useWalkForm();
+
+  // 저기 두 개 값 넣어서 보내야됨.
+  const handleFormSubmit = () => {
+    const formData: WalkForm = {
+      date: selectedDate as string,
+      time: Number(selectedTime),
+      center_uuid: center_uuid as string,
+      animal_uuid: animal_uuid,
+      user_uuid: userUuid as string,
+      status: "PENDING",
+    };
+    console.log("ㅇㅇformData");
+    console.log(formData);
+
+    sendWalkForm(formData);
+  };
 
   return (
     <>
@@ -60,6 +95,7 @@ function WalkDate() {
         </p>
         <Button
           variant="contained"
+          onClick={handleFormSubmit}
           style={{
             backgroundColor: "#FFA629",
             marginLeft: "auto",

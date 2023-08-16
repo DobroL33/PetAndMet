@@ -44,6 +44,8 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
   };
 
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 함수 가져오기
+  // 도네 성공여부
+  const [donationSuccessOpen, setDonationSuccessOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false); // 경고 창 표시 상태 관리
 
   // 후원하기 버튼 클릭 이벤트
@@ -54,6 +56,7 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
     } else {
       donate(); // 후원 요청 보내기
       reduceMileage(); // 마일리지 감소 요청 보내기
+      setDonationSuccessOpen(true);
     }
   };
 
@@ -324,6 +327,39 @@ const Live_ItemStatus: React.FC<Live_ItemStatusProps> = ({
                 sx={{ fontSize: "20px", borderRadius: "10px" }}
               >
                 취소하기
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={donationSuccessOpen} // state for this should be managed in your component
+            onClose={() => setDonationSuccessOpen(false)}
+            sx={{ borderRadius: "30px", minWidth: "700px" }}
+          >
+            <DialogTitle
+              color="gray"
+              sx={{
+                backgroundColor: "#F8D260",
+                fontWeight: "bold",
+                fontSize: "25px",
+              }}
+            >
+              후원 완료!
+            </DialogTitle>
+            <DialogContent
+              sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}
+            >
+              <Typography sx={{ fontSize: "20px" }} color="gray">
+                {donation.toLocaleString()} 원 후원 완료됐습니다!
+              </Typography>
+            </DialogContent>
+            <DialogActions sx={{ backgroundColor: "#F8D260" }}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setDonationSuccessOpen(false)}
+                sx={{ fontSize: "20px", borderRadius: "10px" }}
+              >
+                닫기
               </Button>
             </DialogActions>
           </Dialog>
