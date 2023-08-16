@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useAccessToken } from "hooks/useAccessToken";
+import { domain } from "hooks/customQueryClient";
 
 const KakaoCharge: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
   const [selectedMoney, setSelectedMoney] = useState<string>("");
 
   const [isScriptLoaded, setScriptLoaded] = useState(false);
+  const { accessToken } = useAccessToken();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -37,10 +40,18 @@ const KakaoCharge: React.FC = () => {
       (rsp: any) => {
         if (rsp.success) {
           axios
-            .post("http://i9b302.p.ssafy.io/api/v1/mileage/charge", {
-              uuid: userName,
-              amount: selectedMoney,
-            })
+            .post(
+              `"${domain}/mileage/charge"`,
+              {
+                uuid: userName,
+                amount: selectedMoney,
+              },
+              {
+                headers: {
+                  Authorization: `${accessToken}`,
+                },
+              }
+            )
             .then((response) => {
               console.log(response);
             })
@@ -50,6 +61,7 @@ const KakaoCharge: React.FC = () => {
         } else {
           console.log("결제에 실패하였습니다. 에러내용:", rsp.error_msg);
         }
+        console.log(`"${domain}/mileage/charge"`);
       }
     );
   };
