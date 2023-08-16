@@ -71,21 +71,21 @@ interface AnimalData{
     }
 
   interface UpdateAnimalData{
-    uuid: string| null,
-    name: string| null,
-    age: number| null,
-    specie: string| null,
-    breed: string| null,
-    gender: string| null,
-    character: string| null,
-    find_place: string| null,
+    uuid: string | null,
+    name: string | null,
+    age: number | null,
+    specie: string | null,
+    breed: string | null,
+    gender: string,
+    character: string,
+    find_place: string | null,
     center_uuid: string | unknown,
-    enter_date: string| null,
-    adoption_status: string| null,
-    enter_age: number| null,
-    notice_date: string| null,
-    adoption_start_date: string| null,
-    photo_url: string| null
+    enter_date: string | null,
+    adoption_status: string,
+    enter_age: number | null,
+    notice_date: string | null,
+    adoption_start_date: string | null,
+    photo_url: string | null
   }
 
   const UpdateAnimal = (params: UpdateAnimalData, accessToken : string| unknown) => {
