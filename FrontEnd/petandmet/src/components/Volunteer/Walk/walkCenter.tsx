@@ -3,11 +3,22 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { domain } from "hooks/customQueryClient";
+import axios from "axios";
+import { useCenterStore } from "hooks/Center/CenterMutation";
+import { useCenterData } from "hooks/Center/useCenterData";
+import CenterDataList from "hooks/Center/CenterMutation";
+
+interface CenterData {
+  uuid: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+}
 
 function WalkCenter() {
-  const [center, setCenter] = useState(["A 보호소", "B 보호소", "C 보호소"]);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,6 +28,39 @@ function WalkCenter() {
     setAnchorEl(null);
   };
 
+  const [centers, setCenters] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const centersData = await CenterDataList();
+      setCenters(centersData);
+    };
+    fetchData();
+  }, []);
+
+  // setCenters(centers);
+
+  const { centerData } = useCenterData();
+  const uuid = centerData?.uuid;
+
+  const [centerDetail, setCenterDetail] = useState<any | null>(null);
+
+  useEffect(() => {
+    const fetchCenterDetail = async () => {
+      try {
+        const response = await axios.get(
+          `${domain}/center/detail?id=${uuid}`,
+          {}
+        );
+        setCenterDetail(response.data.response.board);
+      } catch (error) {
+        console.error("Failed to fetch center details:", error);
+      }
+    };
+
+    fetchCenterDetail();
+  }, [uuid]);
+
   return (
     <div className="my-0.5 border rounded">
       <Button
@@ -25,9 +69,11 @@ function WalkCenter() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
+        sx={{ height: "50px" }}
       >
-        <p className="grow">보호소를 선택해주세요</p>
+        <p className="grow">{centerDetail?.name}에 산책 신청하기</p>
       </Button>
+
       <Menu
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
@@ -43,11 +89,9 @@ function WalkCenter() {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={handleClose}>{center[0]}</MenuItem>
-        <MenuItem onClick={handleClose}>{center[1]}</MenuItem>
-        <MenuItem onClick={handleClose}>{center[2]}</MenuItem>
+        {/* {here} */}
       </Menu>
-      <HouseSidingIcon className="m-3" color="action"></HouseSidingIcon>
+      {/* <HouseSidingIcon className="m-3" color="action"></HouseSidingIcon> */}
     </div>
   );
 }
