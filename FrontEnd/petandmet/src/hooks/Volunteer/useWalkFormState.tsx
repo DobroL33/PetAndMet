@@ -1,6 +1,5 @@
 import { domain } from "hooks/customQueryClient";
 import { useCenterData } from "../Center/useCenterData";
-import useAnimal from "hooks/Animal/useAnimal";
 
 interface WalkForm {
   date: string;

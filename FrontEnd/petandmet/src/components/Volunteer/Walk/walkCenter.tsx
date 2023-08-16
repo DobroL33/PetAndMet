@@ -9,6 +9,7 @@ import axios from "axios";
 import { useCenterStore } from "hooks/Center/CenterMutation";
 import { useCenterData } from "hooks/Center/useCenterData";
 import CenterDataList from "hooks/Center/CenterMutation";
+import { useAnimalList } from "hooks/Animal/useAnimalList";
 
 interface CenterData {
   uuid: string;
@@ -44,6 +45,10 @@ function WalkCenter() {
   const uuid = centerData?.uuid;
 
   const [centerDetail, setCenterDetail] = useState<any | null>(null);
+
+  const { data, isError, isLoading } = useAnimalList();
+
+  const animalList = data?.response;
 
   useEffect(() => {
     const fetchCenterDetail = async () => {

@@ -5,6 +5,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useCenterData } from "hooks/Center/useCenterData";
+import { Button } from "react-bootstrap";
+import useWalkForm from "hooks/Volunteer/useWalkFormState";
+import { useAnimalList } from "hooks/Animal/useAnimalList";
 
 function WalkDate() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
@@ -15,6 +18,10 @@ function WalkDate() {
   const phone = centerData?.phone;
   const address = centerData?.address;
 
+  const animalList = useAnimalList();
+  console.log("워크 데이트 animalList");
+  console.log(animalList);
+
   let selectedDate = value?.format("YYYY-MM-DD");
   let selectedHour = value?.hour();
 
@@ -23,6 +30,7 @@ function WalkDate() {
   //   selectedHour += 12;
   // }
   const selectedTime = String(selectedHour).padStart(2, "0"); // 시간을 두 자릿수 형식으로 변경 (예: 05, 13 등)
+  useWalkForm();
 
   return (
     <>
@@ -47,9 +55,21 @@ function WalkDate() {
         <p>주소는 {address} 입니다.</p>
         <br></br>
         <p>
-          원활한 신청을 위해 사전에 연락 해보시는건 어떨까요? <br></br>
+          원활한 신청을 위해 사락 해보시는건 어떨까요? <br></br>
           {phone} {email}
         </p>
+        <Button
+          variant="contained"
+          style={{
+            backgroundColor: "#FFA629",
+            marginLeft: "auto",
+            marginRight: "auto",
+            display: "block",
+            marginBottom: "30px",
+          }}
+        >
+          신청하기
+        </Button>
       </LocalizationProvider>
     </>
   );
