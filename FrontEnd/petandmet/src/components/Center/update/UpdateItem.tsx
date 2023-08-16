@@ -37,7 +37,7 @@ function UpdateCenterItem() {
         };
         console.log(updatedData)
         await ItemUpdate(updatedData, accessToken)
-        navigate(-2)
+        goToBack()
       };
 
     return(

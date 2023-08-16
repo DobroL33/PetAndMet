@@ -4,36 +4,31 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Container, Grid } from '@mui/material'
 import logo from 'images/logo.png'
 import { styled } from '@mui/material/styles'
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { GetAnimal, DeleteAnimal } from 'hooks/Animal/AnimalData'
+import { useAccessToken } from "hooks/useAccessToken";
 
-function createData(
-  photo_url : string | null,
-  center_uuid: string | null,
-  name: string | null,
-  adoption_status: string | null,
-  character: string | null,
-  breed: string | null,
-  specie: string | null,
-  gender: string | null,
-  find_place: string | null,
-  enter_date: string | null,
-  notice_date: string | null,
-  adoption_start_date: string | null,
-  age: number | null
-) {
-  return {
-    photo_url, center_uuid, name, adoption_status, character,
-    breed, specie, gender, find_place,
-    enter_date,notice_date, adoption_start_date, age,
-  }
-}
-
+interface AnimalData{
+      name: string| null,
+      age: number| null,
+      specie: string| null,
+      breed: string| null,
+      gender: string| null,
+      character: string| null,
+      find_place: string| null,
+      center_uuid: string,
+      enter_date: string| null,
+      adoption_status: string| null,
+      enter_age: number| null,
+      notice_date: string| null,
+      adoption_start_date: string| null,
+      photo_url: string| null
+    }
+  
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FFA629',
   color: 'white',
@@ -50,39 +45,33 @@ export default function AnimalDetail() {
   const [animalDetail, setAnimalDetail] = useState<AnimalData | null>(null); // 객체나 null로 초기화
   const navigate = useNavigate()
   const { animal_uuid } = useParams<{ animal_uuid: string }>();
-  // 동물 UUID 값을 가져옴
-  if (!animalDetail) {  // animalDetail이 비어있을 때만 요청
-    axios.get(`https://i9b302.p.ssafy.io/api/v1/animal/detail?uuid=${animal_uuid}`)
-      .then((response) => {
+  const { accessToken } = useAccessToken()
 
-        setAnimalDetail(response.data.response);
-        console.log(animalDetail)
-
-      })
-      .catch((error) => {
-        console.log('오류')
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const info = await GetAnimal(animal_uuid, accessToken);
+        if (info !== undefined) {
+          setAnimalDetail(info);
+        }
+      } catch (error) {
         console.log(error);
-      });
-  }
-  // console.log(animalDetail)
+      }
+    };
+  
+    fetchData();
+  }, []);
 
-  axios.get('https://i9b302.p.ssafy.io/api/v1/user')
-  .then((res) => {
-    console.log(res)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-
-
-
-
-  const goToBack =() => {
+  const goToBack = () => {
     navigate(-1)
   }
-
-
-  type AnimalData = ReturnType<typeof createData>
+  const goToUpdate = () => {
+    navigate('/animal/update', {state : {animalDetail, animal_uuid}})
+  }
+  const goToDelete = () => {
+    DeleteAnimal(animal_uuid, accessToken)
+    goToBack()
+  }
 
   return (
     <Container sx={{mt : 10}}>
@@ -110,7 +99,7 @@ export default function AnimalDetail() {
             </TableCell>
             {animalDetail && ( // 객체가 존재할 때만 렌더링
               <TableCell sx={{ width: '30%' }}>
-                <TableRow>{animalDetail.center_uuid}</TableRow>
+                <TableRow>{animalDetail?.center_uuid}</TableRow>
                 <hr />
                 <TableRow>{animalDetail.name}</TableRow>
                 <hr />
@@ -158,9 +147,9 @@ export default function AnimalDetail() {
         </Table>
       </TableContainer>
       <Grid sx={{ margin: '30px'}}>
-        <CustomButton onClick={goToBack}>사용자 - 돌아가기</CustomButton>
-        <CustomButton>관리자 - 작성 & 수정</CustomButton>
-        <CustomButton>관리자 -삭제</CustomButton>
+        <CustomButton onClick={goToBack}>돌아가기</CustomButton>
+        <CustomButton onClick={goToUpdate}>관리자 - 수정</CustomButton>
+        <CustomButton onClick={goToDelete}>관리자 - 삭제</CustomButton>
       </Grid>
     </Container>
   )

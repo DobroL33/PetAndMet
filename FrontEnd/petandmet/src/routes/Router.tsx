@@ -15,11 +15,11 @@ import Charge from 'components/Donate/Charge'
 import ItemList from 'components/Item/ItemList'
 import ItemDetail from 'containers/components/ItemDetail'
 import StreamingPage from 'components/Streaming/StreamingPage'
-import AnimalDetail from 'containers/components/AnimalDetail'
 import Live from 'components/Live/OpenVidu'
 import Live2 from 'components/Live/OpenViduJoin'
 import Board from 'routes/Board'
 import Center from 'routes/Center'
+import Animal from 'routes/Animal'
 const App = () => {
   return (
     <BrowserRouter>
@@ -40,12 +40,12 @@ const App = () => {
         <Route path="/donate/item" element={<ItemList />} />
         <Route path="/donate/item/:id" element={<ItemDetail />} />
         <Route path="/livelist/streaming/:id" element={<StreamingPage />} />
-        <Route path="/animal/detail/:animal_uuid" element={<AnimalDetail />} />
         <Route path="/live/:id" element={<Live />} />
         <Route path="/openlive" element={<Live />} />
         <Route path="/live2/:id" element={<Live2 />} />
         <Route path="/board/*" element={<Board />} />
         <Route path="/admin/*" element={<Center />} />
+        <Route path="/animal/*" element={<Animal />} />
       </Routes>
     </BrowserRouter>
   )

@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom'
-import { domain } from "hooks/customQueryClient";
 import { useAccessToken } from "hooks/useAccessToken";
 import { CenterUpdate } from "hooks/Center/CenterMutation";
 
