@@ -38,7 +38,7 @@ function CenterPage() {
   const [animals, setAnimalData] = useState<AnimalsData[]>([]);
   const [items, setItems] = useState<ItemsData[]|null>(null);
 
-  console.log(location.state)
+  // console.log(location.state)
   useEffect(() => {
     async function fetchAnimalData() {
       try {
@@ -66,6 +66,9 @@ function CenterPage() {
 
   const EnrollItem = () => {
     navigate('item/enroll')
+  }
+  const UpdateCenter = () => {
+    navigate('center/update', {state : center})
   }
   return (
     <>
@@ -104,7 +107,7 @@ function CenterPage() {
             <span>{center? center.email : 'Center E-mail'}</span>
           </Grid>
           <Grid xs={2} sx={{ textAlign: 'end' }}>
-            <Button>수정</Button>
+            <Button onClick={UpdateCenter}>수정</Button>
           </Grid>
         </Grid>
         <Grid>

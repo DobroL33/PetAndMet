@@ -60,4 +60,33 @@ const CenterDataList = async () => {
   }
 }
 
+interface Center{
+  uuid : string | null,
+  name: string | null,
+  address : string | null,
+  email : string | null,
+  phone : string | null,
+}
+export const CenterUpdate =async (params:Center, accessToken : string| unknown, domain : string) => {
+  try {
+    await axios.patch(`${domain}/center`, params, 
+    {
+      headers: {
+          Authorization : `${accessToken}`
+      }
+    }
+    )
+    .then((res) =>{
+        console.log('수정 완료', res)
+    })
+    .catch((error) => {
+      console.log(error)
+    }) 
+  } catch (error) {
+      console.error('Error updating center:', error);
+      console.log('수정 에러')
+  }
+};
+
+
 export default CenterDataList
