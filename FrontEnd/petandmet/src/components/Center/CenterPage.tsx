@@ -1,5 +1,5 @@
 import { Box, Container, Grid, Button } from '@mui/material'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { domain } from 'hooks/customQueryClient';
@@ -33,6 +33,7 @@ interface ItemsData{
 
 function CenterPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [center, setCenter] = useState<Center | null>(null); 
   const [animals, setAnimalData] = useState<AnimalsData[]>([]);
   const [items, setItems] = useState<ItemsData[]|null>(null);
@@ -63,9 +64,9 @@ function CenterPage() {
     fetchAnimalData();
   }, []);
 
-  // console.log(animals);
-  // console.log(center);
-  // console.log(items);
+  const EnrollItem = () => {
+    navigate('item/enroll')
+  }
   return (
     <>
       <Container
@@ -168,7 +169,7 @@ function CenterPage() {
           </Grid>
           <Grid xs={10} sx={{ textAlign: 'end' }}>
             <Button>더보기</Button>
-            <Button>수정</Button>
+            <Button onClick={EnrollItem}>등록</Button>
           </Grid>
           <Box
             sx={{

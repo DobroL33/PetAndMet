@@ -11,7 +11,6 @@ import AnimalList from 'components/Animal/AnimalList'
 import VolunteerPage from 'components/Volunteer/VolunteerPage'
 import WalkPage from 'components/Volunteer/walkpage'
 import Navbar from 'components/Main/Navbar'
-import CenterPage from 'components/Center/CenterPage'
 import Charge from 'components/Donate/Charge'
 import ItemList from 'components/Item/ItemList'
 import ItemDetail from 'containers/components/ItemDetail'
@@ -20,6 +19,7 @@ import AnimalDetail from 'containers/components/AnimalDetail'
 import Live from 'components/Live/OpenVidu'
 import Live2 from 'components/Live/OpenViduJoin'
 import Board from 'routes/Board'
+import Center from 'routes/Center'
 const App = () => {
   return (
     <BrowserRouter>
@@ -36,7 +36,6 @@ const App = () => {
         <Route path="/adpotprocess" element={<AdoptProcess />} />
         <Route path="/volunteer" element={<VolunteerPage />} />
         <Route path="/walk" element={<WalkPage />} />
-        <Route path="/admin" element={<CenterPage />} />
         <Route path="/donate/charge" element={<Charge />} />
         <Route path="/donate/item" element={<ItemList />} />
         <Route path="/donate/item/:id" element={<ItemDetail />} />
@@ -46,6 +45,7 @@ const App = () => {
         <Route path="/openlive" element={<Live />} />
         <Route path="/live2/:id" element={<Live2 />} />
         <Route path="/board/*" element={<Board />} />
+        <Route path="/admin/*" element={<Center />} />
       </Routes>
     </BrowserRouter>
   )
