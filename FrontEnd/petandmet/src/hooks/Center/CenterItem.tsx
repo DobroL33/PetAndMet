@@ -1,4 +1,4 @@
-import axios from "axios"
+import customAxios from 'utils/axiosUtil'
 
 interface item{
     center_uuid : string | unknown,
@@ -6,17 +6,16 @@ interface item{
     item_url : string | null,
     item_target_price : number | null
 }
-const ItemEnroll = (params: item, accessToken : string| unknown, domain : string) => {
+const ItemEnroll = async (params: item, accessToken : string| unknown) => {
         try{
-            axios.post(`${domain}/center/item`, params,
+            const response = await customAxios.post(`/center/item`, params,
             {
                 headers: {
                     Authorization: `${accessToken}`,
                 }
             }
-            ).then((res) =>{
-                console.log('등록 완료', res)
-            })
+            )
+            return response.data
         }catch(error){
             console.log(error)
         }
@@ -29,39 +28,34 @@ interface itemData{
     item_url : string | null,
     item_target_price : number | null
 }
-const ItemUpdate = (params: itemData, accessToken : string| unknown, domain : string) => {
-    console.log(params)
-    console.log(accessToken)
-    console.log(domain)
+const ItemUpdate =async (params: itemData, accessToken : string| unknown) => {
+    
     try{
-        axios.patch(`${domain}/center/item`, params,
+        const response =  await customAxios.patch(`/center/item`, params,
         {
             headers: {
                 Authorization: `${accessToken}`,
             }
         }
-        ).then((res) =>{
-            console.log('물품 수정 완료', res)
-        })
+        )
+        console.log(response)
+        return response.data
     }catch(error){
         console.log(error)
     }
 }
 
-const ItemDelete = (params: number, accessToken : string| unknown, domain : string) => {
-    console.log(params)
-    console.log(accessToken)
-    console.log(domain)
+const ItemDelete = async (params: number, accessToken : string| unknown) => {
+
     try{
-        axios.delete(`${domain}/center/item/${params}`,
+        const response = await customAxios.delete(`/center/item/${params}`,
         {
             headers: {
                 Authorization: `${accessToken}`,
             }
         }
-        ).then((res) =>{
-            console.log('물품 삭제 완료', res)
-        })
+        )
+        console.log('물품 삭제 완료', response)
     }catch(error){
         console.log(error)
     }

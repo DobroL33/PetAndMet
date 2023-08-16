@@ -25,7 +25,7 @@ function UpdateCenter() {
     const [updatedPhone, setUpdatedPhone] = useState(center?.phone);
     const [updatedEmail, setUpdatedEmail] = useState(center?.email);
     const { accessToken } = useAccessToken()
-    
+
     const goToBack = () =>{
         navigate(-1)
     }
@@ -37,7 +37,7 @@ function UpdateCenter() {
           phone: updatedPhone,
           email: updatedEmail,
         };
-        await CenterUpdate(updatedData, accessToken, domain)
+        await CenterUpdate(updatedData, accessToken)
         goToBack()
       };
 

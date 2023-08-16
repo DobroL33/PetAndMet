@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom'
-import { domain } from "hooks/customQueryClient";
 import { useAccessToken } from "hooks/useAccessToken";
 import { ItemUpdate} from "hooks/Center/CenterItem";
 
@@ -37,7 +36,7 @@ function UpdateCenterItem() {
             item_target_price : updateTargetPrice
         };
         console.log(updatedData)
-        await ItemUpdate(updatedData, accessToken, domain)
+        await ItemUpdate(updatedData, accessToken)
         navigate(-2)
       };
 

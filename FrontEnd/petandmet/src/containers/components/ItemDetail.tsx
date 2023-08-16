@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ItemDelete } from 'hooks/Center/CenterItem'
 import { useAccessToken } from "hooks/useAccessToken";
-import { domain } from "hooks/customQueryClient";
 
 const options = [5000, 10000, 15000, 20000, 50000]
 
@@ -42,7 +41,7 @@ function ItemDetail() {
     navigate('/admin/item/update/', {state : item})
   }
   const goToDelete =async () => {
-    await ItemDelete(item.center_item_id, accessToken, domain)
+    await ItemDelete(item.center_item_id, accessToken)
     goToBack()
   }
 

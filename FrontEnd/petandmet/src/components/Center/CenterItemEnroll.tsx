@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import { useAccessToken } from "hooks/useAccessToken";
 import { ItemEnroll } from "hooks/Center/CenterItem";
-import { domain } from "hooks/customQueryClient";
 function ItemRegister() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -18,7 +17,7 @@ function ItemRegister() {
     };
 
     const goToEnroll =async () => {           
-        await ItemEnroll(Data, accessToken, domain)
+        await ItemEnroll(Data, accessToken)
         navigate(-1)
     }
     const goToBack = () =>{
