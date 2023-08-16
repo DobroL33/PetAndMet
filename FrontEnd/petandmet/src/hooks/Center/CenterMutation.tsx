@@ -1,7 +1,7 @@
 import { domain } from 'hooks/customQueryClient'
 import axios from 'axios'
 import { create } from 'zustand'
-
+import customAxios from 'utils/axiosUtil'
 interface CenterData {
   uuid: string
   name: string
@@ -59,5 +59,29 @@ const CenterDataList = async () => {
     return []
   }
 }
+
+interface Center{
+  uuid : string | null,
+  name: string | null,
+  address : string | null,
+  email : string | null,
+  phone : string | null,
+}
+export const CenterUpdate =async (params:Center, accessToken : string| unknown) => {
+  try {
+    const response = await customAxios.patch(`/center`, params, 
+    {
+      headers: {
+          Authorization : `${accessToken}`
+      }
+    }
+    )
+    console.log('수정 완료', response) 
+  } catch (error) {
+      console.error('Error updating center:', error);
+      console.log('수정 에러')
+  }
+};
+
 
 export default CenterDataList

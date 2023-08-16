@@ -1,13 +1,10 @@
-import {
-  Container,
-  Grid,
-  Typography,
-  LinearProgress,
-  Button,
-} from '@mui/material'
+import { Container, Grid, Typography,
+  LinearProgress, Button } from '@mui/material'
 import pay from 'images/kakaopay.png'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ItemDelete } from 'hooks/Center/CenterItem'
+import { useAccessToken } from "hooks/useAccessToken";
 
 const options = [5000, 10000, 15000, 20000, 50000]
 
@@ -26,6 +23,8 @@ function ItemDetail() {
   const navigate = useNavigate()
   const location = useLocation()
   const item = location.state as CenterItem
+  const { accessToken } = useAccessToken()
+
   console.log('item', item)
 
   const handleOptionChange = (value: number) => {
@@ -36,6 +35,14 @@ function ItemDetail() {
   }
   const goToBack = () => {
     navigate(-1)
+  }
+
+  const goToUpdate = () => {
+    navigate('/admin/item/update/', {state : item})
+  }
+  const goToDelete =async () => {
+    await ItemDelete(item.center_item_id, accessToken)
+    goToBack()
   }
 
   const diffPoint = () => {
@@ -130,8 +137,8 @@ function ItemDetail() {
             <Button sx={{ bgcolor: 'red', color: 'black' }} onClick={goToBack}>
               돌아가기
             </Button>
-            <Button sx={{ bgcolor: 'blue', color: 'black' }}>수정</Button>
-            <Button sx={{ bgcolor: 'red', color: 'black' }} disableRipple>
+            <Button sx={{ bgcolor: 'blue', color: 'black' }} onClick={goToUpdate}>수정</Button>
+            <Button sx={{ bgcolor: 'red', color: 'black' }} onClick={goToDelete} disableRipple>
               삭제
             </Button>
           </Grid>
