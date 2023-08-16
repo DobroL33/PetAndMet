@@ -31,7 +31,7 @@ const KakaoCharge: React.FC = () => {
         pay_method: "kakaopay",
         merchant_uid: "merchant_" + new Date().getTime(),
         name: "주문명 : 주문명 설정",
-        amount: selectedMoney,
+        mileage: selectedMoney,
         buyer_email: "iamport@siot.do",
         buyer_name: "구매자이름",
         buyer_tel: "010-1234-5678",
@@ -78,16 +78,16 @@ const KakaoCharge: React.FC = () => {
       />
       <br />
       {[5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 50000].map(
-        (amount) => (
-          <label key={amount} className="box-radio-input">
+        (mileage) => (
+          <label key={mileage} className="box-radio-input">
             <input
               type="radio"
               name="cp_item"
-              value={amount}
-              checked={selectedMoney === amount.toString()}
-              onChange={() => setSelectedMoney(amount.toString())}
+              value={mileage}
+              checked={selectedMoney === mileage.toString()}
+              onChange={() => setSelectedMoney(mileage.toString())}
             />
-            <span>{amount}원</span>
+            <span>{mileage}원</span>
           </label>
         )
       )}
