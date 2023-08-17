@@ -1,23 +1,34 @@
-import { useState } from "react";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Button,
+  Grid,
+  Typography,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import kakaopay from "images/kakaopay.png";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useRef } from "react";
 import axios from "axios";
-import KakaoPayment from "./KakaoCharge";
-
-const options = [5000, 10000, 15000, 20000, 50000];
-
-const theme = createTheme({
-  typography: {
-    fontSize: 20, // 전체 Typography의 fontSize를 24px로 설정합니다.
-  },
-});
+import { domain } from "hooks/customQueryClient";
+import { useAccessToken } from "hooks/useAccessToken";
 
 function Charge() {
+  const [userMileage, setUserMileage] = useState(0);
+  // const [selectedMoney, setSelectedMoney] = useState(0);
+  const options = [5000, 10000, 15000, 20000, 50000];
+
+  const theme = createTheme({
+    typography: {
+      fontSize: 20, // 전체 Typography의 fontSize를 24px로 설정합니다.
+    },
+  });
+
+  const { accessToken, userUuid } = useAccessToken();
   const [selectedOption, setSelectedOption] = useState<number>(options[0]);
   const userNameRef = useRef<HTMLInputElement>(null); // userNameRef 추가
 
@@ -28,8 +39,6 @@ function Charge() {
   const handleChargeClick = () => {
     const IMP = (window as any).IMP;
     IMP.init("imp02430511");
-    console.log(userUuid);
-    console.log(selectedOption);
 
     IMP.request_pay(
       {
@@ -98,126 +107,90 @@ function Charge() {
       <div style={{ padding: 20 }}>
         <Typography
           variant="h4"
-          style={{ color: "#FFA629", fontWeight: "bold" }}
+          style={{ color: "#E8AF7D", fontWeight: "bold", marginBottom: 5 }}
         >
           충전하기
         </Typography>
       </div>
       <ThemeProvider theme={theme}>
-        <Container>
-          <div style={{ backgroundColor: "#FFE8A3", borderRadius: 20 }}>
-            <Container style={{ fontSize: "3rem" }}>
-              <Grid container style={{ padding: 10, color: "white" }}>
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
-                >
-                  <Typography variant="body1">보유 포인트</Typography>
-                  <Typography variant="body2">10000원</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={1}
-                  md={1}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "black",
-                  }}
-                >
-                  +
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
-                >
-                  <Typography variant="body1">충전 포인트</Typography>
-                  <Typography variant="body2">{selectedOption}원</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={1}
-                  md={1}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "black",
-                  }}
-                >
-                  =
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  md={4}
-                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
-                >
-                  <Typography variant="body1">총 포인트</Typography>
-                  <Typography variant="body2">
-                    {selectedOption + 10000}원
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Container>
-            <Container>
-              <Grid
-                container
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                }}
-              >
-                <Grid item xs={6} md={6}>
-                  {options.map((option) => (
-                    <div key={option}>
-                      <label>
-                        <input
-                          type="radio"
-                          value={option}
-                          checked={selectedOption === option}
-                          onChange={() => handleOptionChange(option)}
-                        />
-                        {option}원
-                      </label>
-                    </div>
-                  ))}
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <img
-                    src={kakaopay}
-                    alt=""
-                    style={{ width: "35%", borderRadius: 30 }}
-                  />
-                </Grid>
-              </Grid>
-            </Container>
-          </div>
-        </Container>
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#FFA629", marginTop: "10px" }}
+        <Container
+          sx={{ backgroundColor: "#FFE8A3", width: "80%", borderRadius: 10 }}
         >
-          결제하기
-        </Button>
+          <Grid container alignItems="center" padding={2}>
+            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+              <Typography variant="body1" sx={{ mb: 2.5 }}>
+                보유 포인트
+              </Typography>
+              <Typography variant="body2">{userMileage} 포인트</Typography>
+            </Grid>
+            <Grid item xs={1.5}>
+              <Typography sx={{ fontSize: 32 }}>+</Typography>
+            </Grid>
+            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+              <Typography variant="body1" sx={{ mb: 2.5 }}>
+                충전 포인트
+              </Typography>
+              <Typography variant="body2">{selectedOption} 포인트</Typography>
+            </Grid>
+            <Grid item xs={1.5}>
+              <Typography sx={{ fontSize: 32 }}>=</Typography>
+            </Grid>
+            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+              <Typography variant="body1" sx={{ mb: 2.5 }}>
+                총 포인트
+              </Typography>
+              <Typography variant="body2">
+                {selectedOption + userMileage} 포인트
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={1.5}></Grid>
+            <Grid item xs={4.5}>
+              <RadioGroup
+                value={selectedOption}
+                onChange={(e) => handleOptionChange(parseInt(e.target.value))}
+              >
+                {options.map((option) => (
+                  <FormControlLabel
+                    sx={{ justifyContent: "center" }}
+                    key={option}
+                    value={option}
+                    control={<Radio sx={{ fontSize: "12px" }} />}
+                    label={
+                      <Typography sx={{ fontSize: "12px" }}>
+                        {option} 포인트
+                      </Typography>
+                    }
+                  />
+                ))}
+              </RadioGroup>
+            </Grid>
+            <Grid item xs={4.5}>
+              <img
+                src={kakaopay}
+                alt="Kakao Pay"
+                style={{ width: "45%", borderRadius: 10, margin: "auto" }}
+              />
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#FFD396",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  display: "block",
+                  marginTop: "50px",
+                  color: "black",
+                }}
+                onClick={handleChargeClick}
+              >
+                충전하기
+              </Button>
+            </Grid>
+            <Grid item xs={1.5}></Grid>
+          </Grid>
+        </Container>
       </ThemeProvider>
-      <KakaoPayment></KakaoPayment>
     </div>
   );
 }
