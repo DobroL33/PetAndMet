@@ -121,7 +121,7 @@ function AnimalUpdate() {
                                 label="종류" 
                                 variant="outlined" 
                                 onChange={(e) => setupdatedSpecie(e.target.value)}
-                                defaultValue={updateage}
+                                defaultValue={updatedSpecie}
                                 />
                             <TextField 
                                 id="outlined-basic" 
@@ -210,14 +210,6 @@ function AnimalUpdate() {
                                 onChange={(e) => setupdatedNoticeDate(e.target.value)}
                                 defaultValue={updatedNoticeDate}
                                 /> 
-                            <TextField 
-                                id="outlined-basic" 
-                                label="공고일" 
-                                variant="outlined" 
-                                onChange={(e) => setupdatedNoticeDate(e.target.value)}
-                                defaultValue={updatedNoticeDate}
-                                />
-
                             <TextField
                                 id="outlined-multiline-static"
                                 label="입양 시작 날짜"

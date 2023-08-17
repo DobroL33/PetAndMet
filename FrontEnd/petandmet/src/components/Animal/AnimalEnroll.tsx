@@ -1,5 +1,5 @@
-import {Table, TableBody, TableCell, TableContainer, TableRow,
-    Paper, Button, Container, Grid, TextField} from '@mui/material'
+import { Container, Typography, Button, InputLabel, FormControl,
+  Box, TextField, Grid, Select, MenuItem } from "@mui/material";
 import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom';
@@ -60,7 +60,7 @@ function AnimalEnroll() {
     const [notice_date, setNoticeDate] = useState('');
     const [adoption_start_date, setAdoptionStartDate] = useState('');
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined)
-    
+    const [preview, setPreview] = useState('')
     const goToBack =() => {
     navigate(-1)
     }
@@ -92,7 +92,7 @@ function AnimalEnroll() {
 
         const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
-        
+            
             if (file) {
               const newUploadedImage: UploadedImage = {
                 name: file.name,
@@ -100,165 +100,199 @@ function AnimalEnroll() {
                 type: file.type,
                 file: file
               };
-                  setUploadedImage(file);
+                setUploadedImage(file);
             }
+            
+            if (file) {
+                  const selectedImage = file;
+                  const reader = new FileReader();
+
+                  reader.onload = () => {
+                    setPreview(reader.result as string);
+                  };
+                  reader.readAsDataURL(selectedImage);
+                }
           };
 
 return (
-<Container sx={{mt : 10}}>
-  <Grid sx={{display:'flex', justifyContent:'center', mb: 3}}>
+  <>
+    <Container>     
+    <div style={{ padding: 20 }}>
+        <Typography
+            variant="h4"
+            style={{ color: '#FFA629', fontWeight: 'bold' }}
+            >
+            동물 정보 수정
+        </Typography>
+    </div> 
+
+  <Grid container spacing={2}>
+    <Grid item xs={12} md={6} sx={{ mb:5, display:'flex', alignItems:'center', justifyContent:'center'}}>
+      {preview ? (
+          <img src={preview} alt="미리보기" width="100%" />
+      ) : (
+          <Typography variant="body1">등록된 사진이 없습니다.</Typography>
+      )}
+    </Grid>
+
+    <Grid item xs={12} md={6}>
+        <Grid container spacing={2}>
+
+            <Grid item xs={6}>
+                <Box
+                    component="form"
+                    sx={{
+                        '& > :not(style)': { m: 1, width: '80%' },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                    >
+                    <TextField 
+                        id="outlined-basic" 
+                        label="이름" 
+                        variant="outlined" 
+                        onChange={(e) => setName(e.target.value)}
+                        
+                        />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="추정 나이"
+                        onChange={(e) => setAge(e.target.value)}
+                        
+                        />
+                    <TextField 
+                        id="outlined-basic" 
+                        label="종류" 
+                        variant="outlined" 
+                        onChange={(e) => setSpecie(e.target.value)}
+                        
+                        />
+                    <TextField 
+                        id="outlined-basic" 
+                        label="품종" 
+                        variant="outlined" 
+                        onChange={(e) => setBreed(e.target.value)}
+                        
+                        />
+                    <FormControl sx={{ '& > *': { width: '100%' } }}>
+                        <InputLabel sx={{paddingRight: 38}}>성별</InputLabel>
+                            <Select
+                                labelId="gender-label"
+                                id="gender"
+                                value={gender}
+                                label= "성별"
+                                onChange={(e) => setGender(e.target.value)}
+                            >
+                                <MenuItem value="MALE">MALE</MenuItem>
+                                <MenuItem value="FEMALE">FEMALE</MenuItem>
+                            </Select>
+                    </FormControl>
+
+                    <FormControl sx={{ '& > *': { width: '100%' } }}>
+                        <InputLabel sx={{paddingRight: 38}}>성격</InputLabel>
+                            <Select
+                                labelId="character-label"
+                                id=""
+                                value={character}
+                                label= "성격"
+                                onChange={(e) => setCharacter(e.target.value)}
+                                >
+                                <MenuItem value="PEACE">PEACE</MenuItem>
+                                <MenuItem value="ACTIVE">ACTIVE</MenuItem>
+                                <MenuItem value="SENSITIVE">SENSITIVE</MenuItem>
+                            </Select>
+                    </FormControl>
+                    <input type="file" accept="image/*" onChange={handleImageChange} />
+
+                </Box>   
+            </Grid>
+            <Grid item xs={6}>
+                <Box
+                    component="form"
+                    sx={{
+                        '& > :not(style)': { m: 1, width: '80%' },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                    >
+                    <TextField 
+                        id="outlined-basic" 
+                        label="만료일" 
+                        variant="outlined" 
+                        onChange={(e) => setEnterDate(e.target.value)}
+                        
+                        />
+                    <TextField 
+                        id="outlined-basic" 
+                        label="발견 장소" 
+                        variant="outlined" 
+                        onChange={(e) => setFindPlace(e.target.value)}
+                        
+                        />  
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="만료 나이"
+                        onChange={(e) => setEnterAge(e.target.value)}
+                        
+                        />
+                    <TextField 
+                        id="outlined-basic" 
+                        label="공고일" 
+                        variant="outlined" 
+                        onChange={(e) => setNoticeDate(e.target.value)}
+                        
+                        /> 
+          
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="입양 시작 날짜"
+                        onChange={(e) => setAdoptionStartDate(e.target.value)}
+                        />
+
+                    <FormControl sx={{ '& > *': { width: '100%' } }}>
+                        <InputLabel sx={{paddingRight: 38}}>입양 상태</InputLabel>
+                            <Select
+                                labelId="character-label"
+                                id=""
+                                label="입양 상태"
+                                value={adoption_status}
+                                onChange={(e) => setAdoptionStatus(e.target.value)}
+                                >
+                                <MenuItem value="POSSIBLE">POSSIBLE</MenuItem>
+                                <MenuItem value="IMPOSSIBLE">IMPOSSIBLE</MenuItem>
+                            </Select>
+                    </FormControl>
+
+                </Box>
+                <Box sx={{mt : 3.5, ml: 10}}>
+                    <Button
+                        sx={{
+                            backgroundColor: '#1E90FF',
+                            '&:hover': { backgroundColor: '#4FC3F7' },
+                            color: 'black',
+                            marginRight: '5px',
+                        }}
+                        onClick={Enroll}
+                        >
+                        등록
+                        </Button>
+                        <Button
+                        sx={{
+                            backgroundColor: '#FF0044',
+                            '&:hover': { backgroundColor: '#FA8072' },
+                            color: 'black',
+                        }}
+                        onClick={goToBack}
+                        >
+                        돌아가기
+                    </Button>
+                </Box>
+            </Grid>
+        </Grid>
+    </Grid>
   </Grid>
-
-  <TableContainer component={Paper} sx={{ borderRadius: 5 }}>
-    <Table sx={{ borderBottom: '1px solid rgba(224, 224, 224, 1)' }}>
-      <TableBody>
-        <TableCell sx={{ backgroundColor: '#FFBC5F', width: '20%' }}>
-          <TableRow>이름</TableRow>
-          <hr />
-          <TableRow>입양 상태</TableRow>
-          <hr />
-          <TableRow>성격</TableRow>
-          <hr />
-          <TableRow>품종</TableRow>
-          <hr />
-          <TableRow>종류</TableRow>
-        </TableCell>
-          <TableCell sx={{ width: '30%' }}>
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="이름" 
-                variant="outlined" 
-                onChange={(e) => setName(e.target.value)}
-                />
-            </TableRow>
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="입양 상태" 
-                variant="outlined" 
-                onChange={(e) => setAdoptionStatus(e.target.value)}
-                />
-            </TableRow>
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="성격" 
-                variant="outlined" 
-                onChange={(e) => setCharacter(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="품종" 
-                variant="outlined" 
-                onChange={(e) => setBreed(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="종류" 
-                variant="outlined" 
-                onChange={(e) => setSpecie(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="만료 나이" 
-                variant="outlined" 
-                onChange={(e) => setEnterAge(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-          </TableCell>
-
-        <TableCell sx={{ backgroundColor: '#FFBC5F', width: '20%' }}>
-          <TableRow>성별</TableRow>
-          <hr />
-          <TableRow>발견 장소</TableRow>
-          <hr />
-          <TableRow>만료일</TableRow>
-          <hr />
-          <TableRow>공고일</TableRow>
-          <hr />
-          <TableRow>입양 시작 가능 일시</TableRow>
-          <hr />
-          <TableRow>나이 (추정)</TableRow>
-        </TableCell>
-          <TableCell sx={{ width: '30%' }}>
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="성별" 
-                variant="outlined" 
-                onChange={(e) => setGender(e.target.value)}
-                />
-            </TableRow>
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="발견 장소" 
-                variant="outlined" 
-                onChange={(e) => setFindPlace(e.target.value)}
-                />
-            </TableRow>
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="만료일" 
-                variant="outlined" 
-                onChange={(e) => setEnterDate(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="공고일" 
-                variant="outlined" 
-                onChange={(e) => setNoticeDate(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="입양 가능 시작 일시" 
-                variant="outlined" 
-                onChange={(e) => setAdoptionStartDate(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-            <TableRow>
-                <TextField 
-                id="outlined-basic" 
-                label="추정 나이" 
-                variant="outlined" 
-                onChange={(e) => setAge(e.target.value)}
-                />
-            </TableRow>                
-            <hr />
-
-            <input type="file" accept="image/*" onChange={handleImageChange} />          </TableCell>
-      </TableBody>
-    </Table>
-  </TableContainer>
-
-  <Grid sx={{ margin: '30px'}}>
-    <CustomButton onClick={Enroll}>등록</CustomButton>
-    <CustomButton onClick={goToBack}>돌아가기</CustomButton>
-  </Grid>
-</Container>
+  </Container>
+</>
 )
 }
 
