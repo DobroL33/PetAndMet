@@ -15,6 +15,14 @@ import { GetAnimal } from "hooks/Animal/AnimalData";
 import { useAccessToken } from "hooks/useAccessToken";
 import { useStore } from "hooks/Volunteer/useWalkStore";
 
+// interface CenterData {
+//   uuid: string;
+//   name: string;
+//   address: string;
+//   phone: string;
+//   email: string;
+// }
+
 interface WalkCenterProps {
   setAnimalUuid: React.Dispatch<React.SetStateAction<string | null>>;
   setCenterUuid: React.Dispatch<React.SetStateAction<string | null>>;
@@ -51,14 +59,6 @@ function WalkCenter() {
     refetch();
   }, [num]);
 
-  useEffect(() => {
-    if (animalDetail) {
-      const centerUuidValue = animalDetail.center_uuid;
-      setAnimalUuid(animal_uuid);
-      setCenterUuid(centerUuidValue);
-    }
-  }, [animalDetail]);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -79,7 +79,7 @@ function WalkCenter() {
           // animal_uuid가 null이 아닐 경우에만 실행
           try {
             const info = await GetAnimal(animal_uuid, accessToken);
-            setAnimalDetail(info);
+            setAnimalDetail(info.response);
           } catch (error) {
             console.log(error);
           }
@@ -88,6 +88,14 @@ function WalkCenter() {
       fetchData();
     }
   }, [selectedAnimal]);
+
+  useEffect(() => {
+    if (animalDetail) {
+      const centerUuidValue = animalDetail.center_uuid;
+      setAnimalUuid(animal_uuid);
+      setCenterUuid(centerUuidValue);
+    }
+  }, [animalDetail]);
 
   const animal_uuid = selectedAnimal ? selectedAnimal.animal_uuid : null;
 
@@ -98,8 +106,6 @@ function WalkCenter() {
       const centerUuid = animalDetail.center_uuid;
       setAnimalUuid(animal_uuid);
       setCenterUuid(centerUuid);
-      console.log("넵넵centerUuid");
-      console.log(centerUuid);
     }
   }, [animalDetail]);
 

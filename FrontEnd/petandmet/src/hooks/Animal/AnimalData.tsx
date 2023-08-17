@@ -27,6 +27,8 @@ const GetAnimal = async (
         Authorization: `${accessToken}`,
       },
     });
+    console.log("res.data");
+    console.log(res.data);
     return res.data; // 추가한 코드
   } catch (error) {
     console.log(error);

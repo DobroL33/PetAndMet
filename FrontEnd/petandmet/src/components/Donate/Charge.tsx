@@ -11,7 +11,7 @@ import { useAccessToken } from "hooks/useAccessToken";
 
 function Charge() {
   const [userMileage, setUserMileage] = useState(0);
-  const [selectedMoney, setSelectedMoney] = useState(0);
+  // const [selectedMoney, setSelectedMoney] = useState(0);
   const options = [5000, 10000, 15000, 20000, 50000];
 
   const theme = createTheme({
@@ -38,7 +38,7 @@ function Charge() {
         pay_method: "kakaopay",
         merchant_uid: "merchant_" + new Date().getTime(),
         name: "주문명 : 주문명 설정",
-        mileage: selectedMoney,
+        mileage: selectedOption,
         buyer_email: "dobrolee26@gmail.com",
         buyer_name: "구매자이름",
         buyer_tel: "010-4604-9647",
@@ -52,7 +52,7 @@ function Charge() {
               `${domain}/mileage/charge`,
               {
                 uuid: userUuid,
-                mileage: selectedMoney,
+                mileage: selectedOption,
               },
               {
                 headers: {

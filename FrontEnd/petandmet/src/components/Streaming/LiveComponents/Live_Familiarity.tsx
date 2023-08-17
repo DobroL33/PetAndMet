@@ -20,22 +20,33 @@ function Familiarity() {
   };
 
   useEffect(() => {
-    const payload = {
-      user_uuid: userUuid,
-      animal_uuid: animal_uuid,
+    const fetchData = () => {
+      const payload = {
+        user_uuid: userUuid,
+        animal_uuid: animal_uuid,
+      };
+
+      axios
+        .post(`${domain}/user/animal-friendliness`, payload, {
+          headers: { Authorization: `${accessToken}` },
+        })
+        .then((response) => {
+          const newProgress = response.data.response.percent;
+          if (newProgress !== progress) {
+            // 값이 변동되었을 때만 상태 업데이트
+            setProgress(newProgress);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
 
-    axios
-      .post(`${domain}/user/animal-friendliness`, payload, {
-        headers: { Authorization: `${accessToken}` },
-      })
-      .then((response) => {
-        setProgress(response.data.response.percent); // 응답받은 값을 Progress 상태로 변환
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [userUuid, animal_uuid, accessToken, progress]); // 의존성 배열
+    fetchData(); // 컴포넌트 마운트 시 바로 실행
+    const intervalId = setInterval(fetchData, 3000); // 그 후 5초마다 fetchData 호출
+
+    return () => clearInterval(intervalId); // 컴포넌트 unmount 시에 타이머 제거
+  }, [userUuid, animal_uuid, accessToken, progress]);
 
   return (
     <>
