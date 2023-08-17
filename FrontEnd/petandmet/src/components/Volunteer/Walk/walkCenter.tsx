@@ -15,14 +15,6 @@ import { GetAnimal } from "hooks/Animal/AnimalData";
 import { useAccessToken } from "hooks/useAccessToken";
 import { useStore } from "hooks/Volunteer/useWalkStore";
 
-// interface CenterData {
-//   uuid: string;
-//   name: string;
-//   address: string;
-//   phone: string;
-//   email: string;
-// }
-
 interface WalkCenterProps {
   setAnimalUuid: React.Dispatch<React.SetStateAction<string | null>>;
   setCenterUuid: React.Dispatch<React.SetStateAction<string | null>>;
@@ -79,8 +71,6 @@ function WalkCenter() {
     handleClose();
   };
 
-  const { data, refetch } = useAnimalList();
-  const num = 15;
   useEffect(() => {
     if (selectedAnimal) {
       setAnimalData(selectedAnimal);
@@ -108,6 +98,8 @@ function WalkCenter() {
       const centerUuid = animalDetail.center_uuid;
       setAnimalUuid(animal_uuid);
       setCenterUuid(centerUuid);
+      console.log("넵넵centerUuid");
+      console.log(centerUuid);
     }
   }, [animalDetail]);
 

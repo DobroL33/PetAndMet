@@ -54,6 +54,7 @@ function CustomCard({
 }) {
   const navigate = useNavigate();
   const { setCenterData, centerData } = useCenterData(); // useCenterData에서 setCenterData를 가져옵니다.
+
   console.log("발룬티어 centerData");
   console.log(centerData);
 

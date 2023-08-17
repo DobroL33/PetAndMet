@@ -62,23 +62,6 @@ function WalkDate() {
   const animal_uuid = Animal.animalData.animal_uuid;
   const [animalDetail, setAnimalDetail] = useState<AnimalData | null>(null); // 객체나 null로 초기화
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const info = await GetAnimal(animal_uuid, accessToken);
-  //       if (info !== undefined) {
-  //         setAnimalDetail(info);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-  console.log("흠animalDetail");
-  console.log(animalDetail);
-
   const name = centerData?.name;
   const email = centerData?.email;
   const phone = centerData?.phone;
@@ -86,17 +69,7 @@ function WalkDate() {
 
   let selectedDate = value?.format("YYYY-MM-DD");
   let selectedHour = value?.hour();
-  const center_uuid = centerData?.uuid;
-  const animal_uuid = AnimalData.animalData.animal_uuid;
 
-  // console.log(AnimalData);
-  // console.log("center_uuid");
-  // console.log(center_uuid);
-
-  // PM 시간 대 (12:00 PM 이후)를 조정
-  // if (value?.format("A") === "PM" && selectedHour) {
-  //   selectedHour += 12;
-  // }
   const selectedTime = String(selectedHour).padStart(2, "0"); // 시간을 두 자릿수 형식으로 변경 (예: 05, 13 등)
 
   const { sendWalkForm } = useWalkForm();
@@ -109,6 +82,7 @@ function WalkDate() {
       center_uuid: centerUuid as string,
       animal_uuid: animalUuid as string,
     };
+    console.log("폼폼");
     console.log(formData);
     sendWalkForm(formData);
   };
