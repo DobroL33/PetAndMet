@@ -79,6 +79,8 @@ function WalkCenter() {
     handleClose();
   };
 
+  const { data, refetch } = useAnimalList();
+  const num = 15;
   useEffect(() => {
     if (selectedAnimal) {
       setAnimalData(selectedAnimal);

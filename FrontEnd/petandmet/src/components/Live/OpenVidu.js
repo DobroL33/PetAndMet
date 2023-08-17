@@ -2,19 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { OpenVidu } from 'openvidu-browser'
 import axios from 'axios'
 import UserVideoComponent from './UserVideoComponent'
-import { useOpenSessionInfo } from 'hooks/Live/useSessionInfo'
-import { createOvSession } from 'hooks/Live/useOvOpen'
-import { useAccessToken } from 'hooks/useAccessToken'
 import { removeOvSession } from 'hooks/Live/useOvOut'
-import { useNavigate, useParams } from 'react-router-dom'
-import { usePrompt } from 'routes/Block'
+import { patchOvSession } from 'hooks/Live/useLivePatch'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 
 const OPENVIDU_SERVER_URL = 'https://i9b302.p.ssafy.io/ov/openvidu'
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
-const DEFAULT_SESSION = 'Session'
 
-const App = () => {
-  const [mySessionId, setMySessionId] = useState(DEFAULT_SESSION)
+const CreateOpenVidu = () => {
   const [myUserName, setMyUserName] = useState(
     'Participant' + Math.floor(Math.random() * 100)
   )
@@ -24,23 +19,43 @@ const App = () => {
   const [subscribers, setSubscribers] = useState([])
   const [isSubscriber, setIsSubscriber] = useState(false)
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
-  const [liveId, setLiveId] = useState()
-  const { sessionId, setSessionId } = useOpenSessionInfo()
-  const { centerUuid } = useAccessToken()
   const navigate = useNavigate()
-  const [createSessionInfo, setCreateSessionInfo] = useState({
-    center_uuid: centerUuid,
-    session_name: '',
-    session_id: '',
-    center_item_id: [],
-    animal_uuid: '',
-  })
-  const openLive = createOvSession()
-  const outLive = removeOvSession()
+  const location = useLocation()
 
+  const { id } = useParams()
+  const liveId = id
+  const outLive = removeOvSession()
+  const patchLive = patchOvSession()
+  const info = location.state
+  const [createSessionInfo, setCreateSessionInfo] = useState({
+    id: liveId,
+    center_uuid: info.center_uuid,
+    session_name: info.session_name,
+    session_id: '',
+    center_item_id: info.center_item_id,
+    animal_uuid: info.animal_uuid,
+  })
   const deleteSubscriber = streamManager => {
     const updatedSubscribers = subscribers.filter(sub => sub !== streamManager)
     setSubscribers(updatedSubscribers)
+  }
+
+  useEffect(() => {
+    if (createSessionInfo.session_id !== '') {
+      patchLive.mutate(createSessionInfo)
+    }
+  }, [createSessionInfo.session_id])
+  const handleSessionId = value => {
+    setCreateSessionInfo(prevInfo => ({
+      ...prevInfo,
+      session_id: value,
+    }))
+  }
+  const handleLiveId = value => {
+    setCreateSessionInfo(prevInfo => ({
+      ...prevInfo,
+      id: value,
+    }))
   }
 
   const joinSession = async () => {
@@ -68,6 +83,7 @@ const App = () => {
     })
     try {
       const token = await getToken() // getToken 함수 구현 필요
+      console.log(token)
       await mySession.connect(token, { clientData: myUserName })
 
       if (!isSubscriber) {
@@ -99,12 +115,14 @@ const App = () => {
         setMainStreamManager(publisher)
         setPublisher(publisher)
         setCurrentVideoDevice(currentVideoDevice)
-        // console.log('세션 아이디', mySessionId)
       }
     } catch (error) {
       console.log('세션 연결 오류:', error.code, error.message)
     }
   }
+  useEffect(() => {
+    joinSession()
+  }, [])
 
   const leaveSession = async () => {
     if (session) {
@@ -114,7 +132,6 @@ const App = () => {
 
     setSession(undefined)
     setSubscribers([])
-    setMySessionId(DEFAULT_SESSION)
     setMyUserName('Participant' + Math.floor(Math.random() * 100))
     setMainStreamManager(undefined)
     setPublisher(undefined)
@@ -155,8 +172,8 @@ const App = () => {
   }
 
   const getToken = async () => {
-    let sessionIdTemp = mySessionId
-    if (mySessionId === DEFAULT_SESSION) {
+    let sessionIdTemp = createSessionInfo.session_id
+    if (createSessionInfo.session_id === '') {
       sessionIdTemp = await createSession()
     }
     return await createToken(sessionIdTemp)
@@ -176,20 +193,13 @@ const App = () => {
           },
         }
       )
-      // console.log(response.data.id)
-      setMySessionId(response.data.id)
-      setSessionId(response.data.id)
-      handleChange('session_id', response.data.id)
-      // openLive.mutate(createSessionInfo)
+      handleSessionId(response.data.id)
       return response.data.id
     } catch (error) {
       console.error('Error creating session:', error)
       return ''
     }
   }
-  // useEffect(() => {
-  //   console.log('Session ID updated in A component')
-  // }, [setSessionId])
   const createToken = async sessionId => {
     try {
       const response = await axios.post(
@@ -209,83 +219,11 @@ const App = () => {
       return ''
     }
   }
-  const handleChange = (fieldName, value) => {
-    setCreateSessionInfo(prevState => ({
-      ...prevState,
-      [fieldName]: value,
-    }))
-  }
-  useEffect(() => {
-    if (createSessionInfo.session_id !== '') {
-      openLive.mutate(createSessionInfo, {
-        onSuccess: data => {
-          setLiveId(data.response.live_id)
-          navigate(`/live/${data.response.live_id}`)
-        },
-      })
-    }
-  }, [createSessionInfo.session_id])
-  // usePrompt('현재 페이지를 벗어나시겠습니까?', true, () => {
-  //   leaveSession()
-  // })
-  const useUnload = fn => {
-    const cb = React.useRef(fn)
-
-    React.useEffect(() => {
-      const onUnload = cb.current
-      window.addEventListener('beforeunload', onUnload)
-      return () => {
-        window.removeEventListener('beforeunload', onUnload)
-      }
-    }, [])
-  }
-  const { id } = useParams()
-  useUnload(e => {
-    outLive.mutate(id, {
-      onSuccess: data => {
-        console.log(data)
-        navigate('/live')
-        console.log('hey')
-      },
-    })
-    e.preventDefault()
-  })
   return (
     <div>
-      {session === undefined ? (
-        <div>
-          <div>
-            <h1> Join a video session </h1>
-            <p>{createSessionInfo.center_uuid}</p>
-            <input
-              type="text"
-              value={createSessionInfo.session_name}
-              onChange={e => handleChange('session_name', e.target.value)}
-              className="border-2"
-            />
-            <input
-              type="text"
-              value={createSessionInfo.animal_uuid}
-              onChange={e => handleChange('animal_uuid', e.target.value)}
-              className="border-2"
-            />
-            <p>
-              <button
-                name="commit"
-                type="submit"
-                value="JOIN"
-                onClick={joinSession}
-              >
-                접속
-              </button>
-            </p>
-          </div>
-        </div>
-      ) : null}
       {session !== undefined ? (
         <div id="session">
           <div id="session-header">
-            <h1 id="session-title">{mySessionId}</h1>
             <input
               className="btn btn-large btn-danger"
               type="button"
@@ -293,41 +231,26 @@ const App = () => {
               onClick={leaveSession}
               value="방송 종료"
             />
-            <input
+            {/* <input
               className="btn btn-large btn-success"
               type="button"
               id="buttonSwitchCamera"
               onClick={switchCamera}
               value="카메라 전환"
-            />
+            /> */}
           </div>
-
-          {/* <div id="main-video" className="col-md-6">
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div> */}
 
           {mainStreamManager !== undefined ? (
             <div id="main-video" className="col-md-6">
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
-          ) : null}
-          <div id="video-container" className="col-md-6">
-            {/* {publisher !== undefined ? (
-              <div className="stream-container col-md-6 col-xs-6" onClick={() => handleMainVideoStream(publisher)}>
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null} */}
-            {subscribers.map((sub, i) => (
-              <div id="main-video" key={sub.id} className="stream-container">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
-          </div>
+          ) : (
+            <div>Error</div>
+          )}
         </div>
       ) : null}
     </div>
   )
 }
 
-export default App
+export default CreateOpenVidu

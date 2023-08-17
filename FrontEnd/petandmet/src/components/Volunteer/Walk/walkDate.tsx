@@ -86,6 +86,8 @@ function WalkDate() {
 
   let selectedDate = value?.format("YYYY-MM-DD");
   let selectedHour = value?.hour();
+  const center_uuid = centerData?.uuid;
+  const animal_uuid = AnimalData.animalData.animal_uuid;
 
   // console.log(AnimalData);
   // console.log("center_uuid");

@@ -1,12 +1,5 @@
-import {
-  Button,
-  Typography,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Container,
-} from '@mui/material'
-import Box from '@mui/material/Box'
+import { Button, Typography, FormControl, Box,
+         InputLabel, MenuItem, Container } from '@mui/material'
 import InputForm from 'containers/components/Form'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -125,8 +118,8 @@ function BoardForm() {
             {title}
           </Typography>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-          <FormControl sx={{ width: '25%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', ml : '11.5%' }}>
+          <FormControl sx={{ width: '200px' }}>
             <InputLabel id="demo-simple-select-label">보호소</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -146,7 +139,7 @@ function BoardForm() {
               ))}
             </Select>
           </FormControl>
-        </div>
+        </Box>
 
         <InputForm
           setTitle={handleTitle}

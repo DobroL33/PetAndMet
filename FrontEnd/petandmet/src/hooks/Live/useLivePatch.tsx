@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult } from 'react-query'
+import { useMutation } from 'react-query'
 import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
 import customAxios from 'utils/axiosUtil'
@@ -11,24 +11,11 @@ export interface SessionInfo {
   animal_uuid: string
 }
 
-interface Response {
-  response: Result
-}
-
-interface Result {
-  live_id: Response
-}
-
-export function createOvSession(): UseMutationResult<
-  Response,
-  unknown,
-  SessionInfo,
-  unknown
-> {
+export function patchOvSession() {
   const [cookies, setCookie] = useCookies(['access_token'])
   const { accessToken, setAccessToken } = useAccessToken()
 
-  const axiosData = async (credential: SessionInfo): Promise<Response> => {
+  const axiosData = async (credential: SessionInfo) => {
     try {
       let token = accessToken
       if (token === '') {
@@ -40,11 +27,7 @@ export function createOvSession(): UseMutationResult<
           Authorization: `${token}`,
         },
       }
-      const response = await customAxios.post<Response>(
-        '/live',
-        credential,
-        config
-      )
+      const response = await customAxios.patch('/live', credential, config)
       if (response.config.headers.Authorization !== token) {
         setCookie('access_token', response.config.headers.Authorization, {
           secure: true,
@@ -59,5 +42,5 @@ export function createOvSession(): UseMutationResult<
       throw error
     }
   }
-  return useMutation<Response, unknown, SessionInfo, unknown>(axiosData)
+  return useMutation(axiosData)
 }
