@@ -69,9 +69,9 @@ function CheckList() {
             </label>
             </Box>
             <Box sx={{ ml: 3, mb : 2, width:'720px', 
-                      textAlign :'start', bgcolor: '#fcfaa7', height: '56px',
+                      textAlign :'start', bgcolor: '#FFD396', height: '56px',
                       pl: 1, justifyContent : 'center', display: 'flex',
-                      flexDirection: 'column'
+                      flexDirection: 'column', borderRadius : 2
                       }}>
               <Typography sx={{fontSize : 20, fontWeight : 'bold'}}>
                 {question}
