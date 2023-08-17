@@ -25,6 +25,74 @@ function Charge() {
     setSelectedOption(value);
   };
 
+  const handleChargeClick = () => {
+    const IMP = (window as any).IMP;
+    IMP.init("imp02430511");
+    console.log(userUuid);
+    console.log(selectedOption);
+
+    IMP.request_pay(
+      {
+        pg: "kakao",
+        pay_method: "kakaopay",
+        merchant_uid: "merchant_" + new Date().getTime(),
+        name: "주문명 : 주문명 설정",
+        amount: selectedOption,
+        buyer_email: "dobrolee26@gmail.com",
+        buyer_name: "구매자이름",
+        buyer_tel: "010-4604-9647",
+        buyer_addr: "대전 광역시 동구",
+        buyer_postcode: "123-456",
+      },
+      (rsp: any) => {
+        if (rsp.success) {
+          axios
+            .post(
+              `${domain}/mileage/charge`,
+              {
+                uuid: userUuid,
+                mileage: selectedOption,
+              },
+              {
+                headers: {
+                  Authorization: `${accessToken}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log("결제에 실패하였습니다. 에러내용:", rsp.error_msg);
+        }
+        console.log(`"${domain}/mileage/charge"`);
+      }
+    );
+  };
+
+  // 마일리지 확인
+  useEffect(() => {
+    const url = `${domain}/user/mileage/${userUuid}`;
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `${accessToken}`, // Header 형태 확인
+        },
+      })
+      .then((response) => {
+        const mileage = response.data.response.mileage; // 응답 형태 확인
+        if (mileage !== userMileage) {
+          setUserMileage(mileage);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [userUuid, accessToken, userMileage]);
+
   return (
     <div>
       <div style={{ padding: 20 }}>
