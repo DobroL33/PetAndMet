@@ -43,7 +43,7 @@ function StreamingPage() {
           display: "flex",
           flexDirection: "column",
           bgcolor: "#ffffff",
-          height: "45rem",
+          height: "40rem",
           width: "98%",
           borderRadius: 5,
         }}
@@ -65,10 +65,12 @@ function StreamingPage() {
                   sx={{
                     backgroundColor: "#7b7777",
                     flex: 1,
-                    height: "100%",
-                    width: "90%",
+                    height: "95%",
+                    width: "100%",
                   }}
-                ></Box>
+                >
+                  영상
+                </Box>
               </Box>
             </Grid>
             {/* Top Right */}
@@ -91,12 +93,12 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: "100%" }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 2, width: "100%" }}>
             {/* Bottom Right */}
             <Box
               sx={{
                 backgroundColor: "#FFA629",
-                height: "100%",
+                height: "80%",
                 display: "flex",
                 borderRadius: 5,
                 justifyContent: "Left",
@@ -115,7 +117,7 @@ function StreamingPage() {
                   src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                   alt=""
                 />
-                <h4 className="m-5">
+                <h4 className="m-3">
                   Name: {animal.name}
                   <br />
                   나이: {animal.age}

@@ -9,16 +9,19 @@ import axios from "axios";
 import { useCenterStore } from "hooks/Center/CenterMutation";
 import { useCenterData } from "hooks/Center/useCenterData";
 import CenterDataList from "hooks/Center/CenterMutation";
+import { useAnimalList } from "hooks/Animal/useAnimalList";
+import useAnimal from "hooks/Animal/useAnimal";
 
-interface CenterData {
-  uuid: string;
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
-}
+// interface CenterData {
+//   uuid: string;
+//   name: string;
+//   address: string;
+//   phone: string;
+//   email: string;
+// }
 
 function WalkCenter() {
+  const [selectedAnimal, setSelectedAnimal] = useState<any>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,38 +31,27 @@ function WalkCenter() {
     setAnchorEl(null);
   };
 
-  const [centers, setCenters] = useState<any[]>([]);
+  const handleMenuItemClick = (animal: any) => {
+    setSelectedAnimal(animal);
+    handleClose();
+  };
+
+  const { data, refetch } = useAnimalList();
+  const num = 15;
+  useEffect(() => {
+    refetch();
+  }, [num]);
+
+  const { setAnimalData } = useAnimal();
+  const AnimalData = useAnimal();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const centersData = await CenterDataList();
-      setCenters(centersData);
-    };
-    fetchData();
-  }, []);
+    if (selectedAnimal) {
+      setAnimalData(selectedAnimal);
+    }
+  }, [selectedAnimal]);
 
-  // setCenters(centers);
-
-  const { centerData } = useCenterData();
-  const uuid = centerData?.uuid;
-
-  const [centerDetail, setCenterDetail] = useState<any | null>(null);
-
-  useEffect(() => {
-    const fetchCenterDetail = async () => {
-      try {
-        const response = await axios.get(
-          `${domain}/center/detail?id=${uuid}`,
-          {}
-        );
-        setCenterDetail(response.data.response.board);
-      } catch (error) {
-        console.error("Failed to fetch center details:", error);
-      }
-    };
-
-    fetchCenterDetail();
-  }, [uuid]);
+  // const { centerData, setCenterData } = useCenterData(); // 전역
 
   return (
     <div className="my-0.5 border rounded">
@@ -71,7 +63,7 @@ function WalkCenter() {
         onClick={handleClick}
         sx={{ height: "50px" }}
       >
-        <p className="grow">{centerDetail?.name}에 산책 신청하기</p>
+        <p className="grow">함께 산책하길 기다리는 {selectedAnimal?.name}</p>
       </Button>
 
       <Menu
@@ -88,8 +80,23 @@ function WalkCenter() {
           vertical: "top",
           horizontal: "left",
         }}
+        PaperProps={{
+          style: {
+            backgroundColor: "warning", // 여기에 실제 색상 코드를 넣어주세요.
+          },
+        }}
       >
-        {/* {here} */}
+        {data?.response.map((animal, index) => (
+          <MenuItem
+            key={index}
+            onClick={() => handleMenuItemClick(animal)}
+            sx={{
+              backgroundColor: index % 2 === 0 ? "warning" : "연노랑", // 짝수와 홀수 인덱스에 따라 색상 변경
+            }}
+          >
+            {animal.name}
+          </MenuItem>
+        ))}
       </Menu>
       {/* <HouseSidingIcon className="m-3" color="action"></HouseSidingIcon> */}
     </div>
