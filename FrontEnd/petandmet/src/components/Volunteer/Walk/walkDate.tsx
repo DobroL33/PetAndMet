@@ -6,9 +6,30 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useCenterData } from "hooks/Center/useCenterData";
 import { Button } from "react-bootstrap";
-import useAnimal from "hooks/Animal/useAnimal";
 import useWalkForm from "hooks/Volunteer/useWalkForm";
 import { useAccessToken } from "hooks/useAccessToken";
+import useAnimal from "hooks/Animal/useAnimal";
+import AnimalDetail from "containers/components/AnimalDetail";
+import { GetAnimal } from "hooks/Animal/AnimalData";
+import { useState, useEffect } from "react";
+import { useStore } from "hooks/Volunteer/useWalkStore";
+
+interface AnimalData {
+  name: string | null;
+  age: number | null;
+  specie: string | null;
+  breed: string | null;
+  gender: string | null;
+  character: string | null;
+  find_place: string | null;
+  center_uuid: string;
+  enter_date: string | null;
+  adoption_status: string | null;
+  enter_age: number | null;
+  notice_date: string | null;
+  adoption_start_date: string | null;
+  photo_url: string | null;
+}
 
 interface CenterData {
   uuid: string;
@@ -23,15 +44,40 @@ interface WalkForm {
   time: number;
   center_uuid: string;
   animal_uuid: string;
-  status: string;
-  user_uuid: string;
+  // status: string;
+  // user_uuid: string;
+}
+
+interface WalkDateProps {
+  animalUuid: string | null;
+  centerUuid: string | null;
 }
 
 function WalkDate() {
-  const { userUuid } = useAccessToken();
+  const { animalUuid, centerUuid } = useStore();
+  const { userUuid, accessToken } = useAccessToken();
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
   const { centerData } = useCenterData();
-  const AnimalData = useAnimal();
+  const Animal = useAnimal();
+  const animal_uuid = Animal.animalData.animal_uuid;
+  const [animalDetail, setAnimalDetail] = useState<AnimalData | null>(null); // 객체나 null로 초기화
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const info = await GetAnimal(animal_uuid, accessToken);
+  //       if (info !== undefined) {
+  //         setAnimalDetail(info);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+  console.log("흠animalDetail");
+  console.log(animalDetail);
 
   const name = centerData?.name;
   const email = centerData?.email;
@@ -42,6 +88,10 @@ function WalkDate() {
   let selectedHour = value?.hour();
   const center_uuid = centerData?.uuid;
   const animal_uuid = AnimalData.animalData.animal_uuid;
+
+  // console.log(AnimalData);
+  // console.log("center_uuid");
+  // console.log(center_uuid);
 
   // PM 시간 대 (12:00 PM 이후)를 조정
   // if (value?.format("A") === "PM" && selectedHour) {
@@ -56,16 +106,15 @@ function WalkDate() {
     const formData: WalkForm = {
       date: selectedDate as string,
       time: Number(selectedTime),
-      center_uuid: center_uuid as string,
-      animal_uuid: animal_uuid,
-      user_uuid: userUuid as string,
-      status: "PENDING",
+      center_uuid: centerUuid as string,
+      animal_uuid: animalUuid as string,
     };
-    console.log("ㅇㅇformData");
     console.log(formData);
-
     sendWalkForm(formData);
   };
+  console.log("마지막==========");
+  console.log(animalUuid);
+  console.log(centerUuid);
 
   return (
     <>
@@ -90,7 +139,7 @@ function WalkDate() {
         <p>주소는 {address} 입니다.</p>
         <br></br>
         <p>
-          원활한 신청을 위해 사락 해보시는건 어떨까요? <br></br>
+          원활한 신청을 위해 연락 먼저 해보시는건 어떨까요? <br></br>
           {phone} {email}
         </p>
         <Button
@@ -101,7 +150,8 @@ function WalkDate() {
             marginLeft: "auto",
             marginRight: "auto",
             display: "block",
-            marginBottom: "30px",
+            marginTop: "40px",
+            // marginBottom: "10px",
           }}
         >
           신청하기

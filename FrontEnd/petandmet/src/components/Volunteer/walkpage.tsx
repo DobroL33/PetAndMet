@@ -45,8 +45,8 @@ function WalkPage() {
           }}
         >
           <div className="text-left my-5 text-2xl font-bold">
-            <WalkCenter></WalkCenter>
-            <WalkDate></WalkDate>
+            <WalkCenter />
+            <WalkDate />
           </div>
         </Container>
       </Container>
