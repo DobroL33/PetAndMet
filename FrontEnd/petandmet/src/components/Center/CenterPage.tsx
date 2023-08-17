@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { domain } from 'hooks/customQueryClient';
 import CenterAnimalList from 'components/Center/CenterAnimalList';
 import CenterItemList from './CenterItemList';
-
+import CenterWalk from './CenterWalk';
 interface AnimalsData {
   name: string;
   age: number;
@@ -112,6 +112,41 @@ function CenterPage() {
             <Button onClick={UpdateCenter}>수정</Button>
           </Grid>
         </Grid>
+
+        <Grid>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            sx={{ bgcolor: '#E5E5E5', marginY: '3px', borderRadius: '5px' }}
+          >
+            <Grid
+              xs={2}
+              sx={{
+                textAlign: 'justify',
+                fontSize: '1.5rem',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              산책 신청 현황
+            </Grid>
+
+            <Grid xs={10} sx={{ textAlign: 'end' }}>
+            </Grid>
+
+            <Box
+              sx={{
+                mb: 1,
+                display: 'grid',
+                gap: '8px', // 카드 간 간격 설정
+                height: '90%',
+              }}
+            >
+              <CenterWalk ></CenterWalk>
+            </Box>
+          </Grid>
+        </Grid>
+
         <Grid>
           <Grid
             container
@@ -149,6 +184,7 @@ function CenterPage() {
             </Box>
           </Grid>
         </Grid>
+
         <Grid
           container
           justifyContent="center"
