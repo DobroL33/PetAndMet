@@ -8,8 +8,8 @@ interface WalkForm {
   time: number;
   center_uuid: string;
   animal_uuid: string;
-  user_uuid: string;
-  status: string;
+  // user_uuid: string;
+  // status: string;
 }
 
 const useWalkForm = () => {
