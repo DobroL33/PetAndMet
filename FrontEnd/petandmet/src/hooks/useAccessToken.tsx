@@ -1,12 +1,13 @@
+import { String } from 'lodash'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
 interface AccessTokenState {
   accessToken: string | null | unknown
-  centerUuid: string | null
+  centerUuid: string
   userUuid: string | null
   setAccessToken: (accessToken: string | null | unknown) => void
-  setCenterUuid: (centerUuid: string | null) => void
+  setCenterUuid: (centerUuid: string) => void
   setUserUuid: (userUuid: string | null) => void
 }
 

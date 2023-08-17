@@ -35,11 +35,11 @@ interface Result {
   response: JoinData
 }
 
-export function joinOvSession(credential: JoinSession): UseQueryResult<Result> {
+export function joinOvSession(credential: string): UseQueryResult<Result> {
   const [cookies, setCookie] = useCookies(['access_token'])
   const { accessToken, setAccessToken } = useAccessToken()
 
-  if (credential.live_id === 0) {
+  if (credential === '') {
     const axios = () => {
       return
     }
@@ -59,7 +59,7 @@ export function joinOvSession(credential: JoinSession): UseQueryResult<Result> {
         },
       }
       const response = await customAxios.get(
-        `/live/detail?id=${credential.live_id}`,
+        `/live/detail?id=${credential}`,
         config
       )
       if (response.config.headers.Authorization !== token) {
@@ -76,5 +76,5 @@ export function joinOvSession(credential: JoinSession): UseQueryResult<Result> {
       throw error
     }
   }
-  return useQuery<Result>(['joinSession', credential.live_id], axiosData)
+  return useQuery<Result>(['joinSession', credential], axiosData)
 }

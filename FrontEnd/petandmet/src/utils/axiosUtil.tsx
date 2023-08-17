@@ -59,8 +59,8 @@ customAxios.interceptors.response.use(
           //Refresg토큰이 죽어서 로그인 창으로 보내야 하는 경우
         } else if (error.response.data.detail === 'Refresh') {
           console.log('Refrech 죽음')
-          //   console.log('요청실패', error.config.headers.Authorization)
-          //   console.log('API', customAxios.defaults.headers.common.Authorization)
+          console.log('요청실패', error.config.headers.Authorization)
+          console.log('API', customAxios.defaults.headers.common.Authorization)
           alert('로그인을 다시 해주세요')
           window.location.href = '/login'
           // return 'Refresh'
