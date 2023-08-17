@@ -9,20 +9,13 @@ const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
 
 const JoinOpenVidu = props => {
   const liveId = props.Id
-  const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(true)
   const [mySessionId, setMySessionId] = useState('')
-  // const [myUserName, setMyUserName] = useState(
-  //   'Participant' + Math.floor(Math.random() * 100)
-  // )
   const [myUserName, setMyUserName] = useState(props.Name)
   const [session, setSession] = useState(undefined)
   const [mainStreamManager, setMainStreamManager] = useState(undefined)
   const [subscribers, setSubscribers] = useState([])
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
-  // const [liveId, setLiveId] = useState({
-  //   live_id: 1234,
-  // })
-  const { data, refetch } = joinOvSession(liveId)
+  const { data, refetch, isSuccess } = joinOvSession(liveId)
 
   const deleteSubscriber = streamManager => {
     const updatedSubscribers = subscribers.filter(sub => sub !== streamManager)
@@ -59,19 +52,6 @@ const JoinOpenVidu = props => {
     }
   }
 
-  const leaveSession = () => {
-    if (session) {
-      session.disconnect()
-    }
-
-    setSession(undefined)
-    setSubscribers([])
-    setMySessionId('')
-    setMyUserName('Participant' + Math.floor(Math.random() * 100))
-    setMainStreamManager(undefined)
-    setPublisher(undefined)
-  }
-
   const getToken = async () => {
     let sessionIdTemp = mySessionId
     return await createToken(sessionIdTemp)
@@ -96,53 +76,56 @@ const JoinOpenVidu = props => {
       throw error
     }
   }
+  useEffect(() => {
+    handleJoinSession()
+  }, [data])
   const handleJoinSession = async () => {
     try {
       await refetch()
       console.log(data)
-      setMySessionId(data.response.session_id)
+      if (isSuccess) {
+        setMySessionId(data.response.session_id)
+      }
     } catch (error) {
       console.log('error', error)
     }
   }
   useEffect(() => {
-    handleJoinSession()
-  }, [data])
-  useEffect(() => {
-    joinSession()
+    if (mySessionId !== '') {
+      joinSession()
+      setIsError(false)
+    }
   }, [mySessionId])
+
+  useEffect(() => {
+    console.log(subscribers)
+  }, [subscribers])
+
   return (
     <div>
-      {isError ? (
+      {isError && session === undefined ? (
         <div>Error</div>
-      ) : session !== undefined ? (
-        <div id="session">
-          <div id="session-header">
-            <h1 id="session-title">{mySessionId}</h1>
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="방송 종료"
-            />
-          </div>
-
-          {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-          ) : null}
-          <div id="video-container" className="col-md-6">
-            {subscribers.map((sub, i) => (
-              <div id="main-video" key={sub.id} className="stream-container">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
+      ) : (
+        <>
+          {subscribers.length > 0 ? (
+            <div id="session">
+              <div id="video-container" className="col-md-6">
+                {subscribers.map((sub, i) => (
+                  <div
+                    id="main-video"
+                    key={i + 'V'}
+                    className="stream-container"
+                  >
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
+            </div>
+          ) : (
+            <div>Loading</div>
+          )}
+        </>
+      )}
     </div>
   )
 }

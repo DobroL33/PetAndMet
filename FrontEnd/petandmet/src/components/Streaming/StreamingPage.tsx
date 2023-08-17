@@ -66,15 +66,9 @@ function StreamingPage() {
                   flexDirection: 'column',
                 }}
               >
-                <JoinOpenVidu Id={liveId} Name={name}></JoinOpenVidu>
-                {/* <Box
-                  sx={{
-                    backgroundColor: '#7b7777',
-                    flex: 1,
-                    height: '100%',
-                    width: '90%',
-                  }}
-                ></Box> */}
+                <div className="w-100 h-100 overflow-hidden">
+                  <JoinOpenVidu Id={liveId} Name={name}></JoinOpenVidu>
+                </div>
               </Box>
             </Grid>
             {/* Top Right */}
