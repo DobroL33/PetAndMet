@@ -45,11 +45,11 @@ function StreamingPage() {
       <Container
         sx={{
           my: 5,
-          display: 'flex',
-          flexDirection: 'column',
-          bgcolor: '#ffffff',
-          height: '45rem',
-          width: '98%',
+          display: "flex",
+          flexDirection: "column",
+          bgcolor: "#ffffff",
+          height: "40rem",
+          width: "98%",
           borderRadius: 5,
         }}
       >
@@ -91,13 +91,13 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 3, width: '100%' }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 2, width: "100%" }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: '#FFA629',
-                height: '100%',
-                display: 'flex',
+                backgroundColor: "#FFA629",
+                height: "80%",
+                display: "flex",
                 borderRadius: 5,
                 justifyContent: 'Left',
               }}
@@ -115,7 +115,7 @@ function StreamingPage() {
                   src="https://cdn.imweb.me/upload/S201910012ff964777e0e3/62f9a36ea3cea.jpg"
                   alt=""
                 />
-                <h4 className="m-5">
+                <h4 className="m-3">
                   Name: {animal.name}
                   <br />
                   나이: {animal.age}

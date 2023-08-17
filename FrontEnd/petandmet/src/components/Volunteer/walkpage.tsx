@@ -1,29 +1,25 @@
-import CssBaseline from '@mui/material/CssBaseline'
-import Container from '@mui/material/Container'
-import { Button, colors } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import { useState } from 'react'
-import WalkCenter from './Walk/walkCenter'
-import WalkDate from './Walk/walkDate'
-import 'react-calendar/dist/Calendar.css'
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import { Button, colors } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import WalkCenter from "./Walk/walkCenter";
+import WalkDate from "./Walk/walkDate";
+import "react-calendar/dist/Calendar.css";
 
 const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FFA629',
-  color: 'white',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  boxShadow: 'none',
-  '&:hover': {
-    backgroundColor: 'orange',
+  backgroundColor: "#FFA629",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  boxShadow: "none",
+  "&:hover": {
+    backgroundColor: "orange",
   },
-  margin: '5px',
-}))
+  margin: "5px",
+}));
 
 function WalkPage() {
-  const [center, setCenter] = useState(['A보호소', 'B보호소', 'C보호소'])
-  const [date, setDate] = useState(['7월29일', '7월30일', '7월31일'])
-  const [time, setTime] = useState(['A보호소', 'B보호소', 'C보호소'])
-
   return (
     <>
       <CssBaseline />
@@ -31,20 +27,20 @@ function WalkPage() {
       <Container
         sx={{
           mt: 5,
-          display: 'grid',
-          bgcolor: '#FFE8A3',
-          height: '45rem',
-          width: '50%',
+          display: "grid",
+          bgcolor: "#FFE8A3",
+          height: "45rem",
+          width: "50%",
           borderRadius: 5,
         }}
       >
         <Container
           sx={{
             mt: 5,
-            display: 'grid',
-            bgcolor: '#ffffff',
-            height: '90%',
-            width: '95%',
+            display: "grid",
+            bgcolor: "#ffffff",
+            height: "90%",
+            width: "95%",
             borderRadius: 5,
           }}
         >
@@ -55,7 +51,7 @@ function WalkPage() {
         </Container>
       </Container>
     </>
-  )
+  );
 }
 
-export default WalkPage
+export default WalkPage;

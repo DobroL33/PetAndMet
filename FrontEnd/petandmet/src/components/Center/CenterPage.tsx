@@ -1,5 +1,5 @@
 import { Box, Container, Grid, Button } from '@mui/material'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { domain } from 'hooks/customQueryClient'
@@ -11,7 +11,7 @@ import {
 } from 'hooks/Animal/useAnimalSearch'
 import { useAccessToken } from 'hooks/useAccessToken'
 import { useCenterLiveList } from 'hooks/Live/useLiveSearchList'
-
+import CenterWalk from './CenterWalk';
 interface AnimalsData {
   name: string
   age: number
@@ -38,6 +38,7 @@ interface ItemsData {
 }
 
 function CenterPage() {
+<<<<<<< FrontEnd/petandmet/src/components/Center/CenterPage.tsx
   const location = useLocation()
   const [center, setCenter] = useState<Center | null>(null)
   const [animals, setAnimalData] = useState<AnimalsData[]>([])
@@ -63,6 +64,48 @@ function CenterPage() {
     return <div>로딩중</div>
   }
 
+=======
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [center, setCenter] = useState<Center | null>(null); 
+  const [animals, setAnimalData] = useState<AnimalsData[]>([]);
+  const [items, setItems] = useState<ItemsData[]|null>(null);
+
+  useEffect(() => {
+    async function fetchAnimalData() {
+      try {
+        const cetnerRes = await axios.get(`${domain}/center/detail?id=${location.state}`)
+        const centerData = cetnerRes.data.response.board
+        setCenter(centerData)
+
+        const ItemRes = await axios.get(`${domain}/center/item?uuid=${location.state}`)
+        const ItemData = ItemRes.data.response.centerItems
+        setItems(ItemData)
+
+        const response = await axios.get(`${domain}/animal/search`,
+          {
+            params: { centerUuid: location.state} 
+          }
+        );
+        const AnimalsData: AnimalsData[] = response.data.response.animals;
+        setAnimalData(AnimalsData)
+      } catch (error) {
+        console.error('Error fetching animal data:', error)
+      }
+    }
+    fetchAnimalData();
+  }, []);
+
+  const EnrollItem = () => {
+    navigate('item/enroll')
+  }
+  const EnrollAnimal = () => {
+    navigate('/animal/enroll')
+  }
+  const UpdateCenter = () => {
+    navigate('center/update', {state : center})
+  }
+>>>>>>> FrontEnd/petandmet/src/components/Center/CenterPage.tsx
   return (
     <>
       <Container
@@ -100,10 +143,50 @@ function CenterPage() {
             <span>E-mail : </span>
             <span>{center ? center.email : 'Center E-mail'}</span>
           </Grid>
+<<<<<<< FrontEnd/petandmet/src/components/Center/CenterPage.tsx
           <Grid item xs={2} sx={{ textAlign: 'end' }}>
             <Button>수정</Button>
+=======
+          <Grid xs={2} sx={{ textAlign: 'end' }}>
+            <Button onClick={UpdateCenter}>수정</Button>
           </Grid>
         </Grid>
+
+        <Grid>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            sx={{ bgcolor: '#E5E5E5', marginY: '3px', borderRadius: '5px' }}
+          >
+            <Grid
+              xs={2}
+              sx={{
+                textAlign: 'justify',
+                fontSize: '1.5rem',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              산책 신청 현황
+            </Grid>
+
+            <Grid xs={10} sx={{ textAlign: 'end' }}>
+            </Grid>
+
+            <Box
+              sx={{
+                mb: 1,
+                display: 'grid',
+                gap: '8px', // 카드 간 간격 설정
+                height: '90%',
+              }}
+            >
+              <CenterWalk ></CenterWalk>
+            </Box>
+>>>>>>> FrontEnd/petandmet/src/components/Center/CenterPage.tsx
+          </Grid>
+        </Grid>
+
         <Grid>
           <Grid
             container
@@ -124,9 +207,14 @@ function CenterPage() {
               보호동물
             </Grid>
 
+<<<<<<< FrontEnd/petandmet/src/components/Center/CenterPage.tsx
             <Grid item xs={10} sx={{ textAlign: 'end' }}>
               <Button>더보기</Button>
               <Button>수정</Button>
+=======
+            <Grid xs={10} sx={{ textAlign: 'end' }}>
+              <Button onClick={EnrollAnimal}>등록</Button>
+>>>>>>> FrontEnd/petandmet/src/components/Center/CenterPage.tsx
             </Grid>
 
             <Box
@@ -145,6 +233,7 @@ function CenterPage() {
             </Box>
           </Grid>
         </Grid>
+
         <Grid
           container
           justifyContent="center"
@@ -168,9 +257,14 @@ function CenterPage() {
           >
             물품
           </Grid>
+<<<<<<< FrontEnd/petandmet/src/components/Center/CenterPage.tsx
           <Grid item xs={10} sx={{ textAlign: 'end' }}>
             <Button>더보기</Button>
             <Button>수정</Button>
+=======
+          <Grid xs={10} sx={{ textAlign: 'end' }}>
+            <Button onClick={EnrollItem}>등록</Button>
+>>>>>>> FrontEnd/petandmet/src/components/Center/CenterPage.tsx
           </Grid>
           <Box
             sx={{

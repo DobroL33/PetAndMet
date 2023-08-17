@@ -3,6 +3,9 @@ import Router from 'routes/Router'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 function App() {
+  interface Window {
+    IMP: any;
+  }
   return (
     <div className="App h-screen">
       <Router></Router>
@@ -20,7 +23,7 @@ function App() {
         theme="colored"
       />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
