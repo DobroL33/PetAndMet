@@ -31,7 +31,7 @@ export function useAnimalList() {
           Authorization: `${token}`,
         },
       }
-      const response = await customAxios.get<Response>('/animal?page=0', config)
+      const response = await customAxios.get<Response>('/animal?page=0&size=100', config)
       if (response.config.headers.Authorization !== token) {
         setCookie('access_token', response.config.headers.Authorization, {
           secure: true,
