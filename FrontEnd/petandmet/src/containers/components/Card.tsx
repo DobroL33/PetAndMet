@@ -87,9 +87,6 @@ function CardInfo({ animal }: CardInfoProps) {
             </div>
           ))}
         </div>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
       </CardContent>
       {/* <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">

@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 
 const CustomButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FFA629',
-  color: 'white',
+  color: 'black',
   padding: '10px 20px',
   borderRadius: '5px',
   boxShadow: 'none',
@@ -49,29 +49,41 @@ function CheckList() {
 
   return (
     <>
+      <Container sx={{ padding: '20px'}}>
       <div style={{ padding: 20 }}>
         <Typography variant="h4" style={{ color: '#FFA629', fontWeight: 'bold' }}>
           반려 동물 입양 전 자가진단 체크리스트
         </Typography>
-      </div>    <Container sx={{ backgroundColor: '#FFBC5F', padding: '20px', borderRadius: 5 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+      </div>
+        <Grid sx={{ display: 'flex', flexDirection: 'column'}}>
         {questions.map((question, index) => (
-            <div key={index} style={{ marginBottom: '20px', borderBottom: '1px solid #FFFFFF' }}>
-            <label>
+          <Grid sx={{display:'inline-flex', justifyContent :'center'}}>
+            <Box>
+            <label>  
                 <input
                 type="checkbox"
                 checked={checklist[index]}
                 onChange={() => toggleCheckbox(index)}
+                style={{ width: '32px', height: '56px' }} // 이 부분을 추가하여 크기 조절
                 />
-                {question}
             </label>
-            </div>
+            </Box>
+            <Box sx={{ ml: 3, mb : 2, width:'720px', 
+                      textAlign :'start', bgcolor: '#fcfaa7', height: '56px',
+                      pl: 1, justifyContent : 'center', display: 'flex',
+                      flexDirection: 'column'
+                      }}>
+              <Typography sx={{fontSize : 20, fontWeight : 'bold'}}>
+                {question}
+                </Typography>
+            </Box>
+          </Grid>
         ))}
-        </Box>
+        </Grid>
         <p style={{opacity: 0.5}}>* 모든 체크를 완료해야 버튼이 활성화 됩니다.</p>
     </Container>
       {/* 모든 체크박스가 선택되지 않은 경우 비활성화된 버튼 */}
-      {!isAllChecked && <CustomButton disabled>입양 시설 알아보기</CustomButton>}
+      {!isAllChecked && <CustomButton sx={{backgroundColor : 'white'}} disabled>입양 시설 알아보기</CustomButton>}
 
       {/* 모든 체크박스가 선택되어 활성화된 버튼 */}
       {isAllChecked && <CustomButton onClick={() => alert('버튼이 클릭되었습니다!')}>입양 시설 알아보기</CustomButton>}
