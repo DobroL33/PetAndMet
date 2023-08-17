@@ -1,112 +1,158 @@
-import React, { useState, useEffect } from "react";
-import KakaoCharge from "components/Donate/KakaoCharge";
+import { useState } from "react";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import kakaopay from "images/kakaopay.png";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, { useRef } from "react";
+import axios from "axios";
+import KakaoPayment from "./KakaoCharge";
 
-<<<<<<< HEAD
-const Charge: React.FC = () => {
-  return <KakaoCharge></KakaoCharge>;
-=======
-const KakaoCharge: React.FC = () => {
-  const [userName, setUserName] = useState<string>("");
+const options = [5000, 10000, 15000, 20000, 50000];
 
-  const [selectedMoney, setSelectedMoney] = useState<string>("");
+const theme = createTheme({
+  typography: {
+    fontSize: 20, // 전체 Typography의 fontSize를 24px로 설정합니다.
+  },
+});
 
-  const [isScriptLoaded, setScriptLoaded] = useState(false);
-  const { accessToken, userUuid } = useAccessToken();
+function Charge() {
+  const [selectedOption, setSelectedOption] = useState<number>(options[0]);
+  const userNameRef = useRef<HTMLInputElement>(null); // userNameRef 추가
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.iamport.kr/js/iamport.payment-1.1.5.js";
-    script.onload = () => setScriptLoaded(true);
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handleChargeClick = () => {
-    const IMP = (window as any).IMP;
-    IMP.init("imp02430511");
-
-    IMP.request_pay(
-      {
-        pg: "kakao",
-        pay_method: "kakaopay",
-        merchant_uid: "merchant_" + new Date().getTime(),
-        name: "주문명 : 주문명 설정",
-        mileage: selectedMoney,
-        buyer_email: "iamport@siot.do",
-        buyer_name: "구매자이름",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "인천광역시 부평구",
-        buyer_postcode: "123-456",
-      },
-      (rsp: any) => {
-        if (rsp.success) {
-          axios
-            .post(
-              `${domain}/mileage/charge`,
-              {
-                uuid: userUuid,
-                mileage: selectedOption,
-              },
-              {
-                headers: {
-                  Authorization: `${accessToken}`,
-                },
-              }
-            )
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } else {
-          console.log("결제에 실패하였습니다. 에러내용:", rsp.error_msg);
-        }
-        console.log(`"${domain}/mileage/charge"`);
-      }
-    );
+  const handleOptionChange = (value: number) => {
+    setSelectedOption(value);
   };
 
   return (
-    <div className="card-body bg-white mt-0 shadow">
-      <p style={{ fontWeight: "bold" }}>카카오페이 현재 사용가능</p>
-      <label>userName : </label>
-      <input
-        type="text"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-      />
-      <br />
-      {[5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 50000].map(
-        (mileage) => (
-          <label key={mileage} className="box-radio-input">
-            <input
-              type="radio"
-              name="cp_item"
-              value={mileage}
-              checked={selectedMoney === mileage.toString()}
-              onChange={() => setSelectedMoney(mileage.toString())}
-            />
-            <span>{mileage}원</span>
-          </label>
-        )
-      )}
-      <p style={{ color: "#ac2925", marginTop: "30px" }}>
-        카카오페이의 최소 충전금액은 5,000원이며 <br />
-        최대 충전금액은 50,000원 입니다.
-      </p>
-      <button
-        type="button"
-        className="btn btn-lg btn-block  btn-custom"
-        onClick={handleChargeClick}
-      >
-        충 전 하 기
-      </button>
+    <div>
+      <div style={{ padding: 20 }}>
+        <Typography
+          variant="h4"
+          style={{ color: "#FFA629", fontWeight: "bold" }}
+        >
+          충전하기
+        </Typography>
+      </div>
+      <ThemeProvider theme={theme}>
+        <Container>
+          <div style={{ backgroundColor: "#FFE8A3", borderRadius: 20 }}>
+            <Container style={{ fontSize: "3rem" }}>
+              <Grid container style={{ padding: 10, color: "white" }}>
+                <Grid
+                  item
+                  xs={3}
+                  md={3}
+                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
+                >
+                  <Typography variant="body1">보유 포인트</Typography>
+                  <Typography variant="body2">10000원</Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={1}
+                  md={1}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "black",
+                  }}
+                >
+                  +
+                </Grid>
+                <Grid
+                  item
+                  xs={3}
+                  md={3}
+                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
+                >
+                  <Typography variant="body1">충전 포인트</Typography>
+                  <Typography variant="body2">{selectedOption}원</Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={1}
+                  md={1}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "black",
+                  }}
+                >
+                  =
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  md={4}
+                  style={{ backgroundColor: "#FFA629", borderRadius: 5 }}
+                >
+                  <Typography variant="body1">총 포인트</Typography>
+                  <Typography variant="body2">
+                    {selectedOption + 10000}원
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Container>
+            <Container>
+              <Grid
+                container
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <Grid item xs={6} md={6}>
+                  {options.map((option) => (
+                    <div key={option}>
+                      <label>
+                        <input
+                          type="radio"
+                          value={option}
+                          checked={selectedOption === option}
+                          onChange={() => handleOptionChange(option)}
+                        />
+                        {option}원
+                      </label>
+                    </div>
+                  ))}
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  md={6}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <img
+                    src={kakaopay}
+                    alt=""
+                    style={{ width: "35%", borderRadius: 30 }}
+                  />
+                </Grid>
+              </Grid>
+            </Container>
+          </div>
+        </Container>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#FFA629", marginTop: "10px" }}
+        >
+          결제하기
+        </Button>
+      </ThemeProvider>
+      <KakaoPayment></KakaoPayment>
     </div>
   );
->>>>>>> 0bc5e7afb85440c580a21015236f95953182cc9f
-};
+}
 
 export default Charge;
+export {};

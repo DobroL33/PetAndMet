@@ -25,11 +25,6 @@ const KakaoCharge: React.FC = () => {
     const IMP = (window as any).IMP;
     IMP.init("imp02430511");
 
-    console.log("충전 전 selecteMoney");
-    console.log(selectedMoney);
-    console.log("충전 전 uuid");
-    console.log(userUuid);
-
     IMP.request_pay(
       {
         pg: "kakao",
