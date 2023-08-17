@@ -5,8 +5,12 @@ import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MainLive from "components/Live/LiveList";
 import AnimalList from "components/Animal/AnimalList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAnimalList, Animal } from 'hooks/Animal/useAnimalList'
+import Introduce from "./Introduce";
+import AdoptionReview from "./AdoptionReview";
+import Notice from "./Notice"
 
 interface CustomButtonProps {
   isActive: boolean;
@@ -45,8 +49,12 @@ function MainPage() {
   };
 
   return (
-    <>
+    <div className="flex justify-center">
+    <div className="w-[60%] flex flex-col justify-center">
       <CssBaseline />
+      <Introduce></Introduce>
+      <Notice></Notice>
+      <AdoptionReview></AdoptionReview>
       <Container
         sx={{
           mt: 10,
@@ -88,7 +96,9 @@ function MainPage() {
           {btn[channel]} 더보기
         </CustomButton>
       </Container>
-    </>
+
+    </div>
+    </div>
   );
 }
 

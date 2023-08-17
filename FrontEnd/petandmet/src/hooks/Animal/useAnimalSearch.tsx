@@ -4,6 +4,7 @@ import { AninmalSearchListStore } from 'hooks/Animal/AnimalListStore'
 
 export interface CenterUuidCredential {
   center_uuid: string | null
+  adoptionStatus? : string | null
 }
 
 export function useAnimalSearch(credential: CenterUuidCredential) {
@@ -11,9 +12,13 @@ export function useAnimalSearch(credential: CenterUuidCredential) {
   const axiosData = async () => {
     try {
       const center = credential.center_uuid
+      const adoptionStatus = credential.adoptionStatus
       let url = `/animal/search`
       if (center !== null) {
         url += `?centerUuid=${center}`
+      }
+      if (adoptionStatus !== null) {
+        url += `?adoptionStatus=${adoptionStatus}`
       }
       const response = await customAxios.get(url)
       return response.data
