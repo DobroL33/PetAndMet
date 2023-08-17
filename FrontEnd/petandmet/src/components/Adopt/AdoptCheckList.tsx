@@ -86,7 +86,7 @@ function CheckList() {
       {!isAllChecked && <CustomButton sx={{backgroundColor : 'white'}} disabled>입양 시설 알아보기</CustomButton>}
 
       {/* 모든 체크박스가 선택되어 활성화된 버튼 */}
-      {isAllChecked && <CustomButton onClick={() => alert('버튼이 클릭되었습니다!')}>입양 시설 알아보기</CustomButton>}
+      {isAllChecked && <CustomButton onClick={() => window.open('https://www.daejeon.go.kr/ani/AniAdoptionApplicationList.do?menuSeq=124', '_blank')}>입양 시설 알아보기</CustomButton>}
     </>
   );
 }
