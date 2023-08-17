@@ -12,7 +12,7 @@ interface CustomButtonProps {
   isActive: boolean;
 }
 
-const btn = ["라이브", "보호동물", "봉사"];
+const btn = ["라이브", "보호동물"];
 const CustomButton = styled(Button)(({ isActive }: CustomButtonProps) => ({
   backgroundColor: isActive ? "#FF6F26" : "#FFA629",
   color: "white",
