@@ -24,6 +24,8 @@ const KakaoCharge: React.FC = () => {
   const handleChargeClick = () => {
     const IMP = (window as any).IMP;
     IMP.init("imp02430511");
+    console.log(selectedMoney);
+    console.log(userUuid);
 
     IMP.request_pay(
       {
@@ -31,7 +33,7 @@ const KakaoCharge: React.FC = () => {
         pay_method: "kakaopay",
         merchant_uid: "merchant_" + new Date().getTime(),
         name: "주문명 : 주문명 설정",
-        mileage: selectedMoney,
+        amount: selectedMoney,
         buyer_email: "iamport@siot.do",
         buyer_name: "구매자이름",
         buyer_tel: "010-1234-5678",
