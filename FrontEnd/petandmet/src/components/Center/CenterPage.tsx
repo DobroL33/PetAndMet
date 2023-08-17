@@ -193,7 +193,7 @@ function CenterPage() {
                 // display: 'inline-block',
               }}
             >
-              보호동물
+              보호 동물
             </Grid>
 
             <Grid xs={10} sx={{ textAlign: 'end' }}>
@@ -238,7 +238,7 @@ function CenterPage() {
               whiteSpace: 'nowrap',
             }}
           >
-            물품
+            보호소 등록 물품
           </Grid>
           <Grid xs={10} sx={{ textAlign: 'end' }}>
             <Button onClick={EnrollItem}>등록</Button>

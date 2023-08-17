@@ -100,10 +100,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="이름" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.name}
 
@@ -112,10 +113,11 @@ export default function AnimalDetail() {
                       <TextField
                           id="outlined-multiline-static"
                           label="추정 나이"
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.age}
                           />
@@ -123,10 +125,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="종류" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.specie}
                           />
@@ -134,10 +137,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="품종" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.breed}
                           />
@@ -145,10 +149,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="성별" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.gender}
                           />
@@ -156,10 +161,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="성격" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.character}
                           />
@@ -167,10 +173,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="관리 보호소" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.center_uuid}
                           />
@@ -190,10 +197,11 @@ export default function AnimalDetail() {
                           label="만료일" 
                           variant="outlined" 
 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.enter_age}
                           />
@@ -202,20 +210,22 @@ export default function AnimalDetail() {
                           label="발견 장소" 
                           variant="outlined" 
 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.find_place}
                           />  
                       <TextField
                           id="outlined-multiline-static"
                           label="만료 나이"
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.enter_age}
                           />
@@ -224,10 +234,11 @@ export default function AnimalDetail() {
                           label="공고일" 
                           variant="outlined" 
 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.notice_date}
                           /> 
@@ -235,10 +246,11 @@ export default function AnimalDetail() {
                           id="outlined-multiline-static"
                           label="입양 시작 날짜"
 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.adoption_start_date}
                           />
@@ -246,10 +258,11 @@ export default function AnimalDetail() {
                           id="outlined-basic" 
                           label="입양 상태" 
                           variant="outlined" 
-                          disabled
+                          InputProps={{
+                            readOnly: true,
+                          }}
                           InputLabelProps={{
                             shrink: true,
-                            style: { color : 'black'}
                           }}
                           value={animalDetail?.adoption_status}
                           />

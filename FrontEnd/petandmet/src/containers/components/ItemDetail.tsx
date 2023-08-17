@@ -72,7 +72,6 @@ function ItemDetail() {
   const { centerData } = useCenterData();
   const location = useLocation();
   const item = location.state as CenterItem;
-
   // 센터 아이템에 후원된 금액 ( 특정 물건에 얼마나 후원 됐는지)
   const [currentPrice, setCurrentPrice] = useState(0); // current_price 상태 변수 설정
 
@@ -81,14 +80,13 @@ function ItemDetail() {
   const prevMileage = useRef(userMileage);
 
   // uuid, 토큰 사용
-  const { accessToken, userUuid } = useAccessToken();
+  const { accessToken, centerUuid, userUuid } = useAccessToken();
 
   // css, 경로 이동
   const theme = useTheme(); // 테마 가져오기
   const navigate = useNavigate();
 
   // url 요청 보낼 때 필요한 요소들
-  const user_uuid = userUuid;
   const center_uuid = item.center_uuid;
   const item_id = item.center_item_id;
   const itemTargetPrice = item.item_target_price;
@@ -230,264 +228,327 @@ function ItemDetail() {
       : 0;
 
   return (
+    <>
+      <div style={{ padding: 20 }}>
+          <Typography
+              variant="h4"
+              style={{ color: '#FFA629', fontWeight: 'bold' }}
+              >
+              후원 물품 상세 정보 
+          </Typography>
+      </div> 
+
     <Container
       sx={{
         display: "flex",
         flexDirection: "column",
-        marginTop: "20px",
+        marginTop: "10px",
         width: "30%",
         backgroundColor: "#FFF9E6", // 연한 노랑색 (적절한 값을 조절하셔도 됩니다.)
         height: "auto", // 세로 길이를 auto로 설정
         borderRadius: "30px",
+        overflow: "hidden", // Prevent content overflow
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "20px",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "15px",
-          }}
-        >
-          <Button
-            id="demo-positioned-button"
-            aria-controls={open ? "demo-positioned-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-            sx={{ height: "50px" }}
-          >
-            <p className="grow">
-              어느 동물에게 후원하고 싶으신가요? {selectedAnimal?.name}
-            </p>
-          </Button>
-
-          <Menu
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            PaperProps={{
-              style: {
-                backgroundColor: "warning", // 여기에 실제 색상 코드를 넣어주세요.
-              },
-            }}
-          >
-            {data?.response.map((animal, index) => (
-              <MenuItem
-                key={index}
-                onClick={() => handleMenuItemClick(animal)}
+      <Grid container spacing={2} margin={0}>
+        <Grid item xs={6}>
+              <Box sx={{ display: "flex", flexDirection: "column"}}>
+                <Box
+                  sx={{display: "flex",justifyContent: "flex-end"}}>
+                  <Button
+                    id="demo-positioned-button"
+                    aria-controls={open ? "demo-positioned-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                    sx={{ height: "50px" }}
+                  >
+                    <p className="grow">
+                      어느 동물에게 후원하고 싶으신가요? {selectedAnimal?.name}
+                    </p>
+                  </Button>
+                        <Menu
+                          id="demo-positioned-menu"
+                          aria-labelledby="demo-positioned-button"
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          anchorOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left",
+                          }}
+                          PaperProps={{
+                            style: {
+                              backgroundColor: "warning", // 여기에 실제 색상 코드를 넣어주세요.
+                            },
+                          }}
+                        >
+                          {data?.response.map((animal, index) => (
+                            <MenuItem
+                              key={index}
+                              onClick={() => handleMenuItemClick(animal)}
+                              sx={{
+                                backgroundColor: index % 2 === 0 ? "warning" : "연노랑", // 짝수와 홀수 인덱스에 따라 색상 변경
+                              }}
+                            >
+                              {animal.name}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                  </Box>
+                    <Box
+                      sx={{display: "flex",flexDirection: "column",alignItems: "flex-end", mt:3}}>
+                      {item.item_url ? (
+                        <img src={item.item_url} alt="Item" style={{ maxWidth: '100%' }} />
+                      ) : (
+                        <img src={pay} alt="KakaoPay" style={{ maxWidth: '100%' }} />
+                      )}
+                    </Box>
+                    <Grid item>
+                        <Typography sx={{my : 1, fontSize: '8px'}}>
+                           물품 : {item.item_name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '8px'}}>
+                           목표 가격 : {item.item_target_price}
+                        </Typography>
+                </Grid>
+              </Box>    
+        </Grid>
+        <Grid item xs={6}>
+                  <Box>
+                    <Typography sx={{mt : 1,mb : 10}}>
+                      후원 금액
+                    </Typography>
+                  </Box>
+                        {[1000, 5000, 10000].map((amount) => (
+                          <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "flex-end",
+                            justifyContent: "flex-end",
+                            marginBottom: "10px",
+                            flexWrap :'nowrap'
+                          }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{ fontSize: "16px" }}
+                              color="text.secondary"
+                              >{`${amount.toLocaleString()}원`}</Typography>
+                            <Button
+                              variant="contained"
+                              onClick={() => handleIncrement(amount)}
+                              sx={{
+                                marginX: "10px",
+                                fontSize: "12px",
+                                backgroundColor: "orange",
+                                borderRadius: "10px",
+                                padding: "4px 8px", // 패딩을 조절하여 크기 조정
+                                opacity: 0.7
+                              }}
+                              >
+                              +
+                            </Button>
+                          </Box>
+                        ))}
+            </Grid>
+        </Grid>
+            <Box
+              sx={{ display: "flex",flexDirection: "column", margin: "5px"}}>
+              <Typography variant="h6"color="text.secondary"sx={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}>
+                {`기부하시려는 금액은 \n ${donation.toLocaleString()}원 입니다.`}
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                color="warning"
+                value={progress}
                 sx={{
-                  backgroundColor: index % 2 === 0 ? "warning" : "연노랑", // 짝수와 홀수 인덱스에 따라 색상 변경
+                  height: "40px",
+                  borderRadius: "15px",
+                  marginTop: "20px",
                 }}
-              >
-                {animal.name}
-              </MenuItem>
-            ))}
-          </Menu>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          >
-            {[1000, 5000, 10000].map((amount) => (
+              />
+              <Typography
+                variant="body2"
+                color={theme.palette.warning.main}
+                sx={{
+                  marginTop: "10px",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                }}
+              >{`후원 물품 구매까지 ${Math.round(progress)}%`}</Typography>
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "row",
-                  alignItems: "flex-end",
-                  marginBottom: "10px",
+                  justifyContent: "space-between",
+                  marginTop: 2,
+                  marginBottom: 3,
                 }}
               >
-                <Typography
-                  variant="body1"
-                  sx={{ fontSize: "25px" }}
-                  color="text.secondary"
-                >{`${amount.toLocaleString()}원`}</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => handleIncrement(amount)}
-                  sx={{
-                    marginX: "10px",
-                    fontSize: "20px",
-                    backgroundColor: "orange",
-                    borderRadius: "10px",
-                  }}
-                >
-                  +
-                </Button>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "5px",
-          }}
-        >
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            sx={{ marginTop: "20px", fontSize: "20px", fontWeight: "bold" }}
-          >
-            {`기부하시려는 금액은 \n ${donation.toLocaleString()}원 입니다.`}
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            color="warning"
-            value={progress}
-            sx={{
-              height: "40px",
-              borderRadius: "15px",
-              marginTop: "20px",
-            }}
-          />
-          <Typography
-            variant="body2"
-            color={theme.palette.warning.main}
-            sx={{
-              marginTop: "10px",
-              fontWeight: "bold",
-              fontSize: "18px",
-            }}
-          >{`후원 물품 구매까지 ${Math.round(progress)}%`}</Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: 2,
-              marginBottom: 3,
-            }}
-          >
-            <Button
-              variant="contained"
-              color="warning"
-              sx={{
-                fontSize: "20px",
-                borderRadius: "10px",
-                backgroundColor: theme.palette.warning.main,
-                fontWeight: "bold",
-              }}
-              onClick={handleDonation}
-            >
-              후원하기
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={handleCancel}
-              sx={{ fontSize: "20px", borderRadius: "10px" }}
-            >
-              취소하기
-            </Button>
-            {/* Alert for insufficient funds */}
-            <Dialog
-              open={alertOpen}
-              onClose={() => setAlertOpen(false)}
-              sx={{ borderRadius: "30px", minWidth: "700px" }}
-            >
-              <DialogTitle
-                color="gray"
-                sx={{
-                  backgroundColor: "#F8D260",
-                  fontWeight: "bold",
-                  fontSize: "25px",
-                }}
-              >
-                포인트 부족 !
-              </DialogTitle>
-              <DialogContent
-                sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}
-              >
-                <Typography sx={{ fontSize: "20px" }} color="gray">
-                  갖고 계신 포인트가 충분하지 않습니다.<br></br>
-                  충전 하시겠습니까?<br></br>[ 현재{" "}
-                  {userMileage.toLocaleString()}
-                  포인트 ]
-                </Typography>
-              </DialogContent>
-              <DialogActions sx={{ backgroundColor: "#F8D260" }}>
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={goToChargePage}
-                  sx={{
-                    fontSize: "20px",
-                    borderRadius: "10px",
-                    backgroundColor: theme.palette.warning.main,
-                    fontWeight: "bold",
-                  }}
-                >
-                  충전하러 가기
-                </Button>
+                {centerUuid === center_uuid ? (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      sx={{
+                        fontSize: "20px",
+                        borderRadius: "10px",
+                        backgroundColor: theme.palette.warning.main,
+                        fontWeight: "bold",
+                        marginRight: "10px"
+                      }}
+                      onClick={goToUpdate}
+                    >
+                      수정하기
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={goToDelete}
+                      sx={{
+                        fontSize: "20px",
+                        borderRadius: "10px",
+                        marginRight: "10px"
+                      }}
+                    >
+                      삭제하기
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      sx={{
+                        fontSize: "20px",
+                        borderRadius: "10px",
+                        backgroundColor: theme.palette.warning.main,
+                        fontWeight: "bold",
+                        marginRight: "10px",
+                      }}
+                      onClick={handleDonation}
+                    >
+                      후원하기
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={handleCancel}
+                      sx={{
+                        fontSize: "20px",
+                        borderRadius: "10px",
+                        marginRight: "10px", 
+                      }}
+                    >
+                      취소하기
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={() => setAlertOpen(false)}
-                  sx={{ fontSize: "20px", borderRadius: "10px" }}
+                  onClick={goToBack}
+                  sx={{
+                    fontSize: "20px",
+                    borderRadius: "10px",
+                  }}
                 >
-                  취소하기
+                  돌아가기
                 </Button>
-              </DialogActions>
-            </Dialog>
+                {/* Alert for insufficient funds */}
+                <Dialog
+                  open={alertOpen}
+                  onClose={() => setAlertOpen(false)}
+                  sx={{ borderRadius: "30px", minWidth: "700px" }}
+                >
+                  <DialogTitle
+                    color="gray"
+                    sx={{
+                      backgroundColor: "#F8D260",
+                      fontWeight: "bold",
+                      fontSize: "25px",
+                    }}
+                  >
+                    포인트 부족 !
+                  </DialogTitle>
+                  <DialogContent
+                    sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}
+                  >
+                    <Typography sx={{ fontSize: "20px" }} color="gray">
+                      갖고 계신 포인트가 충분하지 않습니다.<br></br>
+                      충전 하시겠습니까?<br></br>[ 현재{" "}
+                      {userMileage.toLocaleString()}
+                      포인트 ]
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions sx={{ backgroundColor: "#F8D260" }}>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={goToChargePage}
+                      sx={{
+                        fontSize: "20px",
+                        borderRadius: "10px",
+                        backgroundColor: theme.palette.warning.main,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      충전하러 가기
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => setAlertOpen(false)}
+                      sx={{ fontSize: "20px", borderRadius: "10px" }}
+                    >
+                      취소하기
+                    </Button>
+                  </DialogActions>
+                </Dialog>
 
-            {/* Alert for successful donation */}
-            <Dialog
-              open={donationSuccessOpen} // state for this should be managed in your component
-              onClose={() => setDonationSuccessOpen(false)}
-              sx={{ borderRadius: "30px", minWidth: "700px" }}
-            >
-              <DialogTitle
-                color="gray"
-                sx={{
-                  backgroundColor: "#F8D260",
-                  fontWeight: "bold",
-                  fontSize: "25px",
-                }}
-              >
-                후원 완료!
-              </DialogTitle>
-              <DialogContent
-                sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}
-              >
-                <Typography sx={{ fontSize: "20px" }} color="gray">
-                  {donation.toLocaleString()} 원 후원 완료됐습니다!
-                </Typography>
-              </DialogContent>
-              <DialogActions sx={{ backgroundColor: "#F8D260" }}>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => setDonationSuccessOpen(false)}
-                  sx={{ fontSize: "20px", borderRadius: "10px" }}
+                {/* Alert for successful donation */}
+                <Dialog
+                  open={donationSuccessOpen} // state for this should be managed in your component
+                  onClose={() => setDonationSuccessOpen(false)}
+                  sx={{ borderRadius: "30px", minWidth: "700px" }}
                 >
-                  닫기
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Box>
-        </Box>
-      </Box>
+                  <DialogTitle
+                    color="gray"
+                    sx={{
+                      backgroundColor: "#F8D260",
+                      fontWeight: "bold",
+                      fontSize: "25px",
+                    }}
+                  >
+                    후원 완료!
+                  </DialogTitle>
+                  <DialogContent
+                    sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}
+                  >
+                    <Typography sx={{ fontSize: "20px" }} color="gray">
+                      {donation.toLocaleString()} 원 후원 완료됐습니다!
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions sx={{ backgroundColor: "#F8D260" }}>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => setDonationSuccessOpen(false)}
+                      sx={{ fontSize: "20px", borderRadius: "10px" }}
+                    >
+                      닫기
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Box>
+            </Box>
     </Container>
+    </>
   );
 }
 
