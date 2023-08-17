@@ -18,7 +18,7 @@ import ItemDetail from 'containers/components/ItemDetail'
 import StreamingPage from 'components/Streaming/StreamingPage'
 import AnimalDetail from 'containers/components/AnimalDetail'
 import Live from 'components/Live/OpenVidu'
-import Live2 from 'components/Live/OpenViduJoin'
+import CreateSession from 'components/Live/CreateSession'
 import Board from 'routes/Board'
 const App = () => {
   return (
@@ -43,8 +43,7 @@ const App = () => {
         <Route path="/livelist/streaming/:id" element={<StreamingPage />} />
         <Route path="/animal/detail/:animal_uuid" element={<AnimalDetail />} />
         <Route path="/live/:id" element={<Live />} />
-        <Route path="/openlive" element={<Live />} />
-        <Route path="/live2/:id" element={<Live2 />} />
+        <Route path="/openlive" element={<CreateSession />} />
         <Route path="/board/*" element={<Board />} />
       </Routes>
     </BrowserRouter>
