@@ -1,17 +1,12 @@
-import {
-  Button,
-  Typography,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from '@mui/material'
+import { Button, Typography, FormControl,
+         InputLabel, MenuItem, Box } from '@mui/material'
 import List from 'containers/components/List'
 import { useNavigate } from 'react-router-dom'
 import { useCenterStore } from 'hooks/Center/CenterMutation'
 import Select from '@mui/material/Select'
 import { useState, useEffect } from 'react'
 import { useBoardList, Credential, Detail } from 'hooks/Board/useBoardList'
-import { PageItem } from 'react-bootstrap'
+import { useAccessToken } from 'hooks/useAccessToken'
 
 interface BoardList {
   type: string
@@ -21,6 +16,7 @@ interface BoardList {
 
 function BoardList() {
   const [title, setTitle] = useState('')
+  const {centerUuid} = useAccessToken()
   const [boardList, setBoardList] = useState<BoardList>({
     type: '',
     total: 0,
@@ -135,29 +131,28 @@ function BoardList() {
         >
           {title}
         </Typography>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-          <FormControl sx={{ width: '25%' }}>
-            <InputLabel id="demo-simple-select-label">보호소</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={center}
-              label="보호소"
-              onChange={e => handleChange(e.target.value)}
-            >
-              {centers.centersData.map((cent: any) => (
-                <MenuItem
-                  key={cent.uuid}
-                  value={cent.uuid}
-                  onClick={() => handleCenterUuid(cent.uuid)}
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', ml: '11.4%'}}>
+            <FormControl sx={{ width: '250px' }}>
+              <InputLabel id="demo-simple-select-label">보호소</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={center}
+                label="보호소"
+                onChange={e => handleChange(e.target.value)}
                 >
-                  {cent.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
+                {centers.centersData.map((cent: any) => (
+                  <MenuItem
+                    key={cent.uuid}
+                    value={cent.uuid}
+                    onClick={() => handleCenterUuid(cent.uuid)}
+                    >
+                    {cent.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
         <List
           list={boardList}
           setPage={handlePage}
@@ -166,7 +161,8 @@ function BoardList() {
           size={credential.size}
         ></List>
       </div>
-      <div style={{ textAlign: 'end', width: '90%' }}>
+      <Box sx={{ textAlign: 'end',  mr: '12.5%' }}>
+      {centerUuid !== null || boardList.type !== 'notice' ? (
         <Button
           sx={{
             bgcolor: '#FFBC5F',
@@ -179,7 +175,8 @@ function BoardList() {
         >
           작성
         </Button>
-      </div>
+      ) : null}
+      </Box>
     </>
   )
 }
