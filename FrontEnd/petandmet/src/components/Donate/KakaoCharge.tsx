@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import KakaoCharge from "components/Donate/KakaoCharge";
+import axios from "axios";
+import { useAccessToken } from "hooks/useAccessToken";
+import { domain } from "hooks/customQueryClient";
 
-<<<<<<< HEAD
-const Charge: React.FC = () => {
-  return <KakaoCharge></KakaoCharge>;
-=======
 const KakaoCharge: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
 
@@ -27,6 +25,11 @@ const KakaoCharge: React.FC = () => {
     const IMP = (window as any).IMP;
     IMP.init("imp02430511");
 
+    console.log("충전 전 selecteMoney");
+    console.log(selectedMoney);
+    console.log("충전 전 uuid");
+    console.log(userUuid);
+
     IMP.request_pay(
       {
         pg: "kakao",
@@ -47,7 +50,7 @@ const KakaoCharge: React.FC = () => {
               `${domain}/mileage/charge`,
               {
                 uuid: userUuid,
-                mileage: selectedOption,
+                mileage: selectedMoney,
               },
               {
                 headers: {
@@ -106,7 +109,6 @@ const KakaoCharge: React.FC = () => {
       </button>
     </div>
   );
->>>>>>> 0bc5e7afb85440c580a21015236f95953182cc9f
 };
 
-export default Charge;
+export default KakaoCharge;
