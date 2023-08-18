@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
-import logo from 'images/logo.svg'
+import Final from 'images/final.svg'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { styled } from '@mui/material/styles'
@@ -161,7 +161,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            <img alt="logo" src={logo} style={{ width: 200 }} />
+            <img alt="logo" src={Final} style={{ width: 200 }} />
           </Typography>
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -197,7 +197,7 @@ function Navbar() {
               }}
             >
               <MenuItem onClick={handleOpenUserMenu}>
-                <Typography textAlign="center">{pages[0]}</Typography>
+                <Typography textAlign="center" >{pages[0]}</Typography>
               </MenuItem>
               <MenuItem onClick={handleOpenNotify}>
                 <Typography textAlign="center">{pages[1]}</Typography>

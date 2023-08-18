@@ -1,24 +1,20 @@
-import { Box } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import CardInfo from "containers/components/Card";
 import { useEffect, useState } from "react";
 import { useAnimalList, Animal } from "hooks/Animal/useAnimalList";
+import { Container } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
-//보호 동물 데이터를 받는다면 animals 활성화
-interface AnimalListProps {
-  num?: number;
-  // animals: Animal[];
-}
-// num 값에는 보호동물 수가 들어갈 예정
-function AnimalList({ num = 15 }: AnimalListProps) {
+function AnimalList() {
   const [animalToShow, setAnimalsToShow] = useState<Animal[]>();
   const { data, refetch } = useAnimalList();
-
-  console.log("애니멀 리스트 data?.response");
-  console.log(data?.response);
-
+  const location = useLocation()
+  const showPagination = location.state as Boolean
+  // console.log("애니멀 리스트 data?.response");
+  // console.log(data?.response);
   useEffect(() => {
     refetch();
-  }, [num]);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -26,8 +22,20 @@ function AnimalList({ num = 15 }: AnimalListProps) {
     }
   }, [data]);
 
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const animalsPerPage = 8;
+  const totalAnimals = animalToShow?.length || 0;
+  const totalPages = Math.ceil(totalAnimals / animalsPerPage);
+  const startIndex = currentPage * animalsPerPage;
+  const endIndex = startIndex + animalsPerPage;
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
+    <Container>
       <Box
         sx={{
           mt: 1,
@@ -38,10 +46,23 @@ function AnimalList({ num = 15 }: AnimalListProps) {
         }}
       >
         {animalToShow !== undefined &&
-          animalToShow.map((animal) => (
+          animalToShow.slice(startIndex, endIndex).map((animal) => (
             <CardInfo key={animal.animal_uuid} animal={animal} />
           ))}
       </Box>
+      <Box>
+      {showPagination && (
+        <Pagination
+          count={totalPages}
+          variant="outlined"
+          shape="rounded"
+          page={currentPage + 1}
+          onChange={(event, page) => handlePageChange(event, page - 1)}
+          sx={{ mt: 2,display:'flex', justifyContent: "center" }}
+        />
+      )}
+      </Box>
+    </Container>
     </>
   );
 }

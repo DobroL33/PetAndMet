@@ -37,7 +37,7 @@ function MainPage() {
     navigate("/livelist");
   };
   const goToAnimalList = () => {
-    navigate("/animallist");
+    navigate("/animallist", {state : "true"});
   };
   const goToVolunteer = () => {
     navigate("/volunteer");
@@ -47,6 +47,7 @@ function MainPage() {
     const newIsActive = isActive.map((_, i) => i === idx);
     setIsActive(newIsActive);
   };
+  const [showPagination, setShowPagination] = useState<boolean>(false);
 
   return (
     <div className="flex justify-center">
@@ -81,7 +82,7 @@ function MainPage() {
           ))}
         </Box>
 
-        <Box>{channel === 1 ? <AnimalList num={8} /> : <MainLive />}</Box>
+        <Box>{channel === 1 ? <AnimalList/> : <MainLive />}</Box>
 
         <CustomButton
           isActive={isActive[channel]}

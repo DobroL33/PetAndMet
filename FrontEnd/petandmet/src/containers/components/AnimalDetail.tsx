@@ -22,18 +22,6 @@ interface AnimalData{
       adoption_start_date: string| null,
       photo_url: string| null
     }
-  
-const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FFA629',
-  color: 'white',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  boxShadow: 'none',
-  '&:hover': {
-    backgroundColor: 'orange',
-  },
-  margin: '5px',
-}))
 
 export default function AnimalDetail() {
   const [animalDetail, setAnimalDetail] = useState<AnimalData | null>(null); // 객체나 null로 초기화
@@ -46,7 +34,7 @@ export default function AnimalDetail() {
       try {
         const info = await GetAnimal(animal_uuid, accessToken);
         if (info !== undefined) {
-          setAnimalDetail(info);
+          setAnimalDetail(info.response);
         }
       } catch (error) {
         console.log(error);
