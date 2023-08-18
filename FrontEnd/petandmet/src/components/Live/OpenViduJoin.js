@@ -109,13 +109,9 @@ const JoinOpenVidu = props => {
         <>
           {subscribers.length > 0 ? (
             <div id="session">
-              <div id="video-container" className="col-md-6">
+              <div id="video-container" className="">
                 {subscribers.map((sub, i) => (
-                  <div
-                    id="main-video"
-                    key={i + 'V'}
-                    className="stream-container"
-                  >
+                  <div id="main-video" key={i + 'V'} className="">
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}

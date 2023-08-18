@@ -2,7 +2,6 @@ import { useMutation } from 'react-query'
 import { useCookies } from 'react-cookie'
 import { useAccessToken } from 'hooks/useAccessToken'
 import customAxios from 'utils/axiosUtil'
-import axios from 'axios'
 
 export function removeOvSession() {
   const [cookies, setCookie] = useCookies(['access_token'])

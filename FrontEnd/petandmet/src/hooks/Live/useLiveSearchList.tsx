@@ -2,15 +2,11 @@ import { useQuery } from 'react-query'
 import customAxios from 'utils/axiosUtil'
 import { LiveListSearchStore } from './LiveSearchStore'
 
-export interface CenterUuidCredential {
-  center_uuid: string | null
-}
-
-export function useCenterLiveList(credential: CenterUuidCredential) {
+export function useCenterLiveList(credential: string | undefined) {
   const liveListSearch = LiveListSearchStore()
   const axiosData = async () => {
     try {
-      const centerUuid = credential.center_uuid
+      const centerUuid = credential
       const response = await customAxios.get(`/live/search?uuid=${centerUuid}`)
       return response.data
     } catch (error) {

@@ -23,7 +23,8 @@ export async function refreshToken(accessToken: string) {
 }
 
 customAxios.interceptors.request.use(async config => {
-  console.log('axios 헤더', config)
+  console.log('axios 헤더 목적지', config.method, config.url, config.data)
+  console.log('axios 헤더 토큰', config.headers.Authorization)
   return config
 })
 
@@ -51,9 +52,9 @@ customAxios.interceptors.response.use(
           if (newToken !== '토큰 정보가 유효하지 않습니다.') {
             //   console.log('오리진', originRequest.headers.Authorization)
             //   console.log('API', customAxios.defaults.headers.common.Authorization)
-            customAxios.defaults.headers.common.Authorization = `Bearer ${newToken}`
-            originRequest.headers.Authorization = `Bearer ${newToken}`
-            console.log('바뀐 token', newToken)
+            customAxios.defaults.headers.common.Authorization = `Bearer ${newToken.token}`
+            originRequest.headers.Authorization = `Bearer ${newToken.token}`
+            console.log('바뀐 token', newToken.token)
             return customAxios(originRequest)
           }
           //Refresg토큰이 죽어서 로그인 창으로 보내야 하는 경우

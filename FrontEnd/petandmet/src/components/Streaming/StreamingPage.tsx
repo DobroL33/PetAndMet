@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
-import { Button } from '@mui/material'
-import { styled } from '@mui/material/styles'
+// import { Button } from '@mui/material'
+// import { styled } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
@@ -11,25 +11,25 @@ import Familiarity from './LiveComponents/Live_Familiarity'
 import JoinOpenVidu from 'components/Live/OpenViduJoin'
 import { useLocation } from 'react-router'
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'center',
+//   color: theme.palette.text.secondary,
+// }))
 
-const CustomButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FFA629',
-  color: 'white',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  boxShadow: 'none',
-  '&:hover': {
-    backgroundColor: 'orange',
-  },
-  margin: '5px',
-}))
+// const CustomButton = styled(Button)(({ theme }) => ({
+//   backgroundColor: '#FFA629',
+//   color: 'white',
+//   padding: '10px 20px',
+//   borderRadius: '5px',
+//   boxShadow: 'none',
+//   '&:hover': {
+//     backgroundColor: 'orange',
+//   },
+//   margin: '5px',
+// }))
 
 function StreamingPage() {
   const location = useLocation()
@@ -46,10 +46,10 @@ function StreamingPage() {
         sx={{
           my: 5,
           // display: "flex",
-          flexDirection: "column",
-          bgcolor: "#ffffff",
-          height: "40rem",
-          width: "98%",
+          flexDirection: 'column',
+          bgcolor: '#ffffff',
+          height: '40rem',
+          width: '98%',
           borderRadius: 5,
         }}
       >
@@ -64,9 +64,11 @@ function StreamingPage() {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
+                  overflow: 'hidden',
+                  borderRadius: '0.75rem',
                 }}
               >
-                <div className="w-100 h-100 overflow-hidden">
+                <div className="overflow-hidden">
                   <JoinOpenVidu Id={liveId} Name={name}></JoinOpenVidu>
                 </div>
               </Box>
@@ -91,13 +93,13 @@ function StreamingPage() {
             </Grid>
           </Grid>
           {/* Bottom Container */}
-          <Grid item xs={9} md={3} sx={{ flexGrow: 2, width: "100%" }}>
+          <Grid item xs={9} md={3} sx={{ flexGrow: 2, width: '100%' }}>
             {/* Bottom Right */}
             <Box
               sx={{
-                backgroundColor: "#FFA629",
-                height: "80%",
-                display: "flex",
+                backgroundColor: '#FFA629',
+                height: '80%',
+                display: 'flex',
                 borderRadius: 5,
                 justifyContent: 'Left',
               }}

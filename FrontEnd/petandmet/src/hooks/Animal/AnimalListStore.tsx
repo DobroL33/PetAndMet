@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 
-interface AnimalSearchList {
+export interface AnimalSearchList {
   animals: AnimalDetail[]
   total: number
   setAnimals: (animals: AnimalDetail[]) => void
   setTotal: (total: number) => void
 }
 
-interface AnimalDetail {
+export interface AnimalDetail {
   adoptionStartDate: string
   adoptionStatus: string
   age: number

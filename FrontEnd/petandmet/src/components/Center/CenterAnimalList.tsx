@@ -23,14 +23,17 @@ function CenterAnimalList() {
           }}
         >
           {animals.map((animal: Animal) => {
-            const filteredLives = lives.filter(
-              live => live.animal_uuid === animal.uuid
-            )
+            let filteredLives: Live[] = []
+            if (lives !== null && lives !== undefined) {
+              filteredLives = lives.filter(
+                live => live.animal_uuid === animal.uuid
+              )
+            }
             return (
               <CardInfo
                 key={animal.uuid}
                 animal={animal}
-                live={filteredLives[0]}
+                lives={filteredLives}
               />
             )
           })}

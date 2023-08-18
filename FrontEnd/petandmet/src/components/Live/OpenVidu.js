@@ -5,6 +5,7 @@ import UserVideoComponent from './UserVideoComponent'
 import { removeOvSession } from 'hooks/Live/useOvOut'
 import { patchOvSession } from 'hooks/Live/useLivePatch'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { getLiveDetail } from 'hooks/Live/useLiveDetail'
 
 const OPENVIDU_SERVER_URL = 'https://i9b302.p.ssafy.io/ov/openvidu'
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET'
@@ -20,21 +21,36 @@ const CreateOpenVidu = () => {
   const [isSubscriber, setIsSubscriber] = useState(false)
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined)
   const navigate = useNavigate()
-  const location = useLocation()
 
   const { id } = useParams()
   const liveId = id
   const outLive = removeOvSession()
   const patchLive = patchOvSession()
-  const info = location.state
+
+  const { data, refetch } = getLiveDetail(liveId)
+
+  // const info = location.state
   const [createSessionInfo, setCreateSessionInfo] = useState({
     id: liveId,
-    center_uuid: info.center_uuid,
-    session_name: info.session_name,
+    center_uuid: '',
+    session_name: '',
     session_id: '',
-    center_item_id: info.center_item_id,
-    animal_uuid: info.animal_uuid,
+    center_item_id: [],
+    animal_uuid: '',
   })
+
+  useEffect(() => {
+    if (data && data.response && data.response.status === 200) {
+      console.log(data.response)
+      setCreateSessionInfo(prevData => ({
+        ...prevData,
+        center_uuid: data.response.center.centerUuid,
+        session_name: data.response.session_name,
+        animal_uuid: data.response.animal.uuid,
+      }))
+    }
+  }, [data])
+
   const deleteSubscriber = streamManager => {
     const updatedSubscribers = subscribers.filter(sub => sub !== streamManager)
     setSubscribers(updatedSubscribers)
@@ -42,9 +58,11 @@ const CreateOpenVidu = () => {
 
   useEffect(() => {
     if (createSessionInfo.session_id !== '') {
+      console.log(createSessionInfo.session_id)
       patchLive.mutate(createSessionInfo)
     }
   }, [createSessionInfo.session_id])
+
   const handleSessionId = value => {
     setCreateSessionInfo(prevInfo => ({
       ...prevInfo,
@@ -121,8 +139,10 @@ const CreateOpenVidu = () => {
     }
   }
   useEffect(() => {
-    joinSession()
-  }, [])
+    if (createSessionInfo.animal_uuid !== '') {
+      joinSession()
+    }
+  }, [createSessionInfo.animal_uuid])
 
   const leaveSession = async () => {
     if (session) {
@@ -136,39 +156,7 @@ const CreateOpenVidu = () => {
     setMainStreamManager(undefined)
     setPublisher(undefined)
     setIsSubscriber(false)
-  }
-
-  const switchCamera = async () => {
-    try {
-      const devices = await OV.getDevices()
-      const videoDevices = devices.filter(
-        device => device.kind === 'videoinput'
-      )
-
-      if (videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.find(
-          device => device.deviceId !== currentVideoDevice.deviceId
-        )
-
-        if (newVideoDevice) {
-          const newPublisher = OV.initPublisher(undefined, {
-            videoSource: newVideoDevice.deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: false,
-          })
-
-          await session.unpublish(mainStreamManager)
-          await session.publish(newPublisher)
-
-          setCurrentVideoDevice(newVideoDevice)
-          setMainStreamManager(newPublisher)
-          setPublisher(newPublisher)
-        }
-      }
-    } catch (error) {
-      console.error('Error switching camera:', error)
-    }
+    navigate('/')
   }
 
   const getToken = async () => {
@@ -223,30 +211,27 @@ const CreateOpenVidu = () => {
     <div>
       {session !== undefined ? (
         <div id="session">
-          <div id="session-header">
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="방송 종료"
-            />
-            {/* <input
-              className="btn btn-large btn-success"
-              type="button"
-              id="buttonSwitchCamera"
-              onClick={switchCamera}
-              value="카메라 전환"
-            /> */}
-          </div>
-
-          {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={mainStreamManager} />
+          <div
+            id="session-header"
+            className="flex flex-col justify-center px-[25%]"
+          >
+            <p className="text-4xl my-10">{createSessionInfo.session_name}</p>
+            {mainStreamManager !== undefined ? (
+              <div id="main-video" className="flex justify-center my-4">
+                <UserVideoComponent streamManager={mainStreamManager} />
+              </div>
+            ) : (
+              <div>Error</div>
+            )}
+            <div className="flex justify-end">
+              <button
+                className="py-2 px-4 rounded-xl bg-red-400 hover:bg-red-600"
+                onClick={leaveSession}
+              >
+                방송 종료
+              </button>
             </div>
-          ) : (
-            <div>Error</div>
-          )}
+          </div>
         </div>
       ) : null}
     </div>

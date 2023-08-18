@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-interface LiveList {
+export interface LiveList {
   lives: Live[]
   total_count: number
   setLives: (lives: Live[]) => void
