@@ -13,6 +13,11 @@ import AnimalDetail from "containers/components/AnimalDetail";
 import { GetAnimal } from "hooks/Animal/AnimalData";
 import { useState, useEffect } from "react";
 import { useStore } from "hooks/Volunteer/useWalkStore";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
 
 interface AnimalData {
   name: string | null;
@@ -54,6 +59,7 @@ interface WalkDateProps {
 }
 
 function WalkDate() {
+  const [submitSuccessOpen, setSubmitSuccessOpen] = useState(false);
   const { animalUuid, centerUuid } = useStore();
   const { userUuid, accessToken } = useAccessToken();
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
@@ -109,6 +115,7 @@ function WalkDate() {
     };
     console.log(formData);
     sendWalkForm(formData);
+    setSubmitSuccessOpen(true);
   };
   console.log("마지막==========");
   console.log(animalUuid);
@@ -149,11 +156,42 @@ function WalkDate() {
             marginRight: "auto",
             display: "block",
             marginTop: "40px",
+            height: "10%",
             // marginBottom: "10px",
           }}
         >
           신청하기
         </Button>
+        <Dialog
+          open={submitSuccessOpen}
+          onClose={() => setSubmitSuccessOpen(false)}
+          sx={{ borderRadius: "30px", minWidth: "700px" }}
+        >
+          <DialogTitle
+            color="gray"
+            sx={{
+              backgroundColor: "#F8D260",
+              fontWeight: "bold",
+              fontSize: "25px",
+            }}
+          >
+            신청 완료!
+          </DialogTitle>
+          <DialogContent sx={{ backgroundColor: "#F8D260", minWidth: "400px" }}>
+            <Typography sx={{ fontSize: "20px" }} color="gray">
+              신청이 완료됐습니다.
+            </Typography>
+          </DialogContent>
+          <DialogActions sx={{ backgroundColor: "#F8D260" }}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => setSubmitSuccessOpen(false)}
+            >
+              닫기
+            </Button>
+          </DialogActions>
+        </Dialog>
       </LocalizationProvider>
     </>
   );

@@ -1,149 +1,154 @@
-import * as React from 'react'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import Final from 'images/final.svg'
-import { useNavigate } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
-import { styled } from '@mui/material/styles'
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Final from "images/final.svg";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { styled } from "@mui/material/styles";
 
-import { useAccessToken } from 'hooks/useAccessToken'
+import { useAccessToken } from "hooks/useAccessToken";
 const pages = [
-  '입양',
-  '참여 소통',
-  '후원',
-  '로그인',
-  '회원가입',
-  '로그아웃',
-  '마이페이지',
-]
-const settings = ['입양 절차', '입양 신청', '입양 후기']
-const notify = ['공지 사항', '봉사 신청', 'Q & A']
-const charge = ['충전 하기', '후원 하기', '후원 후기']
+  "입양",
+  "참여 소통",
+  "후원",
+  "로그인",
+  "회원가입",
+  "로그아웃",
+  "마이페이지",
+];
+const settings = ["입양 절차", "입양 신청", "입양 후기"];
+const notify = ["공지 사항", "봉사 신청", "Q & A"];
+const charge = ["충전 하기", "후원 하기", "후원 후기"];
 
 const NavButton = styled(Button)(({ theme }) => ({
   my: 2,
-  color: 'white',
-  display: 'block',
-}))
+  color: "white",
+  display: "block",
+  fontSize: "1.5rem", // 텍스트 사이즈를 더 크게
+  fontWeight: "bold",
+}));
 
 function Navbar() {
-  let navigate = useNavigate()
-  const [cookie, setCookie, removeCookie] = useCookies(['access_token'])
-  const { accessToken, centerUuid, userUuid, setAccessToken } = useAccessToken()
+  let navigate = useNavigate();
+  const [cookie, setCookie, removeCookie] = useCookies(["access_token"]);
+  const { accessToken, centerUuid, userUuid, setAccessToken } =
+    useAccessToken();
 
   const logOut = () => {
-    removeCookie('access_token')
-    localStorage.clear()
-    setAccessToken('')
-    navigate('/login')
-    handleCloseNavMenu()
-  }
+    removeCookie("access_token");
+    localStorage.clear();
+    setAccessToken("");
+    navigate("/login");
+    handleCloseNavMenu();
+  };
   const goToLogin = () => {
-    navigate('/login')
-    handleCloseNavMenu()
-  }
+    navigate("/login");
+    handleCloseNavMenu();
+  };
   const goToSignUP = () => {
-    navigate('/register')
-    handleCloseNavMenu()
-  }
+    navigate("/register");
+    handleCloseNavMenu();
+  };
   const goToAdoptProcess = () => {
-    navigate('/adpotprocess')
-    handleCloseUserMenu()
-    handleCloseNavMenu()
-  }
+    navigate("/adpotprocess");
+    handleCloseUserMenu();
+    handleCloseNavMenu();
+  };
   const goToAdoptCheckList = () => {
-    navigate('/adoptchecklist')
-    handleCloseUserMenu()
-    handleCloseNavMenu()
-  }
+    navigate("/adoptchecklist");
+    handleCloseUserMenu();
+    handleCloseNavMenu();
+  };
   const goToAdoptReview = () => {
-    navigate('/board/adopt/list')
-    handleCloseUserMenu()
-    handleCloseNavMenu()
-  }
+    navigate("/board/adopt/list");
+    handleCloseUserMenu();
+    handleCloseNavMenu();
+  };
   const goToNotice = () => {
-    navigate('/board/notice/list')
-    handleCloseNotify()
-    handleCloseNavMenu()
-  }
+    navigate("/board/notice/list");
+    handleCloseNotify();
+    handleCloseNavMenu();
+  };
   const goToVolunteer = () => {
-    navigate('/volunteer')
-    handleCloseNotify()
-    handleCloseNavMenu()
-  }
+    navigate("/volunteer");
+    handleCloseNotify();
+    handleCloseNavMenu();
+  };
   const goToQna = () => {
-    navigate('/board/qna/list')
-    handleCloseNotify()
-    handleCloseNavMenu()
-  }
+    navigate("/board/qna/list");
+    handleCloseNotify();
+    handleCloseNavMenu();
+  };
   const goToCharge = () => {
-    navigate('/donate/charge')
-    handleCloseCharge()
-    handleCloseNavMenu()
-  }
+    navigate("/donate/charge");
+    handleCloseCharge();
+    handleCloseNavMenu();
+  };
   const goToDonate = () => {
-    navigate('/donate/item')
-    handleCloseCharge()
-    handleCloseNavMenu()
-  }
+    navigate("/donate/item");
+    handleCloseCharge();
+    handleCloseNavMenu();
+  };
   const goToDonateReview = () => {
-    navigate('/board/support/list')
-    handleCloseCharge()
-    handleCloseNavMenu()
-  }
+    navigate("/board/support/list");
+    handleCloseCharge();
+    handleCloseNavMenu();
+  };
   const goToMyPage = () => {
     if (centerUuid === null) {
-      navigate('/mypage')
+      navigate("/mypage");
     } else {
-      navigate('/admin', { state: centerUuid })
+      navigate("/admin", { state: centerUuid });
     }
-    handleCloseNavMenu()
-  }
+    handleCloseNavMenu();
+  };
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
-  )
+  );
   const [anchorElNotify, setAnchorElNotify] =
-    React.useState<null | HTMLElement>(null)
+    React.useState<null | HTMLElement>(null);
   const [anchorElCharge, setAnchorElCharge] =
-    React.useState<null | HTMLElement>(null)
+    React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
+    setAnchorElNav(event.currentTarget);
+  };
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
+    setAnchorElNav(null);
+  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget)
-  }
+    setAnchorElUser(event.currentTarget);
+  };
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
+    setAnchorElUser(null);
+  };
   const handleOpenNotify = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNotify(event.currentTarget)
-  }
+    setAnchorElNotify(event.currentTarget);
+  };
   const handleCloseNotify = () => {
-    setAnchorElNotify(null)
-  }
+    setAnchorElNotify(null);
+  };
   const handleOpenCharge = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElCharge(event.currentTarget)
-  }
+    setAnchorElCharge(event.currentTarget);
+  };
   const handleCloseCharge = () => {
-    setAnchorElCharge(null)
-  }
+    setAnchorElCharge(null);
+  };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#FFA629' }}>
+    <AppBar position="static" sx={{ backgroundColor: "#FFA629" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -153,18 +158,18 @@ function Navbar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "flex", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
             <img alt="logo" src={Final} style={{ width: 200 }} />
           </Typography>
           <Box sx={{ flexGrow: 1 }}></Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <Box sx={{ flexGrow: 1 }}></Box>
             <Box sx={{ flexGrow: 1 }}>
               <IconButton
@@ -182,22 +187,22 @@ function Navbar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
+                vertical: "bottom",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               <MenuItem onClick={handleOpenUserMenu}>
-                <Typography textAlign="center" >{pages[0]}</Typography>
+                <Typography textAlign="center">{pages[0]}</Typography>
               </MenuItem>
               <MenuItem onClick={handleOpenNotify}>
                 <Typography textAlign="center">{pages[1]}</Typography>
@@ -220,7 +225,7 @@ function Navbar() {
 
           {/* 작아질 때 */}
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Box sx={{ flexGrow: 1 }}></Box>
             <NavButton onClick={handleOpenUserMenu}>{pages[0]}</NavButton>
             <NavButton onClick={handleOpenNotify}>{pages[1]}</NavButton>
@@ -240,17 +245,17 @@ function Navbar() {
               </IconButton>
             </Tooltip> */}
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
@@ -273,17 +278,17 @@ function Navbar() {
               ))}
             </Menu>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElNotify}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElNotify)}
               onClose={handleCloseNotify}
@@ -306,17 +311,17 @@ function Navbar() {
               ))}
             </Menu>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElCharge}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElCharge)}
               onClose={handleCloseCharge}
@@ -342,7 +347,7 @@ function Navbar() {
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

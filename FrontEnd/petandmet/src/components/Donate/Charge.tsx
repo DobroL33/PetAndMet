@@ -103,95 +103,99 @@ function Charge() {
   }, [userUuid, accessToken, userMileage]);
 
   return (
-    <div>
-      <div style={{ padding: 20 }}>
-        <Typography
-          variant="h4"
-          style={{ color: "#E8AF7D", fontWeight: "bold", marginBottom: 5 }}
-        >
-          충전하기
-        </Typography>
+    <Container sx={{ width: "80%" }}>
+      <div>
+        <div style={{ padding: 20 }}>
+          <Typography
+            variant="h4"
+            style={{ color: "#E8AF7D", fontWeight: "bold", marginBottom: 5 }}
+          >
+            충전하기
+          </Typography>
+        </div>
+        <ThemeProvider theme={theme}>
+          <Container
+            sx={{ backgroundColor: "#FFE8A3", width: "80%", borderRadius: 10 }}
+          >
+            <Grid container alignItems="center" padding={2}>
+              <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+                <Typography variant="body1" sx={{ mb: 2.5 }}>
+                  보유 포인트
+                </Typography>
+                <Typography variant="body2">{userMileage} 포인트</Typography>
+              </Grid>
+              <Grid item xs={1.5}>
+                <Typography sx={{ fontSize: 32 }}>+</Typography>
+              </Grid>
+              <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+                <Typography variant="body1" sx={{ mb: 2.5 }}>
+                  충전 포인트
+                </Typography>
+                <Typography variant="body2">{selectedOption} 포인트</Typography>
+              </Grid>
+              <Grid item xs={1.5}>
+                <Typography sx={{ fontSize: 32 }}>=</Typography>
+              </Grid>
+              <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
+                <Typography variant="body1" sx={{ mb: 2.5 }}>
+                  총 포인트
+                </Typography>
+                <Typography variant="body2">
+                  {selectedOption + userMileage} 포인트
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={1.5}></Grid>
+              <Grid item xs={4.5}>
+                <RadioGroup
+                  value={selectedOption}
+                  onChange={(e) => handleOptionChange(parseInt(e.target.value))}
+                >
+                  {options.map((option) => (
+                    <FormControlLabel
+                      sx={{ justifyContent: "start" }}
+                      key={option}
+                      value={option}
+                      control={<Radio sx={{ fontSize: "12px" }} />}
+                      label={
+                        <Typography
+                          sx={{ fontSize: "12px", textAlign: "left" }}
+                        >
+                          {option} 포인트
+                        </Typography>
+                      }
+                    />
+                  ))}
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={4.5}>
+                <img
+                  src={kakaopay}
+                  alt="Kakao Pay"
+                  style={{ width: "45%", borderRadius: 10, margin: "auto" }}
+                />
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#FFD396",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "block",
+                    marginTop: "50px",
+                    color: "black",
+                  }}
+                  onClick={handleChargeClick}
+                >
+                  충전하기
+                </Button>
+              </Grid>
+              <Grid item xs={1.5}></Grid>
+            </Grid>
+          </Container>
+        </ThemeProvider>
       </div>
-      <ThemeProvider theme={theme}>
-        <Container
-          sx={{ backgroundColor: "#FFE8A3", width: "80%", borderRadius: 10 }}
-        >
-          <Grid container alignItems="center" padding={2}>
-            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
-              <Typography variant="body1" sx={{ mb: 2.5 }}>
-                보유 포인트
-              </Typography>
-              <Typography variant="body2">{userMileage} 포인트</Typography>
-            </Grid>
-            <Grid item xs={1.5}>
-              <Typography sx={{ fontSize: 32 }}>+</Typography>
-            </Grid>
-            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
-              <Typography variant="body1" sx={{ mb: 2.5 }}>
-                충전 포인트
-              </Typography>
-              <Typography variant="body2">{selectedOption} 포인트</Typography>
-            </Grid>
-            <Grid item xs={1.5}>
-              <Typography sx={{ fontSize: 32 }}>=</Typography>
-            </Grid>
-            <Grid item xs={3} sx={{ bgcolor: "#FFD396", borderRadius: 3 }}>
-              <Typography variant="body1" sx={{ mb: 2.5 }}>
-                총 포인트
-              </Typography>
-              <Typography variant="body2">
-                {selectedOption + userMileage} 포인트
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={1.5}></Grid>
-            <Grid item xs={4.5}>
-              <RadioGroup
-                value={selectedOption}
-                onChange={(e) => handleOptionChange(parseInt(e.target.value))}
-              >
-                {options.map((option) => (
-                  <FormControlLabel
-                    sx={{ justifyContent: "center" }}
-                    key={option}
-                    value={option}
-                    control={<Radio sx={{ fontSize: "12px" }} />}
-                    label={
-                      <Typography sx={{ fontSize: "12px" }}>
-                        {option} 포인트
-                      </Typography>
-                    }
-                  />
-                ))}
-              </RadioGroup>
-            </Grid>
-            <Grid item xs={4.5}>
-              <img
-                src={kakaopay}
-                alt="Kakao Pay"
-                style={{ width: "45%", borderRadius: 10, margin: "auto" }}
-              />
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#FFD396",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  display: "block",
-                  marginTop: "50px",
-                  color: "black",
-                }}
-                onClick={handleChargeClick}
-              >
-                충전하기
-              </Button>
-            </Grid>
-            <Grid item xs={1.5}></Grid>
-          </Grid>
-        </Container>
-      </ThemeProvider>
-    </div>
+    </Container>
   );
 }
 
