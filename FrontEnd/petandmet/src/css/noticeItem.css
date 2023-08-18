@@ -1,0 +1,194 @@
+.a {
+  overflow: hidden;
+}
+
+.a img {
+  transition: all 0.2s linear;
+}
+
+.a:hover img {
+  transform: scale(1.4);
+}
+
+.adoptionImage {
+  overflow: hidden;
+}
+
+.adoptionImage img {
+  transition: all 0.2s linear;
+}
+
+.adoptionImage:hover img {
+  transform: scale(1.4);
+}
+
+.adoptionName {
+  overflow: hidden;
+  color: #212121;
+  font-size: 17px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "NotoSans";
+}
+
+.adoptionImage {
+  width: 100%;
+  height: 100%;
+  transform: scale(1);
+  transition: transform 0.2s linear;
+}
+.adoptionDate {
+  color: #919191;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.banner {
+  max-width: 1150px;
+  margin-top: 20px;
+  margin-left: 180px;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 400px;
+  background-color: #55c5cf;
+  padding: 30px 100px 0px 300px;
+  background-repeat: no-repeat;
+  background-image: url("https://animal.seoul.go.kr/humanframe/theme/sacc/assets/images/main/bg_slide01.png");
+  background-position: 25px calc(100% - 3px);
+}
+
+.info {
+  text-align: left;
+  position: absolute;
+  left: 35px;
+  top: 25px;
+  z-index: 1;
+  font-size: 32px;
+  font-family: "nanumsquare";
+  color: #2c433b;
+}
+
+.infoitem {
+  display: flex;
+  justify-content: center;
+  height: 300px;
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.animalItem {
+  width: 190px;
+  margin-right: 15px;
+  transform: translate3d(0px, 0px, 0px);
+}
+
+.inner {
+  margin: 0;
+  height: 310px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.infoAnimalImg {
+  height: 140px;
+}
+
+.infoli {
+  font-size: 17px;
+  color: #594a41;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.infoDiv {
+  font-size: 14px;
+  color: #898989;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.IntroduceItemDetail {
+  display: flex;
+}
+
+.introduceDetailImg {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 432px;
+  min-height: 100%;
+  min-width: 100%;
+  text-align: center;
+}
+
+.introduceDetailinfo {
+  display: block;
+    float: left;
+    position: relative;
+    width: 45%;
+    padding-right: 10px;
+}
+
+.introduceDetailH3 {
+  padding: 20px 0;
+}
+
+.specie {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100px;
+  height: 100%;
+  background-color: #594a41;
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
+}
+
+.introduceDetailDiv {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.introduceDetailDl {
+  width: 50%;
+  float: left;
+}
+
+.introduceDetailDt {
+  padding: 10px;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100px;
+  height: 100%;
+  background-color: #594a41;
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.introduceDetailDt2 {
+  padding: 10px;
+  display: block;
+  position: relative;
+  margin-left: 100px;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.introduceDetailDl2 {
+  width: 50%;
+  float: left;
+}
